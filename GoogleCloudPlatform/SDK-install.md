@@ -1,4 +1,3 @@
-M
 Google Cloud Platform を使用する際、Web ブラウザ上からだけではなく、コマンドラインから出来ると何かと便利。Cloud SDK を使用すれば実現できます。ここでは、Compute Engine のインスタンスを作成するまでの手順を示します。
 
 # Cloud SDK のインストール

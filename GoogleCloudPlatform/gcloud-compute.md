@@ -1,6 +1,6 @@
-インスタンスを作成する手順をざっくりと示します。なお、gcloud コマンドの詳細は公式リファレンスをご参照ください。
 
-[参考：gcloudリファレンス](https://cloud.google.com/sdk/gcloud/reference/)
+
+### インスタンスの作成
 
 ##### イメージとマシンタイプの確認
 
@@ -25,7 +25,7 @@ n1-highcpu-2    us-central1-f           2     1.80
 n1-highcpu-32   us-central1-f           32    28.80
 ```
 
-### インスタンスの作成
+##### インスタンスの作成
 
 次のコマンドでインスタンスを作成します。イメージは centos-7 、マシンタイプは最小の f1-micro を指定しています。ディスクサイズ無指定時は10GBとなります。
 
@@ -127,5 +127,10 @@ $ gcloud compute firewall-rules create allow-http --description "Incoming http a
 $ gcloud compute networks subnets list
 ```
 
+# 参考
+
 [ネットワークとファイアウォールの使用](https://cloud.google.com/compute/docs/networking?hl=ja)
+
 [ファイアウォールルールの使用](https://cloud.google.com/compute/docs/vpc/using-firewalls?hl=ja)
+
+[gcloudリファレンス](https://cloud.google.com/sdk/gcloud/reference/)
