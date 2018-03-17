@@ -24,6 +24,9 @@
 ```
 # ハイライト
 :syntax on
+
+# 非 vi 互換モードへ(方向キーでABCDが入力される問題への対処)
+set nocompatible
 ```
 
 # 参考
