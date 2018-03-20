@@ -36,13 +36,13 @@ trusted (active)
 なお、外部公開しているインタフェースを trusted にしてはいけない。ただし、クラウドサービスなど上流でフィルタリングしている場合は trusted でもよい。
 
 ```
-# firewall-cmd --permenent --zone=trusted --change-interface=インタフェース名
+# firewall-cmd --permanent --zone=trusted --change-interface=インタフェース名
 ```
 
 ##### サービスへの接続許可
 
 ```
-# firewall-cmd --permenent --zone=public -add-service=http
+# firewall-cmd --permanent --zone=public --add-service=http
 ```
 
 なお、サービスを定義したファイルは、```/usr/lib/firewalld/services/``` にある。例えば、http の場合は以下の通り。
@@ -62,7 +62,7 @@ $ cat /usr/lib/firewalld/services/http.xml
 (例) あるアドレスから udp 500 番ポートの通信を許可する場合
 
 ```
-# firewall-cmd --permenent --zone=public --add-rich-rule="rule family=ipv4 source address=[SRC ADDRESS] port port=500 protocol=udp accept"
+# firewall-cmd --permanent --zone=public --add-rich-rule="rule family=ipv4 source address=[SRC ADDRESS] port port=500 protocol=udp accept"
 ```
 
 ##### 設定の反映
