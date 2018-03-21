@@ -5,15 +5,15 @@
 
 https://www.rabbitmq.com/tutorials/tutorial-two-python.html
 
-コンシューマーが２つ以上ある場合をテーマとする。この章では、コンシューマのことをワーカーと呼んでいる。
+この章では、複数のコンシューマに対して、順にメッセージを送ることにフォーカスする。
 
-重い処理は一台のサーバでさばけないことがある。そのような場合は、複数サーバを用意し、それぞれにワーカーを常駐させる。
-RabbitMQ が各ワーカーにメッセージを順に送信していき、ワーカーはそのメッセージを受け取って処理を行う…という流れを実現できる。
+ユースケースとしては、重い複数の処理があって一台のサーバでさばき切れない場合。
+そのような場合は、複数サーバ上でワーカーを起動し、RabbitMQ が各ワーカーにメッセージを順に送信する。ワーカーはそのメッセージを受け取って処理を行う…という流れを実現できる。
 
 ## この章で学べること
 
 * RabbitMQ はメッセージが正しくコンシューマに届いたかどうかをコンシューマからの Ack によって確認する。
-Ack が帰ってこない場合メッセージをリキューする。Ack 機能はデフォルトでは有効になっている（前の章では no_ack=True にして無効化していた）。
+Ack が返ってこない場合メッセージをリキューする。Ack 機能はデフォルトでは有効になっている（前の章では no_ack=True にして無効化していた）。
 
 * RabbitMQ を停止するとデフォルトではキューが消える。残すには durable を有効化する。
 
@@ -69,7 +69,7 @@ print(" [x] Sent %r" % message)
 connection.close()
 ```
 
-###### recieve.py
+###### worker.py
 
 ```python
 #!/usr/bin/env python
@@ -98,15 +98,17 @@ channel.start_consuming()
 
 ## 実行
 
-2 つのウィンドウを用意し、それぞれでコンシューマを起動させておく。
+2 つのウィンドウを用意し、それぞれでワーカーを起動させておく。
+ワーカーは time.sleep(body.count(b'.'))　の行を修正し、ウィンドウ 1 では 2 秒の sleep、ウィンドウ 2 は 5 秒の sleep を実行する。
+sleep 秒数の異なる ２ つのワーカーが次のメッセージを受信する様子を観察する。
 
 ```
-// ウィンドウ 1
-$ python worker.py
+// ウィンドウ 1　（2 秒間隔）
+$ python worker-2sec.py 
  [*] Waiting for messages. To exit press CTRL+C
 
-// ウィンドウ 2
-$ python worker.py
+// ウィンドウ 2　（5 秒間隔）
+$ python worker-5sec.py 
  [*] Waiting for messages. To exit press CTRL+C
 ```
 
@@ -126,36 +128,36 @@ $ for i in `seq 10`; do python new_task.py $i; done
  [x] Sent '10'
 ```
 
-すると、コンシューマ側にもメッセージが送られる。
+すると、それぞれのワーカーにメッセージが送られる。
 
 
 ```
-// ウィンドウ 1
-$ python worker.py 
+// ウィンドウ 1　（2 秒間隔）
+$ python worker-2sec.py 
  [*] Waiting for messages. To exit press CTRL+C
- [x] Received b'1'
+ [x] Received b'2'
  [x] Done
  [x] Received b'3'
- [x] Done
- [x] Received b'5'
- [x] Done
- [x] Received b'7'
- [x] Done
- [x] Received b'9'
- [x] Done
-
-// ウィンドウ 2
-$ python worker.py 
- [x] Received b'2'
  [x] Done
  [x] Received b'4'
  [x] Done
  [x] Received b'6'
  [x] Done
- [x] Received b'8'
+ [x] Received b'7'
+ [x] Done
+ [x] Received b'9'
  [x] Done
  [x] Received b'10'
  [x] Done
+
+
+// ウィンドウ 2　（5 秒間隔）
+$ python worker-5sec.py 
+ [*] Waiting for messages. To exit press CTRL+C
+ [x] Received b'1'
+ [x] Done
+ [x] Received b'5'
+ [x] Done
+ [x] Received b'8'
+ [x] Done
 ```
-
-

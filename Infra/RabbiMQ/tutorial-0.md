@@ -1,5 +1,5 @@
 チュートリアル従って進めていく。
-ここでは、用語説明、チュートリアルを進めるにあたって準備を行う。
+ここでは、チュートリアルを進めるにあたって準備を行う。
 
 https://www.rabbitmq.com/tutorials/tutorial-one-python.html
 

@@ -5,19 +5,20 @@
 
 https://www.rabbitmq.com/tutorials/tutorial-one-python.html
 
-キュー「hello」対し、メッセージを send, receive する方法を学ぶ。
+キュー「hello」に対し、メッセージを send, receive する方法を学ぶ。
 
 ## この章で学べること
 
-* メッセージを送信するプログラムのことを **プロデューサー** 呼ぶ。
+* メッセージを送信するプログラムのことを **プロデューサ** と呼ぶ。
 
-* メッセージは **キュー** ためられていく。
+* メッセージは **キュー** にためられていく。
 
-* **consumer** メッセージを待ち受けるプログラムである。
+* **コンシューマ** はメッセージを待ち受けるプログラムである。
+
+##### プロデューサ
 
 * RabbitMQ はキューに直接メッセージを送信せず、exchange 経由でとなる。
-空で指定された際はデフォルトの exchange を使う。この exchange は特別で、どのキューにメッセージを送信するかを指定することが出来る。
-キューは「routing_key」で指定する。
+空で指定された際はデフォルトの exchange を使う。この exchange は特別で、メッセージのルーティング先となるキューを指定することが出来る。「routing_key」で指定する。
 
 ```
 channel.basic_publish(exchange='',
@@ -25,7 +26,9 @@ channel.basic_publish(exchange='',
                       body='Hello World!')
 ```
 
-* メッセージ受信時は Pika ライブラリから callback メソッドが実行される動作となる。この例では、メッセージ受信時にメッセージを出力させている。
+##### コンシューマ
+
+* メッセージ受信時は Pika ライブラリから callback メソッドが実行される動作となる。この例では、メッセージ受信時に受け取った内容を画面出力させている。
 
 ```
 def callback(ch, method, properties, body):
