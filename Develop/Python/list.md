@@ -1,6 +1,21 @@
 
 # リスト
 
+リストについてのメモ。
+
+# 参考
+
+以下の URL、書籍を参考にしている。
+
+##### Python チュートリアル
+
+https://docs.python.jp/3/tutorial/
+
+##### 書籍『Effective Python』
+
+『Effective Python』のサンプルコードは次の URL で公開されている。
+https://github.com/bslatkin/effectivepython/tree/master/example_code
+
 ### リストの長さ
 
 ```python
@@ -166,9 +181,104 @@ email hoge@example.com
 
 ```
 
-# TODO
+### defaultdict
 
-defaultdict,
-OrderedDict,
-bisect,
-namedtuple
+https://docs.python.jp/3/library/collections.html#collections.defaultdict
+
+初期化出来る辞書。値が格納されていない場合に初期化する処理を if 文で書くのは面倒だが、その手間を省けるしすっきり書ける。
+
+```python
+>>> from collections import defaultdict
+
+>>> s = [('yellow', 1), ('blue', 2), ('yellow', 3), ('blue', 4), ('red', 1)]
+>>> d = defaultdict(list)
+>>> for k, v in s:
+...    d[k].append(v)
+
+>>> print(sorted(d.items()))
+[('blue', [2, 4]), ('red', [1]), ('yellow', [1, 3])]
+```
+
+なお、辞書の初期化は次のようにも書ける。（が、Python のドキュメントによると defaultdict を使ったほうが速いらしい）
+
+```python
+>>> d = {}
+>>> for k, v in s:
+...     d.setdefault(k, []).append(v)
+...
+>>> sorted(d.items())
+[('blue', [2, 4]), ('red', [1]), ('yellow', [1, 3])]
+```
+
+### OrderedDict
+
+https://docs.python.jp/3/library/collections.html#collections.OrderedDict
+
+OrderedDict を用いることで、辞書に格納した順番が保持される。
+
+普通の辞書の場合。
+
+```python
+>>> a = {}
+>>> a['foo'] = 1
+>>> a['bar'] = 2
+>>> a['hoge'] = 3
+// 実行するたびに異なる順番になる。
+>>> print(a)
+{'bar': 2, 'hoge': 3, 'foo': 1}
+```
+
+OrderedDict の場合。
+
+```python
+>>> from collections import OrderedDict
+>>> od = OrderedDict()
+>>> od['foo'] = 1
+>>> od['bar'] = 2
+>>> od['hoge'] = 3
+>>> print(od)
+OrderedDict([('foo', 1), ('bar', 2), ('hoge', 3)])
+```
+
+### bisect
+
+https://docs.python.jp/3/library/bisect.html
+
+ソート済みのリストを 2 分探索で探索。
+
+普通のリストの場合。
+
+```
+x = list(range(10**7))
+i = x.index(9991234)
+```
+
+2 分探索。
+
+```
+x = list(range(10**7))
+i = bisect_left(x, 9991234)
+```
+
+### namedtuple
+
+https://docs.python.jp/3/library/collections.html#collections.namedtuple
+
+フィールドに名前を使ってアクセスできるようになる。
+csv や SQL などスキーマの決まっているデータの取得時に便利。
+
+・employees.csv
+
+```
+tom,29,leader
+jeff,35,manager
+```
+
+
+```python
+>>> EmployeeRecord = namedtuple('EmployeeRecord', 'name, age, grade')
+>>>for emp in map(EmployeeRecord._make, csv.reader(open("employees.csv", "r"))):
+...    print(emp.name, emp.grade)
+tom leader
+jeff manager
+```
