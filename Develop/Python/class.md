@@ -1,8 +1,20 @@
 ### クラスの使い方
 
-以下のクラスを題材に基本的な使い方をおさえていく。[Pythonチュートリアル](https://docs.python.jp/3/tutorial/classes.html#class-objects)の例を参考にしつつ。
+# 参考
 
-なお、**属性**という言葉は、ドットに続く名前全てに対して使う。
+以下の URL、書籍を参考にしている。
+
+##### Python チュートリアル(クラスのページ)
+
+https://docs.python.jp/3/tutorial/classes.html#class-objects)
+
+##### 書籍『Effective Python』
+
+『Effective Python』のサンプルコードは次の URL で公開されている。
+https://github.com/bslatkin/effectivepython/tree/master/example_code
+
+### はじめの例題クラス
+
 
 ```python
 class MyClass:
@@ -22,8 +34,11 @@ class MyClass:
 
 ##### 属性
 
+**属性**という言葉は、ドットに続く名前全てに対して使う。
+以下のように属性用にセッター、ゲッターを使わず、パブリックな属性とした方が属性を直感的に扱えるし、Python 風である。ゲッター、セッターのような書き方や、値の取得、セット時に追加の処理を行いたい場合は、後述する property を使うのが効果的。
+
 ```python
-# 属性の値を確認。属性用にセッター、ゲッターを使わず、パブリックな属性とした方が属性を直感的に扱える。
+# ゲッターを使わずに、普通にパブリックな属性へアクセスする。
 >>> print(x.my_string)
 sample value
 
@@ -88,14 +103,14 @@ class MyList:
 >>> y.append_class_list("lemon")
 >>> y.append_instance_list("lemon")
 
-# クラス変数はインスタンスに共有されている。
+# クラス変数は各インスタンスに共有されている点に注意。
 >>> print(x.class_list)
 ['apple', 'lemon']
 
 >>> print(y.class_list)
 ['apple', 'lemon']
 
-# インスタンス変数はインスタンスごとに格納されている。
+# インスタンス変数だとインスタンスごとに格納されている。
 >>> print(x.instance_list)
 ['apple']
 
@@ -153,6 +168,45 @@ class Cat:
 >>> Cat.meow()
 nyaan
 ```
+
+##### クラスメソッドを活用したデザイン。
+
+『Effective Python』の項目24 を参考にしつつ、クラス設計のデザインを考える。
+https://github.com/bslatkin/effectivepython/blob/master/example_code/item_24.py
+
+例えばプレゼンテーション資料を作成するためのクラスを実装したとして、利用者が自分の好みのプレゼンテンプレートを使用したい場合。
+
+まず、様々なテンプレートのクラスを実装する（基底クラスを実装しないのはダックタイピングということで・・）。クラスメソッドで同名のメソッドを実装する。
+
+```Python
+class SimpleTemplate():
+    @classmethod
+    def load_template(self):
+       ...
+```
+
+```Python
+class DarkFantasyTemplate():
+    @classmethod
+    def load_template(self):
+       ...
+```
+
+プレゼンテーション資料を作成するためのメソッドを実装する。その中の処理でテンプレートのロードを行う。
+
+```Python
+def create_presentation(template_cls):
+    template_cls.load_template()
+    ...
+```
+
+利用者は次のように、好みのクラスを指定すれば、テンプレートをロードできる。
+
+```Python
+create_presentation(SimpleTemplate)
+```
+
+
 
 ### __call__
 
