@@ -38,7 +38,7 @@ $ ansible-playbook -i staging_hosts site.yml
 |-- db.yml
 |-- roles
 |   |-- staging_pretask/
-|   |-- common/ 
+|   |-- common/
 |   |-- db/
 |   `-- web/
 `-- vars
@@ -107,7 +107,7 @@ web, db という粒度でプレイブックを作成する。
 
 ##### web.yml
 
-```
+```yaml
 - hosts: web
   become: yes
   vars_files:
@@ -125,11 +125,11 @@ db.yml も同じような考え方で作成する。
 
 片方の環境でのみ実行したい処理は、when 句によってステージを指定する。
 
-#####  roles/common/tasks/main.yml 
+#####  roles/common/tasks/main.yml
 
-```
+```yaml
 - name: install packages
-  yum: name={{ item }} 
+  yum: name={{ item }}
   with_items:
    - "{{ yum_pkg }}"
   when:
@@ -148,7 +148,7 @@ db.yml も同じような考え方で作成する。
 
 -i でステージング、プロダクションを切り替える。
 
-```
+```shell
 # production を対象とする。
 $ ansible-playbook -i production_hosts site.yml
 
@@ -169,4 +169,3 @@ $ ansible-playbook -i staging_hosts web.yml --tags common
 [Ansible inventoryパターン](https://dev.classmethod.jp/server-side/ansible/ansible-inventory-pattern/)
 
 [Qiita:Ansibleのインベントリファイルでステージを切り替える](https://qiita.com/NewGyu/items/5de31d76d2488ab27ed6)
-
