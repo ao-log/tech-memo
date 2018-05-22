@@ -83,6 +83,8 @@ def main():
 
     (x_train, y_train), (x_test, y_test) = load_data(categories)
 
+    callbacks = [keras.callbacks.TensorBoard(log_dir="/workspace/__tmp/", histogram_freq=1)]
+
     model = define_model(categories)
     #model.summary()
 
@@ -90,6 +92,7 @@ def main():
         batch_size=int(args.batch_size),
         epochs=int(args.epochs),
         verbose=1,
+        callbacks=callbacks,
         validation_data=(x_test, y_test))
 
     score = model.evaluate(x_test, y_test, verbose=0)
