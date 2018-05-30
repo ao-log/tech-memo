@@ -14,8 +14,6 @@ $ sqlite3 user.sqlite
 
 ##### テーブル作成
 
-テーブル作成の SQK を書いたファイルを作成。
-
 ・create.sql
 
 ```
