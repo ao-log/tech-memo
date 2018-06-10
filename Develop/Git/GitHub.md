@@ -15,6 +15,16 @@ $ git pull origin master
 $ git push -u origin master
 ```
 
+# 複数のリポジトリを利用している場合
+
+リポジトリごとに鍵ペアを用意する必要あり。次の URL を参照のこと。
+
+https://qiita.com/zaru/items/c0e6799d8e6417fa8617
+
+* .ssh/config でリポジトリごとに接続設定を作る。鍵と接続先のホスト名（エイリアス）を設定
+* git remote で、エイリアスのホスト名を指定
+
+
 # GitHub の Contribution が反映されない問題への対応
 
 Author、メールアドレスが正しいかを確認する。
