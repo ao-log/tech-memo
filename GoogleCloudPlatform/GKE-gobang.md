@@ -1,5 +1,5 @@
 
-こちらの手順に習ってGKE の動作を確認しました。
+こちらの手順に習ってGKE の動作を確認しました。  
 https://github.com/GoogleCloudPlatform/gke-gobang-app-example
 
 以下の手順は、上記 URL のものを写経したものになります。
