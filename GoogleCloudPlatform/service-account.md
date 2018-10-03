@@ -41,3 +41,9 @@ $ gcloud auth list
 ### VM へのサービスアカウント設定
 
 VM インスタンス作成時に、その VM のサービスアカウントを指定することもできる。
+
+### 参考
+
+GCP における OAuth2 の認証・認可についての分かりやすい記事。
+
+https://medium.com/google-cloud-jp/gcp-%E3%81%A8-oauth2-91476f2b3d7f
