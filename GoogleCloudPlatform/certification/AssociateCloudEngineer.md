@@ -83,11 +83,17 @@ $ gcloud config set compute/zone us-east1-b
 
 ### 2.1 料金計算ツールを使用して GCP プロダクトの使用量を計画し、見積もる。
 
+* [料金計算ツール](https://cloud.google.com/products/calculator/?authuser=3&hl=ja)
+* [料金](https://cloud.google.com/compute/pricing?hl=ja-)
+
 ### 2.2 コンピューティング リソースを計画し、構成する。次のような内容を考察します。
 
 ###### ワークロードに適したコンピューティング サービスの選択（Compute Engine、Kubernetes Engine、App Engine など）
 
 ###### 必要に応じたプリエンプティブ VM とカスタム マシンタイプの使用
+
+* [プリエンプティブ VM インスタンス](https://cloud.google.com/compute/docs/instances/preemptible?hl=ja)
+* [カスタムマシンタイプ](https://cloud.google.com/compute/docs/machine-types?hl=ja#custom_machine_types)
 
 ### 2.3 データ ストレージ オプションを計画し、構成する。次のような内容を考察します。
 
@@ -95,13 +101,19 @@ $ gcloud config set compute/zone us-east1-b
 
 ###### ストレージ オプションの選択（Regional、Multi-regional、Nearline、Coldline など）
 
+* [ストレージクラス](https://cloud.google.com/storage/docs/storage-classes?hl=ja)
+
 ### 2.4 ネットワーク リソースを計画し、構成する。次のようなタスクがあります。
 
 ###### 負荷分散オプションの差別化
 
+* [負荷分散](https://cloud.google.com/compute/docs/load-balancing/)
+
 ###### 可用性を考慮したネットワーク内のリソース ロケーションの特定
 
 ###### Cloud DNS の構成
+
+* [Cloud DNS](https://cloud.google.com/dns/docs/?hl=ja)
 
 # セクション 3: クラウド ソリューションのデプロイと実装
 
