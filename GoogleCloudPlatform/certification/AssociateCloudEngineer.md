@@ -79,6 +79,8 @@ $ gcloud config set project [PROJECT]
 $ gcloud config set compute/zone us-east1-b
 ```
 
+
+
 # セクション 2: クラウド ソリューションの計画と構成
 
 ### 2.1 料金計算ツールを使用して GCP プロダクトの使用量を計画し、見積もる。
@@ -115,35 +117,70 @@ $ gcloud config set compute/zone us-east1-b
 
 * [Cloud DNS](https://cloud.google.com/dns/docs/?hl=ja)
 
+
+
 # セクション 3: クラウド ソリューションのデプロイと実装
 
 ### 3.1 Compute Engine リソースをデプロイし、実装する。次のようなタスクがあります。
 
 ###### Cloud Console と Cloud SDK（gcloud）を使用したコンピューティング インスタンスの起動（ディスクの割り当て、可用性ポリシー、SSH 認証鍵など）
 
+* [VM インスタンスの作成と起動](https://cloud.google.com/compute/docs/instances/create-start-instance?hl=JA)
+
+```
+$ gcloud compute instances create [INSTANCE_NAME] \
+  --image-family [IMAGE_FAMILY] \
+  --image-project [IMAGE_PROJECT] \
+  --create-disk [image=[IMAGE],size=[SIZE_GB],type=[DISK_TYPE]]
+```
+
 ###### インスタンス テンプレートを使用した、自動スケーリングされるマネージド インスタンス グループの作成
 
+* [インスタンスグループ](https://cloud.google.com/compute/docs/instance-groups/?hl=JA)
+* [マネージド インスタンス グループの作成](https://cloud.google.com/compute/docs/instance-groups/creating-groups-of-managed-instances?hl=JA)
+* [
+フィードバックを送信
+CPU または負荷分散処理能力に基づくスケーリング](https://cloud.google.com/compute/docs/autoscaler/scaling-cpu-load-balancing?hl=JA)
+
 ###### インスタンス用のカスタム SSH 認証鍵の生成 / アップロード
+
+* [メタデータでの SSH 認証鍵の管理](https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys?authuser=2&hl=ja)
 
 ###### Stackdriver Monitoring と Logging のための VM の構成
 
 ###### コンピューティングの割り当ての評価と増加のリクエスト
 
+[IAM と管理] → [割り当て]
+
 ###### モニタリングとロギング用の Stackdriver Agent のインストール
+
+* [Monitoring エージェントのインストール](https://cloud.google.com/monitoring/agent/install-agent?hl=ja)
 
 ### 3.2 Kubernetes Engine リソースをデプロイし、実装する。次のようなタスクがあります。
 
 ###### Kubernetes Engine クラスタのデプロイ
 
+* [Creating a Cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster)
+
 ###### ポッドを使用した Kubernetes Engine へのコンテナ アプリケーションのデプロイ
 
+* [ステートレス アプリケーションのデプロイ](ステートレス アプリケーションのデプロイ)
+
 ###### Kubernetes Engine アプリケーションのモニタリングとロギングの構成
+
+* [ログ](https://cloud.google.com/kubernetes-engine/docs/how-to/logging)
+* [モニタリング](https://cloud.google.com/kubernetes-engine/docs/how-to/monitoring)
 
 ### 3.3 App Engine リソースと Cloud Functions リソースをデプロイし、実装する。次のようなタスクがあります。
 
 ###### App Engine へのアプリケーションのデプロイ（スケーリング構成、バージョン、トラフィック分割など）
 
+* [Testing and deploying your application](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app)
+* [gcloud app deploy](https://cloud.google.com/sdk/gcloud/reference/app/deploy)
+
 ###### Google Cloud イベント（Cloud Pub/Sub イベント、Cloud Storage オブジェクト変更通知イベントなど）を受信する Cloud Function のデプロイ
+
+* [Deploying from Source Control](https://cloud.google.com/functions/docs/deploying/repo)
 
 ### 3.4 データ ソリューションをデプロイし、実装する。次のようなタスクがあります。
 
@@ -151,9 +188,16 @@ $ gcloud config set compute/zone us-east1-b
 
 ###### データの読み込み（コマンドラインによるアップロード、API による転送、インポート / エクスポート、Cloud Storage からのデータの読み込み、Cloud Pub/Sub へのデータのストリーミングなど）
 
+* [クイックスタート: gsutil ツールの使用](https://cloud.google.com/storage/docs/quickstart-gsutil?hl=ja)
+* [Cloud Pub/Sub Notifications for Cloud Storage](https://cloud.google.com/storage/docs/pubsub-notifications)
+* [BigQuery へのデータの読み込みの概要](https://cloud.google.com/bigquery/docs/loading-data?hl=ja)
+
 ### 3.5 ネットワーキング リソースをデプロイし、実装する。次のようなタスクがあります。
 
 ###### サブネットを使用した VPC の作成（カスタムモード VPC、共有 VPC など）
+
+* [Virtual Private Cloud（VPC）ネットワークの概要](https://cloud.google.com/compute/docs/vpc/?hl=ja)
+* [共有 VPC の概要](https://cloud.google.com/vpc/docs/shared-vpc?hl=ja)
 
 ###### カスタム ネットワーク構成を使用した Compute Engine インスタンスの起動（内部専用 IP アドレス、限定公開の Google アクセス、静的外部 IP アドレスとプライベート IP アドレス、ネットワーク タグなど）
 
@@ -161,9 +205,15 @@ $ gcloud config set compute/zone us-east1-b
 
 ###### Cloud VPN を使用した Google VPC と外部ネットワーク間の VPN の作成
 
+* [Cloud VPN](https://cloud.google.com/vpn/docs/concepts/overview)
+
 ###### アプリケーションへのアプリケーション ネットワーク トラフィックを分散するロードバランサの作成（グローバル HTTP(S) ロードバランサ、グローバル SSL プロキシ ロードバランサ、グローバル TCP プロキシ ロードバランサ、リージョン ネットワーク ロードバランサ、リージョン内部ロードバランサなど）
 
+* [負荷分散](https://cloud.google.com/compute/docs/load-balancing/?hl=ja)
+
 ### 3.6 Cloud Launcher を使用してソリューションをデプロイする。次のようなタスクがあります。
+
+* [GOOGLE CLOUD PLATFORM MARKETPLACE](https://cloud.google.com/marketplace/)
 
 ###### Cloud Launcher カタログの閲覧とソリューションの詳細の表示
 
@@ -171,9 +221,15 @@ $ gcloud config set compute/zone us-east1-b
 
 ### 3.7 Deployment Manager を使用してアプリケーションをデプロイする。次のようなタスクがあります。
 
+* [CLOUD DEPLOYMENT MANAGER](https://cloud.google.com/deployment-manager/?hl=ja)
+
 ###### アプリケーションのデプロイを自動化する Deployment Manager テンプレートの開発
 
+* [クイックスタート](https://cloud.google.com/deployment-manager/docs/quickstart?hl=ja)
+
 ###### Deployment Manager テンプレートの起動による自動的な GCP リソースのプロビジョニングとアプリケーションの構成
+
+
 
 # セクション 4: クラウド ソリューションの正常なオペレーションの確保
 
