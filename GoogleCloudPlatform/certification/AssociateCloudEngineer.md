@@ -237,17 +237,32 @@ CPU または負荷分散処理能力に基づくスケーリング](https://clo
 
 ###### 単一 VM インスタンスの管理（起動、停止、構成の編集、インスタンスの削除など）
 
+* [VM インスタンスの作成と起動](https://cloud.google.com/compute/docs/instances/create-start-instance?hl=ja)
+* [インスタンスの停止または削除](https://cloud.google.com/compute/docs/instances/stopping-or-deleting-an-instance?hl=ja)
+
 ###### インスタンスへの SSH / RDP
 
+* [インスタンスへの接続](https://cloud.google.com/compute/docs/instances/connecting-to-instance?hl=ja)
+
 ###### 新しいインスタンスへの GPU の接続と CUDA ライブラリのインストール
+
+* [インスタンスへの GPU の追加](https://cloud.google.com/compute/docs/gpus/add-gpus?hl=ja)
 
 ###### 現在実行されている VM のインベントリ（インスタンス ID、詳細）の表示
 
 ###### スナップショットの操作（VM からのスナップショットの作成、表示、削除など）
 
+* [永続ディスクのスナップショットを作成する](https://cloud.google.com/compute/docs/disks/create-snapshots?hl=ja)
+* [永続ディスクのスナップショットの復元と削除](https://cloud.google.com/compute/docs/disks/restore-and-delete-snapshots?hl=ja)
+
 ###### イメージの操作（VM またはスナップショットからのイメージの作成、表示、削除など）
 
+* [カスタム イメージの作成、削除、使用中止](https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images?hl=ja)
+
 ###### インスタンス グループの操作（自動スケーリング パラメータの設定、インスタンス テンプレートの割り当てや作成、インスタンス グループの削除など）
+
+* [マネージド インスタンス グループの作成](https://cloud.google.com/compute/docs/instance-groups/creating-groups-of-managed-instances?hl=ja)
+* [非マネージド インスタンスのグループの作成](https://cloud.google.com/compute/docs/instance-groups/creating-groups-of-unmanaged-instances?hl=ja)
 
 ###### 管理インターフェースの操作（Cloud Console、Cloud Shell、GCloud SDK など）
 
@@ -259,6 +274,9 @@ CPU または負荷分散処理能力に基づくスケーリング](https://clo
 
 ###### ノードの操作（ノードの追加、編集、削除など）
 
+* [Resizing a Cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/resizing-a-cluster)
+* [Deleting a Cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/deleting-a-cluster)
+
 ###### ポッドの操作（ポッドの追加、編集、削除など）
 
 ###### サービスの操作（サービスの追加、編集、削除など）
@@ -269,7 +287,11 @@ CPU または負荷分散処理能力に基づくスケーリング](https://clo
 
 ###### アプリケーションのトラフィック分割パラメータの調整
 
+* [Splitting Traffic](https://cloud.google.com/appengine/docs/standard/python3/splitting-traffic?hl=ja)
+
 ###### 自動スケーリング インスタンスのスケーリング パラメータの設定
+
+* [app.yaml Reference](https://cloud.google.com/appengine/docs/standard/python3/config/appref?hl=ja)
 
 ###### 管理インターフェースの操作（Cloud Console、Cloud Shell、Cloud SDK など）
 
@@ -277,23 +299,50 @@ CPU または負荷分散処理能力に基づくスケーリング](https://clo
 
 ###### データ インスタンスからデータを取得するクエリの実行（Cloud SQL、BigQuery、Cloud Spanner、Cloud Datastore、Cloud Bigtable、Cloud Dataproc など）
 
+
+・Cloud Datastore
+
+* [データストアのクエリ](https://cloud.google.com/datastore/docs/concepts/queries?hl=ja)
+
+・BigQuery
+* [インタラクティブ クエリとバッチクエリの実行](https://cloud.google.com/bigquery/docs/running-queries?hl=ja)
+
 ###### BigQuery クエリのコストの見積もり
 
+* [ストレージとクエリの費用の見積もり](https://cloud.google.com/bigquery/docs/estimate-costs?hl=ja)
+
 ###### データ インスタンスのバックアップと復元（Cloud SQL、Cloud Datastore、Cloud Dataproc など）
+
+・Cloud SQL
+
+* [オンデマンド バックアップと自動バックアップを作成、管理する](https://cloud.google.com/sql/docs/postgres/backup-recovery/backing-up?hl=ja)
+* [インスタンスをリストアする](https://cloud.google.com/sql/docs/postgres/backup-recovery/restoring?hl=ja)
+
+・Cloud Datastore
+
+* [エンティティのエクスポートとインポート](https://cloud.google.com/datastore/docs/export-import-entities?hl=ja)
+
 
 ###### Cloud Dataproc または BigQuery 内のジョブ ステータスの確認
 
 ###### Cloud Storage バケット間でのオブジェクトの移動
 
+* [オブジェクトの名前変更、コピー、移動](https://cloud.google.com/storage/docs/renaming-copying-moving-objects?hl=ja)
+
 ###### ストレージ クラス間での Cloud Storage バケットの変換
 
 ###### Cloud Storage バケットのオブジェクト ライフサイクル管理ポリシーの設定
+
+* [オブジェクトのライフサイクル管理](https://cloud.google.com/storage/docs/lifecycle?hl=ja)
+
 
 ###### 管理インターフェースの操作（Cloud Console、Cloud Shell、Cloud SDK など）
 
 ### 4.5 ネットワーキング リソースを管理する。次のようなタスクがあります。
 
 ###### 既存の VPC へのサブネットの追加
+
+* [Virtual Private Cloud（VPC）ネットワークの概要](https://cloud.google.com/vpc/docs/vpc?hl=ja)
 
 ###### CIDR ブロック サブネットの拡張による IP アドレスの追加
 
@@ -305,11 +354,19 @@ CPU または負荷分散処理能力に基づくスケーリング](https://clo
 
 ###### リソース指標に基づく Stackdriver アラートの作成
 
+* [アラートの概要](https://cloud.google.com/monitoring/alerts/?hl=ja)
+
 ###### Stackdriver カスタム指標の作成
+
+* [カスタム指標の使用](https://cloud.google.com/monitoring/custom-metrics/?hl=ja)
 
 ###### ログを外部システムにエクスポートするためのログシンクの構成（オンブレミスまたは BigQuery など）
 
+* [ログシンクを設定する](https://cloud.google.com/logging/docs/export/configure_export_v1?hl=ja#configuring_log_sinks)
+
 ###### Stackdriver のログの表示とフィルタリング
+
+* [ログの表示](https://cloud.google.com/logging/docs/view/overview?authuser=19&hl=ja)
 
 ###### Stackdriver の特定のログメッセージの詳細の表示
 
@@ -325,16 +382,27 @@ CPU または負荷分散処理能力に基づくスケーリング](https://clo
 
 ###### アカウントの IAM 割り当ての表示
 
+
 ###### アカウントまたは Google グループへの IAM 役割の割り当て
 
+* [プロジェクト メンバーに対するアクセス権の付与、変更、取り消し](https://cloud.google.com/iam/docs/granting-changing-revoking-access)
+
 ###### カスタム IAM 役割の定義
+
+* [カスタムの役割の作成と管理](https://cloud.google.com/iam/docs/creating-custom-roles)
 
 ### 5.2 サービス アカウントを管理する。次のようなタスクがあります。
 
 ###### スコープの制限によるサービス アカウントの管理
 
+* [サービス アカウントの作成と管理](https://cloud.google.com/iam/docs/creating-managing-service-accounts)
+
 ###### VM インスタンスへのサービス アカウントの割り当て
 
 ###### 別のプロジェクトのサービス アカウントへのアクセス権の付与
 
+* [サービス アカウントへの役割の付与](https://cloud.google.com/iam/docs/granting-roles-to-service-accounts)
+
 ### 5.3 プロジェクトとマネージド サービスの監査ログを表示する。
+
+* [Cloud Audit Logging](https://cloud.google.com/logging/docs/audit/?hl=ja)
