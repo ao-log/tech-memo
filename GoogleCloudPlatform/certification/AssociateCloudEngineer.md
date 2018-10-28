@@ -110,6 +110,11 @@ $ gcloud config set compute/zone us-east1-b
 ###### 負荷分散オプションの差別化
 
 * [負荷分散](https://cloud.google.com/compute/docs/load-balancing/)
+* [HTTPSプロキシ負荷分散の設定](https://cloud.google.com/compute/docs/load-balancing/http/)
+* [SSLプロキシ負荷分散の設定](https://cloud.google.com/compute/docs/load-balancing/tcp-ssl/)
+* [TCPプロキシ負荷分散の設定](https://cloud.google.com/compute/docs/load-balancing/tcp-ssl/tcp-proxy)
+* [内部負荷分散の設定](https://cloud.google.com/compute/docs/load-balancing/internal/)
+* [5 分でわかる内部負荷分散](https://cloud.google.com/files/internal-load-balancing-tutorial-slides.pdf)
 
 ###### 可用性を考慮したネットワーク内のリソース ロケーションの特定
 
@@ -177,6 +182,7 @@ CPU または負荷分散処理能力に基づくスケーリング](https://clo
 
 * [Testing and deploying your application](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app)
 * [gcloud app deploy](https://cloud.google.com/sdk/gcloud/reference/app/deploy)
+* [app.yaml](https://cloud.google.com/appengine/docs/standard/python/config/appref)
 
 ###### Google Cloud イベント（Cloud Pub/Sub イベント、Cloud Storage オブジェクト変更通知イベントなど）を受信する Cloud Function のデプロイ
 
