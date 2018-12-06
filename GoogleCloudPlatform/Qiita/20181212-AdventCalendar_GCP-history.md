@@ -16,61 +16,69 @@
 | Google App Engine | - | 2008/04/07 | [Introducing Google App Engine + our new blog](https://googleappengine.blogspot.com/2008/04/introducing-google-app-engine-our-new.html) |
 | Cloud Storage | preview | 2010/05/19 | [Google Storage for Developers: A Preview](http://googlecode.blogspot.com/2010/05/google-storage-for-developers-preview.html) |
 | BigQuery | preview | 2010/05/19 | [BigQuery and Prediction API: Get more from your data with Google](http://googlecode.blogspot.com/2010/05/bigquery-and-prediction-api-get-more.html) |
+| | GA | 2011/11/14 | [Google BigQuery Service: Big data analytics at Google speed](https://cloudplatform.googleblog.com/2011/11/google-bigquery-service-big-data.html) |
 | Cloud SQL | preview | 2011/10/06 | [Google Cloud SQL: your database in the cloud](http://googlecode.blogspot.com/2011/10/google-cloud-sql-your-database-in-cloud.html) |
 | | GA | 2014/02/11 | [Google Cloud SQL now Generally Available with an SLA, 500GB databases, and encryption](https://cloudplatform.googleblog.com/2014/02/google-cloud-sql-now-generally-available.html) |
 | | 第2世代 | 2016/08/17 | [Cloud SQL Second Generation performance and feature deep dive](https://cloud.google.com/blog/products/gcp/cloud-sql-second-generation-performance-and-feature-deep-dive) |
 | Google Compute Engine | preview | 2012/06/28 | [Google Compute Engine launches, expanding Google’s cloud offerings](https://cloudplatform.googleblog.com/2012/06/google-compute-engine-launches.html) |
 | | GA | 2013/12/2 | [Google Compute Engine is now Generally Available with expanded OS support, transparent maintenance, and lower prices](https://cloudplatform.googleblog.com/2013/12/google-compute-engine-is-now-generally-available.html) |
-| Cloud Datastore | (v1beta1) | 2013/05/15 | [Ushering in the next generation of computing at Google I/O](https://cloudplatform.googleblog.com/2013/05/ushering-in-next-generation-of.html) |
-| | (API v1) | 2016/08/16 | [Google Cloud Datastore serves over 15 trillion queries per month and is ready for more](https://cloud.google.com/blog/products/gcp/google-cloud-datastore-serves-over-15) |
-| Google Container Engine(現: Google Kubernetes Engine) | Alpha | 2014/11/04 | [Unleashing Containers and Kubernetes with Google Container Engine](https://cloudplatform.googleblog.com/2014/11/unleashing-containers-and-kubernetes-with-google-compute-engine.html) |
+| Cloud Datastore | beta | 2013/05/15 | [Ushering in the next generation of computing at Google I/O](https://cloudplatform.googleblog.com/2013/05/ushering-in-next-generation-of.html) |
+| | GA | 2016/08/16 | [Google Cloud Datastore serves over 15 trillion queries per month and is ready for more](https://cloud.google.com/blog/products/gcp/google-cloud-datastore-serves-over-15) |
+| Google Container Engine(現: Google Kubernetes Engine) | alpha | 2014/11/04 | [Unleashing Containers and Kubernetes with Google Container Engine](https://cloudplatform.googleblog.com/2014/11/unleashing-containers-and-kubernetes-with-google-compute-engine.html) |
 | | GA | 2015/08/26 | [Google Container Engine is Generally Available](https://cloudplatform.googleblog.com/2015/08/Google-Container-Engine-is-Generally-Available.html) |
 | Cloud DNS | GA | 2015/04/13 | [Google’s network edge: presence, connectivity and choice for today’s enterprise](https://cloudplatform.googleblog.com/2015/04/Googles-network-edge-presence-connectivity-and-choice-for-todays-enterprise.html) |
-| Cloud BigTable | Beta | 2015/05/06 | [Announcing Google Cloud Bigtable: The same database that powers Google Search, Gmail and Analytics is now available on Google Cloud Platform](https://cloudplatform.googleblog.com/2015/05/introducing-Google-Cloud-Bigtable.html) |
+| Cloud BigTable | beta | 2015/05/06 | [Announcing Google Cloud Bigtable: The same database that powers Google Search, Gmail and Analytics is now available on Google Cloud Platform](https://cloudplatform.googleblog.com/2015/05/introducing-Google-Cloud-Bigtable.html) |
 | | GA | 2016/08/18 | [Google Cloud Bigtable is generally available for petabyte-scale NoSQL workloads](https://cloud.google.com/blog/products/gcp/google-cloud-bigtable-is-generally-available-for-petabyte-scale-nosql-workloads) |
+| Cloud VPN  | GA | 2015/05/20 | - |
+| Container Registry | GA | 2015/06/22 | [Container Engine & Container Registry Updates - New Features & Pricing](https://cloudplatform.googleblog.com/2015/06/Container-Engine-Container-Registry-Updates-New-Features-Pricing.html) |
+| Deployment Manager | GA | 2015/07/22 | - |
 | Cloud Dataflow | GA | 2015/08/12 | [Announcing General Availability of Google Cloud Dataflow and Cloud Pub/Sub](https://cloudplatform.googleblog.com/2015/08/Announcing-General-Availability-of-Google-Cloud-Dataflow-and-Cloud-Pub-Sub.html) |
 | Cloud Pub/Sub | GA | 2015/08/12 | 同上 |
 | HTTP(S) Load Balancing | GA | 2015/10/29 | [Bringing you more flexibility and better Cloud Networking performance, GA of HTTPS Load Balancing and Akamai joins CDN Interconnect](https://cloudplatform.googleblog.com/2015/11/bringing-you-more-flexibility-and-better-Cloud-Networking-performance-GA-of-HTTPS-Load-Balancing-and-Akamai-joins-CDN-Interconnect.html) |
 | Cloud Dataproc | GA | 2016/02/23 | [Google Cloud Dataproc managed Spark and Hadoop service now GA](https://cloud.google.com/blog/products/gcp/google-cloud-dataproc-managed-spark-and-hadoop-service-now-ga) |
 | Cloud Shell | GA | 2016/08/03 | [Cloud Shell now GA, and still free](https://cloud.google.com/blog/products/gcp/cloud-shell-now-ga-and-still-free) |
+| Cloud Natural Language API | GA | 2016/11/15 | [Google Cloud Machine Learning family grows with new API, editions and pricing](https://cloud.google.com/blog/products/gcp/cloud-machine-learning-family-grows-with-new-api-editions-and-pricing) |
 | Internal Load Balancing | GA | 2016/12/08 | [Building scalable private services with Internal Load Balancing](https://cloud.google.com/blog/products/gcp/building-scalable-private-services-with-internal-load-balancing) |
-| Cloud Spanner | GA | 2017/02/14 | [Introducing Cloud Spanner: a global database service for mission-critical applications](https://cloud.google.com/blog/products/gcp/introducing-cloud-spanner-a-global-database-service-for-mission-critical-applications) |
-| Cloud Functions | Beta | 2017/03/09 | [Google Cloud Functions: a serverless environment to build and connect cloud services](https://cloud.google.com/blog/products/gcp/google-cloud-functions-a-serverless-environment-to-build-and-connect-cloud-services_13) |
+| Cloud Spanner | beta | 2017/02/14 | [Introducing Cloud Spanner: a global database service for mission-critical applications](https://cloud.google.com/blog/products/gcp/introducing-cloud-spanner-a-global-database-service-for-mission-critical-applications) |
+| | GA | 2017/05/16 | [Cloud Spanner is now production-ready; let the migrations begin!](https://cloud.google.com/blog/products/gcp/cloud-spanner-is-now-production-ready-let-the-migrations-begin) |
+| Cloud Container Builder(現: Cloud Build) | GA | 2017/03/06 | [Google Cloud Container Builder: a fast and flexible way to package your software](https://cloud.google.com/blog/products/gcp/google-cloud-container-builder-a-fast-and-flexible-way-to-package-your-software) |
+| Cloud ML Engine | GA | 2017/03/08 | - |
+| Cloud Functions | beta | 2017/03/09 | [Google Cloud Functions: a serverless environment to build and connect cloud services](https://cloud.google.com/blog/products/gcp/google-cloud-functions-a-serverless-environment-to-build-and-connect-cloud-services_13) |
 | | GA | 2018/07/19 | [Bringing the best of serverless to you](https://cloudplatform.googleblog.com/2018/07/bringing-the-best-of-serverless-to-you.html) |
 | Cloud KMS | GA | 2017/03/16 | [Cloud KMS GA, new partners expand encryption options](https://cloud.google.com/blog/products/gcp/cloud-kms-ga-new-partners-expand-encryption-options) |
+| Cloud Speech-to-Text API | GA | 2017/04/18 | [Cloud Speech API is now generally available](https://cloud.google.com/blog/products/gcp/cloud-speech-api-is-now-generally-available) |
+| Cloud Vision API | GA | 2017/05/18 | - |
 | Cloud Source Repositories | GA | 2017/05/25 | [Cloud Source Repositories: now GA and free for up to five users and 50GB of storage](https://cloud.google.com/blog/products/gcp/cloud-source-repositories-now-ga-and-free-for-up-to-five-users-and-50gb-of-storage) |
-| Cloud Firestore | Beta | 2017/10/03 | [Introducing Cloud Firestore: Our New Document Database for Apps](https://firebase.googleblog.com/2017/10/introducing-cloud-firestore.html)
+| Cloud Firestore | beta | 2017/10/03 | [Introducing Cloud Firestore: Our New Document Database for Apps](https://firebase.googleblog.com/2017/10/introducing-cloud-firestore.html)
 | Cloud Interconnect | GA | 2017/10/23 | [Google Cloud Dedicated Interconnect gets global routing, more locations, and is GA](https://cloud.google.com/blog/products/gcp/google-cloud-dedicated-interconnect-gets-global-routing-more-locations-and-is-ga) |
+| Video Intelligence API | GA | 2017/11/30 | - |
+| Cloud TPU | beta | 2018/02/12 | [Cloud TPU machine learning accelerators now available in beta](https://cloud.google.com/blog/products/gcp/cloud-tpu-machine-learning-accelerators-now-available-in-beta) |
+| | GA | 2018/06/27 | - |
+|  | v2 GA<br>v3 alpha | 2018/08/31 | [What makes TPUs fine-tuned for deep learning?](https://cloud.google.com/blog/products/ai-machine-learning/what-makes-tpus-fine-tuned-for-deep-learning)
+| | v3 beta | 2018/10/10 | - |
 | Cloud IoT Core | GA | 2018/02/21 | [The thing is . . . Cloud IoT Core is now generally available](https://cloud.google.com/blog/products/gcp/the-thing-is-cloud-iot-core-is-now-generally-available) |
-| Cloud Vision API | GA | 2018/07/19 | [What a week! 105 announcements from Google Cloud Next '18](https://cloud.google.com/blog/topics/inside-google-cloud/what-week-105-announcements-google-cloud-next-18) |
-| Cloud Text-to-Speech | Beta | 同上 | 同上 |
-| Cloud Composer | GA | 同上 | 同上 |
-| Cloud TPU v3 | Alpha | 同上 | 同上 |
-| Managed Istio | Alpha | 同上 | 同上 |
-| Cloud Build | GA | 同上 | 同上 |
+| Dialogflow Enterprise Edition | GA | 2018/04/17 | [Dialogflow Enterprise Edition is now generally available](https://cloud.google.com/blog/products/gcp/dialogflow-enterprise-edition-is-now-generally-available) |
+| Cloud Composer | GA | 2018/07/19 | [What a week! 105 announcements from Google Cloud Next '18](https://cloud.google.com/blog/topics/inside-google-cloud/what-week-105-announcements-google-cloud-next-18) |
+| Managed Istio | alpha | 同上 | 同上 |
+| Cloud Talent Solution | GA | 2018/08/03 | - |
+| Cloud Text-to-Speech API | GA | 2018/08/28 | [Announcing updates to Cloud Speech-to-Text and the general availability of Cloud Text-to-Speech](https://cloud.google.com/blog/products/ai-machine-learning/announcing-updates-to-cloud-speech-to-text-and-general-availability-of-cloud-text-to-speech) |
 | Cloud Memorystore for Redis | GA | 2018/09/19 | [Announcing general availability of Cloud Memorystore for Redis](https://cloud.google.com/blog/products/databases/announcing-general-availability-of-cloud-memorystore-for-redis) |
 
 
 
-2017/04/07
-[Cloud Translation API Neural Machine Translation enters GA and adds more languages](https://cloud.google.com/blog/products/gcp/cloud-translation-api-adds-more-languages-and-neural-machine-translation-enters-ga)
 
 * DataStudio
 * Cloud Datalab
-* Deployment Manager
-* Cloud Machine Learning
 * Cloud Dataprep
 * Cloud Identity-Aware Proxy
-
 * Cloud Armor
 * Cloud AutoML
 * Cloud Services Platform
-* BigQuery ML
-
-* TPU
+* Translation API
 * Cloud IAM
 * Stackdriver
-* VPC
+
+オライリー本
 
 ### Wiki
 
