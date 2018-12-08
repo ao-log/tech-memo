@@ -36,49 +36,45 @@
 | Cloud Pub/Sub | GA | 2015/08/12 | 同上 |
 | HTTP(S) Load Balancing | GA | 2015/10/29 | [Bringing you more flexibility and better Cloud Networking performance, GA of HTTPS Load Balancing and Akamai joins CDN Interconnect](https://cloudplatform.googleblog.com/2015/11/bringing-you-more-flexibility-and-better-Cloud-Networking-performance-GA-of-HTTPS-Load-Balancing-and-Akamai-joins-CDN-Interconnect.html) |
 | Cloud Dataproc | GA | 2016/02/23 | [Google Cloud Dataproc managed Spark and Hadoop service now GA](https://cloud.google.com/blog/products/gcp/google-cloud-dataproc-managed-spark-and-hadoop-service-now-ga) |
+| Cloud IAM | beta | 2016/03/24 | [How Google is bringing cloud computing innovation to the enterprise](https://cloud.google.com/blog/products/gcp/how-google-is-bringing-cloud-computing-innovation-to-the-enterprise) |
 | Cloud Shell | GA | 2016/08/03 | [Cloud Shell now GA, and still free](https://cloud.google.com/blog/products/gcp/cloud-shell-now-ga-and-still-free) |
+| Stackdriver Logging | GA | 2016/10/20 | [Google Stackdriver is now generally available for hybrid cloud monitoring, logging and diagnostics](https://cloud.google.com/blog/products/gcp/google-stackdriver-generally-available) |
 | Cloud Natural Language API | GA | 2016/11/15 | [Google Cloud Machine Learning family grows with new API, editions and pricing](https://cloud.google.com/blog/products/gcp/cloud-machine-learning-family-grows-with-new-api-editions-and-pricing) |
 | Internal Load Balancing | GA | 2016/12/08 | [Building scalable private services with Internal Load Balancing](https://cloud.google.com/blog/products/gcp/building-scalable-private-services-with-internal-load-balancing) |
 | Cloud Spanner | beta | 2017/02/14 | [Introducing Cloud Spanner: a global database service for mission-critical applications](https://cloud.google.com/blog/products/gcp/introducing-cloud-spanner-a-global-database-service-for-mission-critical-applications) |
 | | GA | 2017/05/16 | [Cloud Spanner is now production-ready; let the migrations begin!](https://cloud.google.com/blog/products/gcp/cloud-spanner-is-now-production-ready-let-the-migrations-begin) |
 | Cloud Container Builder(現: Cloud Build) | GA | 2017/03/06 | [Google Cloud Container Builder: a fast and flexible way to package your software](https://cloud.google.com/blog/products/gcp/google-cloud-container-builder-a-fast-and-flexible-way-to-package-your-software) |
-| Cloud ML Engine | GA | 2017/03/08 | - |
 | Cloud Functions | beta | 2017/03/09 | [Google Cloud Functions: a serverless environment to build and connect cloud services](https://cloud.google.com/blog/products/gcp/google-cloud-functions-a-serverless-environment-to-build-and-connect-cloud-services_13) |
 | | GA | 2018/07/19 | [Bringing the best of serverless to you](https://cloudplatform.googleblog.com/2018/07/bringing-the-best-of-serverless-to-you.html) |
+| Cloud Datalab | GA | 2017/03/10 | [100 announcements (!) from Google Cloud Next '17](https://www.blog.google/products/google-cloud/100-announcements-google-cloud-next-17/) |
+| Cloud Machine Learning Engine | GA | 2017/03/08 | 同上 |
 | Cloud KMS | GA | 2017/03/16 | [Cloud KMS GA, new partners expand encryption options](https://cloud.google.com/blog/products/gcp/cloud-kms-ga-new-partners-expand-encryption-options) |
+| Translation API | GA | 2017/04/06 | - |
 | Cloud Speech-to-Text API | GA | 2017/04/18 | [Cloud Speech API is now generally available](https://cloud.google.com/blog/products/gcp/cloud-speech-api-is-now-generally-available) |
 | Cloud Vision API | GA | 2017/05/18 | - |
 | Cloud Source Repositories | GA | 2017/05/25 | [Cloud Source Repositories: now GA and free for up to five users and 50GB of storage](https://cloud.google.com/blog/products/gcp/cloud-source-repositories-now-ga-and-free-for-up-to-five-users-and-50gb-of-storage) |
+| Cloud Identity-Aware Proxy | GA | 2017/08/31 | [Cloud Identity-Aware Proxy: a simple and more secure way to manage application access](https://cloud.google.com/blog/products/gcp/cloud-identity-aware-proxy-a-more-secure-way-to-move-internal-apps-to-gcp) |
 | Cloud Firestore | beta | 2017/10/03 | [Introducing Cloud Firestore: Our New Document Database for Apps](https://firebase.googleblog.com/2017/10/introducing-cloud-firestore.html)
 | Cloud Interconnect | GA | 2017/10/23 | [Google Cloud Dedicated Interconnect gets global routing, more locations, and is GA](https://cloud.google.com/blog/products/gcp/google-cloud-dedicated-interconnect-gets-global-routing-more-locations-and-is-ga) |
 | Video Intelligence API | GA | 2017/11/30 | - |
+| Cloud AutoML | alpha | 2018/01/17 | [Cloud AutoML: Making AI accessible to every business](https://cloud.google.com/blog/topics/inside-google-cloud/cloud-automl-making-ai-accessible-every-business) |
+| | beta | 2018/07/19 | - |
 | Cloud TPU | beta | 2018/02/12 | [Cloud TPU machine learning accelerators now available in beta](https://cloud.google.com/blog/products/gcp/cloud-tpu-machine-learning-accelerators-now-available-in-beta) |
 | | GA | 2018/06/27 | - |
 |  | v2 GA<br>v3 alpha | 2018/08/31 | [What makes TPUs fine-tuned for deep learning?](https://cloud.google.com/blog/products/ai-machine-learning/what-makes-tpus-fine-tuned-for-deep-learning)
 | | v3 beta | 2018/10/10 | - |
 | Cloud IoT Core | GA | 2018/02/21 | [The thing is . . . Cloud IoT Core is now generally available](https://cloud.google.com/blog/products/gcp/the-thing-is-cloud-iot-core-is-now-generally-available) |
+| Cloud Armor | beta | 2018/03/19 | [Introducing new ways to protect and control your GCP services and data](https://cloud.google.com/blog/products/gcp/introducing-new-ways-to-protect-and-control-your-gcp-services-and-data) |
+| Cloud Data Loss Prevention (DLP) API | GA | 2018/03/21 | [Take charge of your sensitive data with the Cloud Data Loss Prevention (DLP) API](https://cloud.google.com/blog/products/gcp/take-charge-of-your-sensitive-data-with-the-cloud-dlp-api) |
 | Dialogflow Enterprise Edition | GA | 2018/04/17 | [Dialogflow Enterprise Edition is now generally available](https://cloud.google.com/blog/products/gcp/dialogflow-enterprise-edition-is-now-generally-available) |
 | Cloud Composer | GA | 2018/07/19 | [What a week! 105 announcements from Google Cloud Next '18](https://cloud.google.com/blog/topics/inside-google-cloud/what-week-105-announcements-google-cloud-next-18) |
 | Managed Istio | alpha | 同上 | 同上 |
 | Cloud Talent Solution | GA | 2018/08/03 | - |
 | Cloud Text-to-Speech API | GA | 2018/08/28 | [Announcing updates to Cloud Speech-to-Text and the general availability of Cloud Text-to-Speech](https://cloud.google.com/blog/products/ai-machine-learning/announcing-updates-to-cloud-speech-to-text-and-general-availability-of-cloud-text-to-speech) |
 | Cloud Memorystore for Redis | GA | 2018/09/19 | [Announcing general availability of Cloud Memorystore for Redis](https://cloud.google.com/blog/products/databases/announcing-general-availability-of-cloud-memorystore-for-redis) |
-
-
-
-
-* DataStudio
-* Cloud Datalab
-* Cloud Dataprep
-* Cloud Identity-Aware Proxy
-* Cloud Armor
-* Cloud AutoML
-* Cloud Services Platform
-* Translation API
-* Cloud IAM
-* Stackdriver
-
-オライリー本
+| Data Studio | GA | 2018/09/21 | [Unlock insights with ease: Data Studio and Cloud Dataprep are now generally available](https://cloud.google.com/blog/products/data-analytics/unlock-insights-with-ease-data-studio-and-cloud-dataprep-are-now-generally-available) |
+| Cloud Dataprep | GA | 2018/09/21 | 同上 |
+| Cloud Security Command Center | beta | 2018/12/05 | [Cloud Security Command Center is now in beta and ready to use](https://cloud.google.com/blog/products/identity-security/cloud-security-command-center-is-now-in-beta) |
 
 ### Wiki
 
