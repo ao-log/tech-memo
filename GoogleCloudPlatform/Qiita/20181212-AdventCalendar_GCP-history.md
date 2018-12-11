@@ -191,6 +191,7 @@ Cloud Armor は DDoS 攻撃への防御や IP アドレスベースのフィル�
 
 自分の GCP プロジェクトに対してセキュリティの診断をし、可視化してくれるサービスのようです。
 
+* [Cloud Security Command Center をベータ リリース](https://cloudplatform-jp.googleblog.com/2018/12/cloud-security-command-center-is-now-in-beta.html)
 * [Cloud Security Command Center で GCP 環境をモニタリング](https://cloudplatform-jp.googleblog.com/2018/05/monitor-your-GCP-environment-with-Cloud-Security-Command-Center.html)
 
 ### Cloud DLP API
@@ -532,70 +533,61 @@ Google 社内での歴史からユースケースまで書かれています。
 
 ## ネットワーク
 
-#### 概要
+### 概要
 
-[Cloud OnAir 番組レポート :Google Networking Deep Dive](https://cloudplatform-jp.googleblog.com/2018/08/Cloud-OnAir-20180809-Google-Networking-Deep-Dive.html)
+* [Cloud OnAir 番組レポート :Google Networking Deep Dive](https://cloudplatform-jp.googleblog.com/2018/08/Cloud-OnAir-20180809-Google-Networking-Deep-Dive.html)
 
-#### Google が擁するインフラ
+### 設計ガイド
 
-[LA - 香港間を 120 Tbps で結ぶ海底ケーブル システムを構築へ](https://cloudplatform-jp.googleblog.com/2016/10/la-120-tbps.html)
+* [一から学べる Google Cloud Networking リファレンス ガイド](https://cloudplatform-jp.googleblog.com/2016/10/google-cloud-networking_4.html)
 
-[アジアで Google へのアクセスがより速く : FASTER - 台湾間の新海底ケーブルが開通](https://cloudplatform-jp.googleblog.com/2016/09/google-faster.html)
+### 海底ケーブル
 
-[新リージョンと海底ケーブルの増設でグローバル インフラストラクチャを拡張](https://cloudplatform-jp.googleblog.com/2018/01/expanding-our-global-infrastructure-new-regions-and-subsea-cables.html)
+* [LA - 香港間を 120 Tbps で結ぶ海底ケーブル システムを構築へ](https://cloudplatform-jp.googleblog.com/2016/10/la-120-tbps.html)
+* [アジアで Google へのアクセスがより速く : FASTER - 台湾間の新海底ケーブルが開通](https://cloudplatform-jp.googleblog.com/2016/09/google-faster.html)
+* [新リージョンと海底ケーブルの増設でグローバル インフラストラクチャを拡張](https://cloudplatform-jp.googleblog.com/2018/01/expanding-our-global-infrastructure-new-regions-and-subsea-cables.html)
 
-[GCP のイントラゾーン レイテンシを 40 % 低減する Andromeda 2.1](https://cloudplatform-jp.googleblog.com/2017/11/Andromeda-2-1-reduces-GCPs-intra-zone-latency-by-40-percent.html)
+### ネットワークインフラの技術
 
-[データセンター ネットワークに対する Google の取り組み - 最新世代の Jupiter を紹介](https://cloudplatform-jp.googleblog.com/2015/06/google-jupiter.html)
+* [GCP のイントラゾーン レイテンシを 40 % 低減する Andromeda 2.1](https://cloudplatform-jp.googleblog.com/2017/11/Andromeda-2-1-reduces-GCPs-intra-zone-latency-by-40-percent.html)
+* [データセンター ネットワークに対する Google の取り組み - 最新世代の Jupiter を紹介](https://cloudplatform-jp.googleblog.com/2015/06/google-jupiter.html)
 
-#### 設計ガイド
+### HTTP/2
 
-[一から学べる Google Cloud Networking リファレンス ガイド](https://cloudplatform-jp.googleblog.com/2016/10/google-cloud-networking_4.html)
-
-[内部負荷分散によるスケーラブルなプライベート サービスの構築](https://cloudplatform-jp.googleblog.com/2016/12/blog-post.html)
-
-[Google Cloud CDN が CDN Interconnect に加わり、ユーザーに選択肢を提供](https://cloudplatform-jp.googleblog.com/2017/03/Google-Cloud-CDN-joins-CDN-Interconnect-providers-delivering-choice-to-users.html)
-
-#### VPC
-
-[Cloud VPC のファイアウォール管理をサービス アカウントで簡素化](https://cloudplatform-jp.googleblog.com/2018/01/simplify-Cloud-VPC-firewall-management-with-service-accounts.html)
-
-[ファイアウォール ルールを堅固にする 3 つの方法](https://cloudplatform-jp.googleblog.com/2018/01/three-ways-to-configure-robust-firewall-rules.html)
-
-[VPC の VM インスタンスで複数のネットワーク インターフェースをサポート](https://cloudplatform-jp.googleblog.com/2017/10/with-multiple-network-interfaces-connect-third-party-devices-to-GCP-workloads.html)
-
-[Shared VPC : 複数プロジェクトにまたがる仮想ネットワークを一元管理](https://cloudplatform-jp.googleblog.com/2017/06/getting-started-with-shared-VPC.html)
-
-[Google VPC を特徴づける 4 つのキーワード](https://cloudplatform-jp.googleblog.com/2017/07/reimagining-virtual-private-clouds.html)
-
-#### Cloud NAT
-
-[Cloud NAT : ソフトウェア定義型の新しいネットワーク アドレス変換サービス](https://cloudplatform-jp.googleblog.com/2018/10/cloud-nat-deep-dive-into-our-new-network-address-translation-service.html)
-
-#### Dedicated Interconnect
-
-[Dedicated Interconnect : Google Cloud に高速でプライベート接続](https://cloudplatform-jp.googleblog.com/2017/10/announcing-dedicated-interconnect-your-fast-private-on-ramp-to-Google-Cloud.html)
-
-[グローバル ルーティングや新ロケーションをサポートした Dedicated Interconnect を正式リリース](https://cloudplatform-jp.googleblog.com/2017/11/Google-Cloud-Dedicated-Interconnect-gets-global-routing-more-locations-and-is-GA.html)
+* [HTTP/2 で Google Cloud Platform もより早く](https://cloudplatform-jp.googleblog.com/2015/10/http2-google-cloud-platform.html)
 
 
-[Network Service Tiers をアルファ リリース : クラウド ネットワークの選択が可能に](https://cloudplatform-jp.googleblog.com/2017/09/introducing-Network-Service-Tiers-your-cloud-network-your-way.html)
+### ロードバランサ
 
+* [GCP を支えるロードバランサの設計を公開](https://cloudplatform-jp.googleblog.com/2016/03/gcp.html)
+* [内部負荷分散によるスケーラブルなプライベート サービスの構築](https://cloudplatform-jp.googleblog.com/2016/12/blog-post.html)
 
-[GCP プライベート ネットワークの柔軟性を高める拡張可能なサブネットワーク](https://cloudplatform-jp.googleblog.com/2016/09/gcp.html)
+### VPC
 
+* [Cloud VPC のファイアウォール管理をサービス アカウントで簡素化](https://cloudplatform-jp.googleblog.com/2018/01/simplify-Cloud-VPC-firewall-management-with-service-accounts.html)
+* [Google VPC を特徴づける 4 つのキーワード](https://cloudplatform-jp.googleblog.com/2017/07/reimagining-virtual-private-clouds.html)
+* [Shared VPC : 複数プロジェクトにまたがる仮想ネットワークを一元管理](https://cloudplatform-jp.googleblog.com/2017/06/getting-started-with-shared-VPC.html)
+* [GCP プライベート ネットワークの柔軟性を高める拡張可能なサブネットワーク](https://cloudplatform-jp.googleblog.com/2016/09/gcp.html)
+* [VPC の VM インスタンスで複数のネットワーク インターフェースをサポート](https://cloudplatform-jp.googleblog.com/2017/10/with-multiple-network-interfaces-connect-third-party-devices-to-GCP-workloads.html)
+* [ファイアウォール ルールを堅固にする 3 つの方法](https://cloudplatform-jp.googleblog.com/2018/01/three-ways-to-configure-robust-firewall-rules.html)
 
-[GCP を支えるロードバランサの設計を公開](https://cloudplatform-jp.googleblog.com/2016/03/gcp.html)
+### Cloud NAT
 
+* [Cloud NAT : ソフトウェア定義型の新しいネットワーク アドレス変換サービス](https://cloudplatform-jp.googleblog.com/2018/10/cloud-nat-deep-dive-into-our-new-network-address-translation-service.html)
 
+### Dedicated Interconnect
 
-[HTTP/2 で Google Cloud Platform もより早く](https://cloudplatform-jp.googleblog.com/2015/10/http2-google-cloud-platform.html)
+* [Dedicated Interconnect : Google Cloud に高速でプライベート接続](https://cloudplatform-jp.googleblog.com/2017/10/announcing-dedicated-interconnect-your-fast-private-on-ramp-to-Google-Cloud.html)
+* [グローバル ルーティングや新ロケーションをサポートした Dedicated Interconnect を正式リリース](https://cloudplatform-jp.googleblog.com/2017/11/Google-Cloud-Dedicated-Interconnect-gets-global-routing-more-locations-and-is-GA.html)
 
-[CDN Interconnect でアカマイとの連携が実現する、企業の接続性とパフォーマンスの向上](https://cloudplatform-jp.googleblog.com/2015/11/cdn-interconnect.html)
+### CDN Interconnect
 
-[うるう秒への対応も万全 : 新しい パブリック NTP サーバーを公開](https://cloudplatform-jp.googleblog.com/2016/12/ntp.html)
+* [Google Cloud CDN が CDN Interconnect に加わり、ユーザーに選択肢を提供](https://cloudplatform-jp.googleblog.com/2017/03/Google-Cloud-CDN-joins-CDN-Interconnect-providers-delivering-choice-to-users.html)
+* [CDN Interconnect でアカマイとの連携が実現する、企業の接続性とパフォーマンスの向上](https://cloudplatform-jp.googleblog.com/2015/11/cdn-interconnect.html)
 
+### Network Service Tiers
 
+* [Network Service Tiers をアルファ リリース : クラウド ネットワークの選択が可能に](https://cloudplatform-jp.googleblog.com/2017/09/introducing-Network-Service-Tiers-your-cloud-network-your-way.html)
 
 ## 機械学習
 
@@ -668,7 +660,6 @@ Publickey の記事ですが、TPU 3.0 は液冷のようです。冷却効率�
 * [Compute Engine と Cloud Machine Learning で GPU が利用可能に](https://cloudplatform-jp.googleblog.com/2017/03/GPUs-are-now-available-for-Google-Compute-Engine-and-Cloud-Machine-Learning.html)
 * [クラウド GPU が 2017 年から利用可能に](https://cloudplatform-jp.googleblog.com/2016/11/gpu-2017.html)
 * [通常の半額で使用できるプリエンプティブル GPU](https://cloudplatform-jp.googleblog.com/2018/01/introducing-preemptible-gpus-50-off.html)
-
 
 ### Dialogflow
 
