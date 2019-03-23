@@ -28,7 +28,7 @@ $ export GOOGLE_APPLICATION_CREDENTIALS=JSONへのパス
 
 ```
 $ gcloud auth activate-service-account \      
-    storage-admin@aoao22pj.iam.gserviceaccount.com \
+    storage-admin@DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
     --key-file=JSONへのパス
 ```
 
