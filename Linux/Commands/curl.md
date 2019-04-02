@@ -1,3 +1,10 @@
+### ヘッダ確認
+
+```
+curl --verbose https://example.com > /dev/null
+```
+
+
 ### JSON を POST
 
 ```
