@@ -10,41 +10,41 @@
       <canvas id="myBar"></canvas>
     </div>
     <script>
-        var barChartData = {
-            labels: ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
-			datasets: [{
-                label: 'Group A',
-                backgroundColor: 'rgba(0, 0, 200, 0.3)',
-                data: [16, 16, 16, 16, 16, 32, 16]
-            }, {
-                label: 'Group B',
-                backgroundColor: 'rgba(0, 200, 0, 0.3)',
-                data: [0, 0, 0, 16, 16, 0, 0]
-            }]
-        };
+      var barChartData = {
+        labels: ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
+        datasets: [{
+          label: 'Group A',
+          backgroundColor: 'rgba(0, 0, 200, 0.3)',
+          data: [16, 16, 16, 16, 16, 32, 16]
+        }, {
+          label: 'Group B',
+          backgroundColor: 'rgba(0, 200, 0, 0.3)',
+          data: [0, 0, 0, 16, 16, 0, 0]
+        }]
+      };
 
-	    var ctx = document.getElementById('myBar');
-		var myBar = new Chart(ctx, {
-			type: 'bar',
-			data: barChartData,
-			options: {
-				title: {
-					display: true,
-					text: 'Chart.js Bar Chart - Stacked'
-				},
-				responsive: true,
-				scales: {
-					xAxes: [{
-						stacked: true,
-                        barPercentage: 1,
-                        categoryPercentage: 1,
-					}],
-					yAxes: [{
-						stacked: true
-					}]
-				}
-			}
-		});
+      var ctx = document.getElementById('myBar');
+      var myBar = new Chart(ctx, {
+        type: 'bar',
+        data: barChartData,
+        options: {
+          title: {
+            display: true,
+            text: 'Chart.js Bar Chart - Stacked'
+          },
+          responsive: true,
+          scales: {
+            xAxes: [{
+              stacked: true,
+              barPercentage: 1,
+              categoryPercentage: 1,
+            }],
+            yAxes: [{
+              stacked: true
+            }]
+          }
+        }
+      });
     </script>
   </body>
 </html>
