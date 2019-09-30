@@ -21,9 +21,9 @@ def test_passwd_file(host):
 ```
 $ py.test -v test_myinfra.py
 ======================== test session starts ========================
-platform linux -- Python 3.6.6, pytest-3.9.3, py-1.7.0, pluggy-0.8.0 -- /home/k-aono/test/bin/python36
+platform linux -- Python 3.6.6, pytest-3.9.3, py-1.7.0, pluggy-0.8.0 -- /home/xxxx/test/bin/python36
 cachedir: .pytest_cache
-rootdir: /home/k-aono/testinfra, inifile:
+rootdir: /home/xxxx/testinfra, inifile:
 plugins: testinfra-1.17.0
 collected 1 item                                                    
 
@@ -37,9 +37,9 @@ test_myinfra.py::test_passwd_file[local] PASSED               [100%]
 ```
 $ py.test -v test_myinfra.py
 ======================== test session starts ========================
-platform linux -- Python 3.6.6, pytest-3.9.3, py-1.7.0, pluggy-0.8.0 -- /home/k-aono/test/bin/python36
+platform linux -- Python 3.6.6, pytest-3.9.3, py-1.7.0, pluggy-0.8.0 -- /home/xxxx/test/bin/python36
 cachedir: .pytest_cache
-rootdir: /home/k-aono/testinfra, inifile:
+rootdir: /home/xxxx/testinfra, inifile:
 plugins: testinfra-1.17.0
 collected 3 items                                                   
 
@@ -72,6 +72,6 @@ E        +  where False = <service nginx>.is_running
 test_myinfra.py:15: AssertionError
 ================ 2 failed, 1 passed in 0.14 seconds =================
 
-(test) [k-aono@instance-1 testinfra]$ echo $?
+(test) [xxxx@instance-1 testinfra]$ echo $?
 1
 ```
