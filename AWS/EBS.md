@@ -29,5 +29,5 @@ gp2 はデフォルトのボリュームタイプ。IOPS をバーストする�
 
 # 参考
 
-* [AWS Black Belt Online Seminar] Amazon EBS 資料及び QA 公開](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ebs-2019/)
+* [AWS Black Belt Online Seminar Amazon EBS 資料及び QA 公開](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ebs-2019/)
 * [EBS ドキュメント](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/AmazonEBS.html)

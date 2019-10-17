@@ -2,9 +2,8 @@
 
 ## 特徴
 
-* 管理者権限を使える
+* インスタンス内で管理者権限を使える
 * 課金は秒単位
-* AMD, ARM ベースのプロセッサを選択可能
 * AWS CLI で制御可能
 
 ## システム基盤
@@ -53,7 +52,7 @@ T2, T3 が該当。CPU クレジットを消費する方式。
 
 #### A1 インスタンス
 
-マイクロサービス、Web サーバなど多数の小規模インスタンスを使用する用途に最適。
+ARM プロセッサ。マイクロサービス、Web サーバなど多数の小規模インスタンスを使用する用途に最適。
 
 ## CPU
 
@@ -83,7 +82,7 @@ T2, T3 が該当。CPU クレジットを消費する方式。
 
 #### EBS
 
-* EBS 最適化オプションは EBS 専用の帯域を確保できるオプション。
+* EBS 最適化オプションは EBS への IO は専用の帯域で通信できるオプション。
 * EBS-Backed インスタンス、Instance store-backed の二種類がある。EBS-Backed が推奨。
 
 https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/RootDeviceStorage.html
