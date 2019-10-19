@@ -6,17 +6,22 @@
 * 課金は秒単位
 * AWS CLI で制御可能
 
+## リージョン、AZ
+
+[リージョンとアベイラビリティーゾーン](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
+
+AZ は us-east-1a のような識別子で表される。どの AZ に紐づくかは AWS アカウントによって異なる。AZ を特定するには use1-az1 のように表される AZ-ID を使用する。
+
 ## システム基盤
 
-AWS Nitro System。
+[Nitro Hypervisor](https://aws.amazon.com/jp/ec2/faqs/#Nitro_Hypervisor)
+
 C5, M5, R5 などの最新インスタンスは EC2 ソフトウェアスタック全体を専用ハードウェアへオフロード。
 C4, M4, R4 より前は Xen ベースのハイパーバイザー。
 
-https://aws.amazon.com/jp/ec2/faqs/#Nitro_Hypervisor
-
 ## インスタンスタイプ
 
-https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/instance-types.html
+[インスタンスタイプ](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/instance-types.html)
 
 * リージョンによって選択できるインスタンスタイプは異なる
 
@@ -38,9 +43,9 @@ c5d.xlarge
 
 #### 追加機能
 
-d: インスタンスストアを付加(NVMe SSD)
-n: ネットワーク強化
-a: AMD の CPU を搭載
+* d: インスタンスストアを付加(NVMe SSD)
+* n: ネットワーク強化
+* a: AMD の CPU を搭載
 
 #### ベアメタル
 
@@ -78,40 +83,63 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 
 ## ストレージ
 
-* インスタンスストアは stop すると消える。無料で利用可能。
-
-#### EBS
+### EBS
 
 * EBS 最適化オプションは EBS への IO は専用の帯域で通信できるオプション。
 * EBS-Backed インスタンス、Instance store-backed の二種類がある。EBS-Backed が推奨。
 
 https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/RootDeviceStorage.html
 
-#### AMI
+### インスタンスストア
 
-https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/AMIs.html
+揮発性のストレージ。起動時のみアタッチ可能。起動後はアタッチ不可。無料で使える。
 
-* OS 起動に必要なイメージ。別リージョンにコピー可能。
+
+### AMI
+
+[Amazon マシンイメージ (AMI)](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/AMIs.html)
+
+#### 概要
+
+* OS 起動に必要なイメージ。
+* リージョン単位で保存される。
+
+#### AMI に含まれている情報
+
+* EBS スナップショット
+* 特定の AWS アカウントへの起動許可
+* インスタンス起動のデバイスマッピング
+
+#### 備考
+
 * Nitro Hypervisor では、ENA, NVMe ドライバがないと OS 起動に失敗する
+
+## インスタンスのライフサイクル
+
+[インスタンスのライフサイクル](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)
+
+リタイアという状態がある。ハード側で回復不可能な障害が検知された場合、予定されたリタイア日に強制的に停止または削除される。
+
 
 ## インスタンスの配置
 
 #### 専有オプション
 
-* ハードウェア専有インスタンス: インスタンスあたりの課金。
-* Dedicated Hosts: 物理ホストへのインスタンス配置が可能。ライセンス持ち込み可能。ホストあたりの課金。
-* キャパシティ予約: 予約した分のリソースがほぼ確実に使える。
+|項目|説明|
+|---|---|
+| [ハードウェア専有インスタンス](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/dedicated-instance.html) | インスタンスあたりの課金。 |
+| [Dedicated Hosts](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/dedicated-hosts-overview.html) | 物理ホストへのインスタンス配置が可能。ライセンス持ち込み可能。ホストあたりの課金。 |
+| [キャパシティ予約](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-capacity-reservations.html) | 予約した分のリソースがほぼ確実に使える。 |
 
 #### プレイスメントグループ
 
-https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/placement-groups.html
+[プレイスメントグループ](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/placement-groups.html)
 
-* Cluster: 密な場所に配置。広帯域、低レイテンシが求められるワークロードに。
-* Spread: EC2 インスタンスを別々の物理ホストに分散して配置。
-
-#### パーティションプレイスメントグループ
-
-複数のインスタンスを一つのパーティションにグループ化し、パーティションごとに分散してインスタンスを配置。
+|項目|説明|
+|---|---|
+| Cluster | 密な場所に配置。広帯域、低レイテンシが求められるワークロードに。 |
+| Spread | EC2 インスタンスを別々の物理ホストに分散して配置。 |
+| パーティションプレイスメントグループ | 複数のインスタンスを一つのパーティションにグループ化し、パーティションごとに分散してインスタンスを配置。 |
 
 ## 運用
 
@@ -122,9 +150,30 @@ https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/placement-groups.html
 
 #### 便利機能
 
-* User Data: 起動時にスクリプトを実行する。
-* 起動テンプレート: 起動時の設定をテンプレ化。Auto Scaling などで使用できる。
-* インスタンスメタデータ: 自インスタンスの情報を採取。次のアドレス「http://169.254.169.254/latest/meta-data」にアクセスすることで採取できる。
+|項目|説明|
+|---|---|
+| [ユーザーデータ](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/user-data.html) | 起動時にスクリプトを実行する。 |
+| 起動テンプレート | 起動時の設定をテンプレ化。Auto Scaling などで使用できる。 |
+| インスタンスメタデータ | 自インスタンスの情報を採取。次のアドレス「http://169.254.169.254/latest/meta-data」にアクセスすることで採取できる。 |
+
+## ベストプラクティス
+
+[ベストプラクティス](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-best-practices.html)
+
+#### セキュリティ
+
+* IAM で EC2 インスタンスへのアクセスを制御
+* セキュリティグループで制限
+* パスワードログインを禁止
+
+#### バックアップ & リストア
+
+* スナップショット、AMI の作成
+
+## トラブルシューティング
+
+[インスタンスのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-instance-troubleshoot.html)
+
 
 ## 課金
 
