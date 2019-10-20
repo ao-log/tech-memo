@@ -35,10 +35,11 @@
 ## ALB
 
 * プロトコルは HTTP、HTTPS、ポートは 1 ～ 65535 をサポート。詳細は、[リスナー設定](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-listeners.html) を参照。
+* URL パスベースのルーティングをサポート。リスナールールの詳細は、[リスナールール](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-listeners.html#listener-rules) を参照。
+* WebSocket、HTTP/2 のサポート
 * [ターゲットグループへルーティング](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-target-groups.html)。Auto Scaling Group を設定可能。
 * マルチ AZ を有効にする必要あり
 * クロスゾーン負荷分散はデフォルトで有効
-* URL パスベースのルーティングをサポート
 * [SSL証明書](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/create-https-listener.html#https-listener-certificates)
 * [ターゲットグループのヘルスチェック](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/target-group-health-checks.html)
 * [LB 自身のモニタリング](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-monitoring.html)
@@ -63,7 +64,7 @@
 
 * プロトコルは HTTP、HTTPS、TCP、SSL (セキュア TCP) をサポート。詳細は、[リスナーの設定](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/elb-listener-config.html) を参照。
 * ターゲットグループではなく、インスタンスへルーティング
-* [クロスゾーン負荷分散可能](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/elb-listener-config.html#https-ssl-listeners)
+* [クロスゾーン負荷分散可能](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/enable-disable-crosszone-lb.html)
 * [SSL証明書](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/elb-listener-config.html#https-ssl-listeners)
 * [インスタンスのヘルスチェック](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/elb-healthchecks.html)
 * [LB 自身のモニタリング](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/elb-monitor-logs.html)
@@ -73,7 +74,7 @@
 
 ## その他、LB の特徴、機能
 
-* 複数 AZ へのルーティング
+* DNS で各 AZ へのルーティング
 * ELB にセキュリティグループを設定可能
 
 #### ELB のスケーリング
@@ -95,6 +96,10 @@ ALB、CLB は IP アドレスが変わる可能性あり。DNS を使用して�
 
 * [Classic Load Balancer のカスタムドメイン名を設定する](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/using-domain-names-with-elb.html)
 
+#### Route 53 DNS フェイルオーバ対応
+
+ユースケースとしては、ELB 配下に正常な EC2 インスタンスがない場合に、S3 上の Sorry ページを参照させる。
+
 #### クロスゾーン負荷分散
 
 LB のあるゾーンだけでなく、有効な全ての AZ の登録済みターゲットに負荷分散する。
@@ -111,7 +116,7 @@ LB のあるゾーンだけでなく、有効な全ての AZ の登録済みタ�
 
 #### アイドル接続のタイムアウト
 
-データの送受信がなかった場合のタイムアウト秒数を設定可能。
+データの送受信がなかった場合のタイムアウト秒数を 1 〜 3600 秒の間で設定可能。デフォルト 60 秒。
 
 * [Classic Load Balancer のアイドル接続のタイムアウトを設定する](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/config-idle-timeout.html)
 
@@ -119,7 +124,7 @@ LB のあるゾーンだけでなく、有効な全ての AZ の登録済みタ�
 
 既存の接続を開いたまま、登録解除中のインスタンスまたは異常の発生したインスタンスにリクエストを送信しないようにする機能。
 
-[Classic Load Balancer の Connection Draining を設定する](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/config-conn-drain.html)
+* [Classic Load Balancer の Connection Draining を設定する](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/config-conn-drain.html)
 
 
 ## 価格体系
