@@ -1,4 +1,4 @@
-
+# EC2
 
 ## 特徴
 
@@ -77,18 +77,19 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 * インスタンスには公開鍵のみ起動時にコピーして配置。
 * セキュリティグループでフィルタリング
 * ENI はインスタンスによって割り当て可能な数が異なる。
-* 拡張ネットワークにより、帯域、レイテンシを改善可能。Intel 82599VF, Elastic Network Adopter、Elastic Fablic Adopter(HPC 向け) がある。
-
-[Elastic Fabric Adapter](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/efa.html)
+* 拡張ネットワークにより、帯域、レイテンシを改善可能。Intel 82599VF, Elastic Network Adopter、[Elastic Fabric Adapter](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/efa.html)(HPC 向け) がある。
 
 ## ストレージ
 
 ### EBS
 
 * EBS 最適化オプションは EBS への IO は専用の帯域で通信できるオプション。
-* EBS-Backed インスタンス、Instance store-backed の二種類がある。EBS-Backed が推奨。
 
-https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/RootDeviceStorage.html
+#### ルートボリュームについて
+
+[ルートボリューム](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/RootDeviceStorage.html)
+
+ EBS-Backed インスタンスの AMI、Instance store-backed の AMI の二種類がある。EBS-Backed が推奨。
 
 ### インスタンスストア
 
