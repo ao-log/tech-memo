@@ -83,7 +83,7 @@
 
 #### インターネット向け or 内部向け
 
-LB はインターネット向け、内部向け、療法を作成できる。
+LB はインターネット向け、内部向け、両方を作成できる。
 
 #### ドメイン名の設定
 
@@ -122,7 +122,7 @@ LB のあるゾーンだけでなく、有効な全ての AZ の登録済みタ�
 
 #### Connection Draining
 
-既存の接続を開いたまま、登録解除中のインスタンスまたは異常の発生したインスタンスにリクエストを送信しないようにする機能。
+登録解除中のインスタンスまたは異常の発生したインスタンスにリクエストを送信しないようにする機能。既存の接続を開いたままなので、Graceful に停止できる。
 
 * [Classic Load Balancer の Connection Draining を設定する](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/config-conn-drain.html)
 
