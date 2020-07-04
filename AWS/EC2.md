@@ -6,11 +6,15 @@
 * 課金は秒単位
 * AWS CLI で制御可能
 
+
+
 ## リージョン、AZ
 
 [リージョンとアベイラビリティーゾーン](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
 
 AZ は us-east-1a のような識別子で表される。どの AZ に紐づくかは AWS アカウントによって異なる。AZ を特定するには use1-az1 のように表される AZ-ID を使用する。
+
+
 
 ## システム基盤
 
@@ -18,6 +22,8 @@ AZ は us-east-1a のような識別子で表される。どの AZ に紐づく�
 
 C5, M5, R5 などの最新インスタンスは EC2 ソフトウェアスタック全体を専用ハードウェアへオフロード。
 C4, M4, R4 より前は Xen ベースのハイパーバイザー。
+
+
 
 ## インスタンスタイプ
 
@@ -59,6 +65,8 @@ T2, T3 が該当。CPU クレジットを消費する方式。
 
 ARM プロセッサ。マイクロサービス、Web サーバなど多数の小規模インスタンスを使用する用途に最適。
 
+
+
 ## CPU
 
 * CPU 最適化オプション: 起動時に CPU コア数、ハイパースレッドをオフに指定できるオプション。
@@ -67,6 +75,8 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 
 * Elastic Graphics: GPU をアタッチ可能
 * Elastic Inference: アタッチすることで推論処理を高速化
+
+
 
 ## メモリ
 
@@ -78,6 +88,8 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 * セキュリティグループでフィルタリング
 * ENI はインスタンスによって割り当て可能な数が異なる。
 * 拡張ネットワークにより、帯域、レイテンシを改善可能。Intel 82599VF, Elastic Network Adopter、[Elastic Fabric Adapter](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/efa.html)(HPC 向け) がある。
+
+
 
 ## ストレージ
 
@@ -115,6 +127,8 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 
 * Nitro Hypervisor では、ENA, NVMe ドライバがないと OS 起動に失敗する
 
+
+
 ## インスタンスのライフサイクル
 
 [インスタンスのライフサイクル](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)
@@ -142,13 +156,6 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 | Spread | EC2 インスタンスを別々の物理ホストに分散して配置。 |
 | パーティションプレイスメントグループ | 複数のインスタンスを一つのパーティションにグループ化し、パーティションごとに分散してインスタンスを配置。 |
 
-## 運用
-
-#### 障害検知、復旧
-
-* ホスト側で回復不可能な障害が検出された場合、インスタンスリタイアが予定される。
-* インスタンスの異常は StatusCheckFailed_System、StatusCheckFailed_System で検知される。CloudWatch アラームで「Recover this Instance」アクションを指定することで自動復旧する。
-
 #### 便利機能
 
 |項目|説明|
@@ -157,13 +164,16 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 | 起動テンプレート | 起動時の設定をテンプレ化。Auto Scaling などで使用できる。 |
 | インスタンスメタデータ | 自インスタンスの情報を採取。次のアドレス「http://169.254.169.254/latest/meta-data」にアクセスすることで採取できる。 |
 
+
+
 ## ベストプラクティス
 
 [ベストプラクティス](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-best-practices.html)
 
 #### セキュリティ
 
-* IAM で EC2 インスタンスへのアクセスを制御
+* IAM ポリシーで EC2 インスタンスに対するアクションの実行可否を制御
+* IAM ロールで　EC2 インスタンス内で実行できる権限を設定（環境変数などで対応する必要がなくなる）
 * セキュリティグループで制限
 * パスワードログインを禁止
 
@@ -171,9 +181,13 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 
 * スナップショット、AMI の作成
 
-## トラブルシューティング
 
-[インスタンスのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-instance-troubleshoot.html)
+## タグ
+
+[リソースとタグ](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/EC2_Resources.html)
+
+請求、システム（システム名、本番・開発環境）を区別するなどの用途で使用。脱線するが、複数システムを運用する際は AWS アカウント自体を分けることも検討するべき。
+
 
 
 ## 課金
@@ -192,7 +206,33 @@ ARM プロセッサ。マイクロサービス、Web サーバなど多数の小
 * [料金ページ](https://aws.amazon.com/jp/ec2/pricing/)
 
 
+
+## 運用
+
+#### 障害検知、復旧
+
+* ホスト側で回復不可能な障害が検出された場合、インスタンスリタイアが予定される。
+* インスタンスの異常は StatusCheckFailed_System、StatusCheckFailed_Instance で検知される。CloudWatch アラームで「Recover this Instance」アクションを指定することで自動復旧する。
+* StatusCheckFailed_Instance は [ARP の応答があるかどうかで判定している](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/monitoring-system-instance-status-check.html)。
+
+
+
+## トラブルシューティング
+
+[インスタンスのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-instance-troubleshoot.html)
+
+エラー原因は色々とある。
+
+* リージョン内のキャパシティ不足
+* 接続タイムアウト(セキュリティグループ、ルートテーブル、ネットワーク ACL、OS 内、)
+など。
+
+なお、設定ミスでログインできなくなった際は、他のインスタンスで EBS をアタッチして設定を修正することで復旧を試みることができる。
+
+
+
 # 参考
 
 * [[AWS Black Belt Online Seminar] Amazon EC2 資料及び QA 公開](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ec2-2019/)
 * [EC2 ドキュメント](https://docs.aws.amazon.com/ec2/index.html)
+

@@ -126,6 +126,9 @@ LB のあるゾーンだけでなく、有効な全ての AZ の登録済みタ�
 
 * [Classic Load Balancer の Connection Draining を設定する](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/classic/config-conn-drain.html)
 
+#### メトリクス
+
+* [Application Load Balancer の CloudWatch メトリクス](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html)
 
 ## 価格体系
 
