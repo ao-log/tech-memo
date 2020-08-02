@@ -406,12 +406,12 @@ Outputs:
 
 ## サンプルテンプレート
 
-[サンプルテンプレート]](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/sample-templates-services-ap-northeast-1.html)
+[サンプルテンプレート](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/sample-templates-services-ap-northeast-1.html)
 
 
 # 参考
 
 * [AWS CloudFormation とは](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/Welcome.html)
-
+* [AWS Black Belt Online Seminar AWS CloudFormation アップデート](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-aws-cloudformation)
 
 
