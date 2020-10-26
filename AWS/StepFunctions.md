@@ -97,13 +97,8 @@ ASL(Amazon State Language) で記述する。
 
 [標準ワークフローとExpress ワークフロー](https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/concepts-standard-vs-express.html)
 
-・標準ワークフロー
-最大期間は 1 年。
-状態を内部的に持つことができるが、同時に 1 つだけしか実行できない。
-
-・Express ワークフロー
-最大期間は 5 分。
-状態を持たない。最低 1 回の実行がされる。
+* 標準ワークフロー: 最大期間は 1 年。状態を内部的に持つことができるが、同時に 1 つだけしか実行できない。
+* Express ワークフロー: 最大期間は 5 分。状態を持たない。最低 1 回の実行がされる。
 
 [状態](https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/concepts-states.html)
 

@@ -1,29 +1,157 @@
 
 # Auto Scaling
 
-## どのようにスケーリングするか
-
-#### 希望台数
-
-* 台数維持(台数減少を検知して機能台数まで回復させる)
-* 手動スケーリング(希望台数を手動で変更することでスケーリング)
-* 自動スケーリング(ポリシーに応じて自動スケーリング)
-
 #### Auto Scaling の整理
 
 * EC2 Auto Scaling: EC2 インスタンス。
 * Application Auto Scaling: ECSクラスタ、EMRクラスタ、Auroraレプリカなど。
-* AWS Auto Scaling: スケーリングプラン
 
-#### スケーリング方法
+#### バランシング
 
-* 簡易スケーリング: 現在は非推奨。あるメトリクスが X % 以上になったら、といった条件でスケーリング。
-  * クールダウンピリオド    
-* [ステップスケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/application/userguide/application-auto-scaling-step-scaling-policies.html): 一つのメトリクスに対して、複数のスケーリング条件を設定可能。例えば CPU 使用率 70 % で +1 台、80 % で + 2 台といった具合。条件を一つにすれば簡易スケーリングと同じことができる。
+[アベイラビリティーゾーンの追加](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-add-availability-zone.html)
+
+1 つの AZ に問題が発生すると、影響を受けていない AZ で新しいインスタンスを起動する。AZ が正常な状態に戻ると AZ に渡ってインスタンスを移動的に再分散する。
+
+update-auto-scaling-group コマンドを使用して、Auto Scaling グループにサブネットを追加できる。
+set-subnets コマンドを使用して、Application Load Balancer で新しいサブネットを有効にする。
+
+[自動スケーリングのメリット](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/auto-scaling-benefits.html)
+
+Auto Scaling グループは可用性ゾーン間で不均衡になる可能性がある。
+再バランシングして補正されるようになっており、その際は新しいインスタンスを起動してから古いインスタンスを停止する動作となる。
+
+
+#### ライフサイクル
+
+[ライフサイクル](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/AutoScalingGroupLifecycle.html)
+
+起動時は Pending。ライフサイクルフックを設定できる。
+
+正常に起動したインスタンスは InService の状態。 
+
+ヘルスチェックの失敗やスケールインによって、Terminating → Terminated へと遷移する。ライフサイクルフックを設定できる。
+
+デタッチすることもできる。
+
+スタンバイ状態にして一時的に外し、再び組み込むこともできる。
+
+
+
+## Auto Scaling Group
+
+[複数のインスタンスタイプと購入オプションを使用する Auto Scaling グループ](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/asg-purchase-options.html)
+
+オンデマンドインスタンスとスポットインスタンスの組み合わせからなるフリートを使用可能。
+配分戦略で、オンデマンドとスポットの容量をどのように満たすかを設定可能。
+
+[起動テンプレートを使用した Auto Scaling グループの作成](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/create-asg-launch-template.html)
+
+[起動設定を使用した Auto Scaling グループの作成](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/create-asg.html)
+
+起動テンプレートもしくは起動設定から Auto Scaling Group を作成可能。ドキュメントでは、EC2 の最新機能を使用できるように起動テンプレートが推奨されている。
+
+[Elastic Load Balancing および Amazon EC2 Auto Scaling](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/autoscaling-load-balancer.html)
+
+ヘルスチェックにおいては、全てのロードバランサからのチェックに合格する必要がある。一つでも異常と判定されると置き換えられる動作となる。
+
+1 つのアベイラビリティーゾーンが異常ありまたは使用不可になると、Amazon EC2 Auto Scaling は、影響を受けていないアベイラビリティーゾーンで新しいインスタンスを起動する。異常のあるアベイラビリティーゾーンが正常な状態に戻ると、Amazon EC2 Auto Scaling は Auto Scaling グループのアベイラビリティーゾーンにわたって均等にインスタンスを自動的に再分散する。
+
+[最大インスタンス有効期限](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/asg-max-instance-lifetime.html)
+
+最大インスタンス有効期間の機能を設定しておくことで、稼働時間が最大許容時間に達したインスタンスが置き換えられる。
+
+[インスタンスの更新](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/asg-instance-refresh.html)
+
+インスタンスの更新を行うことにより、ASG のインスタンスを置き換えることができる。一気に更新するのではなく、ローリングアップデートされる動作となる。
+
+
+
+## スケーリング
+
+[スケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/scaling_plan.html)
+
+スケーリング方法
+
+* 希望台数の維持
+* 希望台数の変更によるスケール
+* スケジュールに基づくスケーリング
+* 需要に基づくスケーリング（リソース使用率を指定値に維持）
+* 予測スケーリング
+
+#### 動的なスケーリング
+
+[動的スケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-scale-based-on-demand.html)
+
+CloudWatch アラームを使用してスケーリングする仕組みとなっている。
+
+[ターゲット追跡スケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-scaling-target-tracking.html)
+
+例としては CPU 使用率を 40 % に維持するような指定方法。ステップスケーリングで細かく指定するのが面倒な場合は、こちらを推奨。
+
+事前定義されたリクエストを使用可能。
+
+* ASGAverageCPUUtilization
+* ASGAverageNetworkIn
+* ASGAverageNetworkOut
+* ALBRequestCountPerTarget
+
+
+[ステップスケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/application/userguide/application-auto-scaling-step-scaling-policies.html)
+
+一つのメトリクスに対して、複数のスケーリング条件を設定可能。例えば CPU 使用率 70 % で +1 台、80 % で + 2 台といった具合。条件を一つにすれば簡易スケーリングと同じことができる。
   * ウォームアップ周期: 新しいインスタンスがサービス開始できるまで何秒要するかを設定。これにより、ウォームアップ期間中に次のトリガーが発動したときでも、条件合致時の全台を起動するのではなく現在起動中台数の差分台数だけ起動する。
-* [ターゲット追跡受けーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/application/userguide/application-auto-scaling-target-tracking.html): CPU 使用率を 40 % に維持するような指定方法。ステップスケーリングで細かく指定するのが面倒な場合は、こちらを推奨。
-* [スケジュールスケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/application/userguide/application-auto-scaling-scheduled-scaling.html): 一度限り、あるいは定期的なスケーリングを設定可能。
-* 予測スケーリング: 過去のメトリクスをもとに将来の需要を予測し、キャパシティの増減をスケジュールする。
+
+簡易スケーリング: 現在は非推奨。あるメトリクスが X % 以上になったら、といった条件でスケーリング。
+
+[スケジュールされたスケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/schedule_time.html)
+
+一度限り、あるいは cron のような定期的なスケーリングを設定可能。
+
+予測スケーリング
+
+過去のメトリクスをもとに将来の需要を予測し、キャパシティの増減をスケジュールする。
+
+[終了ポリシー、スケールインからの保護](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-instance-termination.html)
+
+デフォルトの終了ポリシーではインスタンスが各 AZ に均等に配置されるようになっている。終了ポリシーは複数あり、変更することも可能。
+スケールインから保護する設定もある。インスタンスごとに個別に設定することも可能。
+
+[ライフサイクルフック](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/lifecycle-hooks.html)
+
+インスタンスの起動時、削除時にカスタムアクションを実行可能。タイムアウト期間（デフォルトは 1 時間）が経過するまで待機状態となる。（Pending:Wait、Terminating:Wait）。
+
+Amazon EventBridge、Amazon SNS、Amazon SQS を使用して通知を設定可能。
+
+なお、ライフサイクルフックを追加した場合、ヘルスチェックの猶予期間が始まるのは、ライフサイクルフックアクションが完了してインスタンスが InService 状態になってから。
+
+[インスタンスの一時的な削除](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-enter-exit-standby.html)
+
+スタンバイ状態にすることができる。
+スタンバイ状態にすると対象インスタンスはロードバランサから登録解除され、希望する容量の値も減少する。
+
+[スケーリングの中断](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-suspend-resume-processes.html)
+
+管理上の中断が発生する場合がある。インスタンスの起動を 24 時間以上試みている場合が該当。
+
+スケーリングプロセスを Suspend することができる。もとに戻すときは Resume。
+
+
+
+## Monitoring
+
+[ヘルスチェック](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/healthcheck.html)
+
+EC2 インスタンスのチェックは、ステータスチェックにより行う。stopped, stopping, terminated, terminating の状態もチェックしている。
+
+ELB はデフォルトでは有効になっていない。
+
+ヘルスチェックの猶予期間を設定することで、インスタンスの起動後、指定した時間の間ヘルスチェックを実施しない。
+
+[グループメトリクス](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-instance-monitoring.html)
+
+グループメトリクスを有効化することで、ASG に関する CloudWatch メトリクスが採取できるようになる。
+
+
 
 ## 設定項目
 
@@ -74,24 +202,6 @@ $ aws ec2 create-auto-scaling-group \
     [--vpc-zone-identifier <value>] \
     [--tags <value>] \
 ```
-
-#### ヘルスチェック
-
-デフォルトは EC2 のみ。ELB を選択すると ELB と EC2 の両方の条件でヘルスチェックする。
-
-[Auto Scaling グループへの Elastic Load Balancing ヘルスチェックの追加](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-add-elb-healthcheck.html)
-
-#### [猶予期間](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/healthcheck.html#health-check-grace-period)
-
-ヘルスチェックを猶予する期間。この期間の間は unhealthy の判定を行わない。そのため、unhealthy と判定されて無駄にインスタンスを起動することがなくなる。
-
-## その他機能
-
-* ミックスインスタンスグループ: スポットインスタンスを混ぜることが可能。
-* インスタンスの保護: 保護対象したインスタンスをスケールイン対象外とできる。
-* スタンバイ: 一時的に Auto Scaling グループから外す。ELB の対象からも外れる。
-* デタッチ: インスタンスを起動したまま、Auto Scaling グループから外す。
-* ライフサイクルフック: インスタンスの起動、削除時にカスタムアクションを実行できる。
 
 
 # 参考
