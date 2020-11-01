@@ -10,7 +10,7 @@
 
 [アベイラビリティーゾーンの追加](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-add-availability-zone.html)
 
-**1 つの AZ に問題が発生すると、影響を受けていない AZ で新しいインスタンスを起動する。**AZ が正常な状態に戻ると AZ に渡ってインスタンスを移動的に再分散する。
+**1 つの AZ に問題が発生すると、影響を受けていない AZ で新しいインスタンスを起動する。** AZ が正常な状態に戻ると AZ に渡ってインスタンスを移動的に再分散する。
 
 update-auto-scaling-group コマンドを使用して、Auto Scaling グループにサブネットを追加できる。
 set-subnets コマンドを使用して、Application Load Balancer で新しいサブネットを有効にする。
