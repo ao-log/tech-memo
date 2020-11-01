@@ -10,7 +10,7 @@
 
 [アベイラビリティーゾーンの追加](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-add-availability-zone.html)
 
-1 つの AZ に問題が発生すると、影響を受けていない AZ で新しいインスタンスを起動する。AZ が正常な状態に戻ると AZ に渡ってインスタンスを移動的に再分散する。
+**1 つの AZ に問題が発生すると、影響を受けていない AZ で新しいインスタンスを起動する。**AZ が正常な状態に戻ると AZ に渡ってインスタンスを移動的に再分散する。
 
 update-auto-scaling-group コマンドを使用して、Auto Scaling グループにサブネットを追加できる。
 set-subnets コマンドを使用して、Application Load Balancer で新しいサブネットを有効にする。
@@ -25,7 +25,7 @@ Auto Scaling グループは可用性ゾーン間で不均衡になる可能性�
 
 [ライフサイクル](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/AutoScalingGroupLifecycle.html)
 
-起動時は Pending。ライフサイクルフックを設定できる。
+起動するまでの間は Pending。ライフサイクルフックを設定できる。
 
 正常に起動したインスタンスは InService の状態。 
 
@@ -48,11 +48,11 @@ Auto Scaling グループは可用性ゾーン間で不均衡になる可能性�
 
 [起動設定を使用した Auto Scaling グループの作成](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/create-asg.html)
 
-起動テンプレートもしくは起動設定から Auto Scaling Group を作成可能。ドキュメントでは、EC2 の最新機能を使用できるように起動テンプレートが推奨されている。
+起動テンプレートもしくは起動設定から Auto Scaling Group を作成可能。ドキュメントでは、EC2 の最新機能を使用できるように**起動テンプレートが推奨されている。**
 
 [Elastic Load Balancing および Amazon EC2 Auto Scaling](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/autoscaling-load-balancer.html)
 
-ヘルスチェックにおいては、全てのロードバランサからのチェックに合格する必要がある。一つでも異常と判定されると置き換えられる動作となる。
+ヘルスチェックにおいては、全てのロードバランサからのチェックに合格する必要がある。**一つでも異常と判定されると置き換えられる動作となる。**
 
 1 つのアベイラビリティーゾーンが異常ありまたは使用不可になると、Amazon EC2 Auto Scaling は、影響を受けていないアベイラビリティーゾーンで新しいインスタンスを起動する。異常のあるアベイラビリティーゾーンが正常な状態に戻ると、Amazon EC2 Auto Scaling は Auto Scaling グループのアベイラビリティーゾーンにわたって均等にインスタンスを自動的に再分散する。
 
@@ -114,11 +114,11 @@ CloudWatch アラームを使用してスケーリングする仕組みとなっ
 [終了ポリシー、スケールインからの保護](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-instance-termination.html)
 
 デフォルトの終了ポリシーではインスタンスが各 AZ に均等に配置されるようになっている。終了ポリシーは複数あり、変更することも可能。
-スケールインから保護する設定もある。インスタンスごとに個別に設定することも可能。
+**スケールインから保護する設定**もある。インスタンスごとに個別に設定することも可能。
 
 [ライフサイクルフック](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/lifecycle-hooks.html)
 
-インスタンスの起動時、削除時にカスタムアクションを実行可能。タイムアウト期間（デフォルトは 1 時間）が経過するまで待機状態となる。（Pending:Wait、Terminating:Wait）。
+**インスタンスの起動時、削除時にカスタムアクションを実行可能。**タイムアウト期間（デフォルトは 1 時間）が経過するまで待機状態となる。（Pending:Wait、Terminating:Wait）。
 
 Amazon EventBridge、Amazon SNS、Amazon SQS を使用して通知を設定可能。
 
@@ -133,7 +133,7 @@ Amazon EventBridge、Amazon SNS、Amazon SQS を使用して通知を設定可�
 
 管理上の中断が発生する場合がある。インスタンスの起動を 24 時間以上試みている場合が該当。
 
-スケーリングプロセスを Suspend することができる。もとに戻すときは Resume。
+**スケーリングプロセスを Suspend することができる。もとに戻すときは Resume。**
 
 
 
@@ -143,7 +143,7 @@ Amazon EventBridge、Amazon SNS、Amazon SQS を使用して通知を設定可�
 
 EC2 インスタンスのチェックは、ステータスチェックにより行う。stopped, stopping, terminated, terminating の状態もチェックしている。
 
-ELB はデフォルトでは有効になっていない。
+**ELB はデフォルトでは有効になっていない。**
 
 ヘルスチェックの猶予期間を設定することで、インスタンスの起動後、指定した時間の間ヘルスチェックを実施しない。
 
