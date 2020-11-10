@@ -413,5 +413,8 @@ Outputs:
 
 * [AWS CloudFormation とは](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/Welcome.html)
 * [AWS Black Belt Online Seminar AWS CloudFormation アップデート](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-aws-cloudformation)
+* [20200826 AWS Black Belt Online Seminar AWS CloudFormation](https://www.slideshare.net/AmazonWebServicesJapan/20200826-aws-black-belt-online-seminar-aws-cloudformation-238501102)
+* [20201006 AWS Black Belt Online Seminar AWS CloudFormation deep dive](https://www.slideshare.net/AmazonWebServicesJapan/20201006-aws-black-belt-online-seminar-aws-cloudformation-deep-dive)
+
 
 
