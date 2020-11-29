@@ -56,7 +56,7 @@
 [ジョブの再試行の自動化](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/job_retries.html)
 
 ジョブがジョブキューに送信されて RUNNING 状態になると、1 回の試行とみなされる。
-ジョブが終了コード 0 以外あるいは要害などの理由で失敗した場合、再試行設定で指定した試行回数分、リトライされる。
+ジョブが終了コード 0 以外あるいは障害などの理由で失敗した場合、再試行設定で指定した試行回数分、リトライされる。
 
 
 [ジョブの依存関係](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/job_dependencies.html)
@@ -262,7 +262,7 @@ EFA を使用するすべてのインスタンスは、同じクラスタープ�
 
 ## ナレッジセンター
 
-* [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_Batch)
+[ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_Batch)
 
 [AWS Batch ジョブが RUNNABLE ステータスで止まっているのはなぜですか?](https://aws.amazon.com/jp/premiumsupport/knowledge-center/batch-job-stuck-runnable-status/)
 
