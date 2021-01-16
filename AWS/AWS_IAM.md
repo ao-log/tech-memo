@@ -187,7 +187,7 @@ aws ec2 describe-instances --region us-west-1
 
 [管理ポリシーとインラインポリシー](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/access_policies_managed-vs-inline.html)
 
-ポリシーはバージョニングされている。最大 5 つのバージョンが保存されるようになっている。
+ポリシーはバージョニングされている。**最大 5 つのバージョンが保存**されるようになっている。
 
 
 [IAM エンティティのアクセス許可の境界](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/access_policies_boundaries.html)
@@ -197,9 +197,9 @@ aws ec2 describe-instances --region us-west-1
 
 [アイデンティティベースのポリシーおよびリソースベースのポリシー](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/access_policies_identity-vs-resource.html)
 
-同一の AWS アカウント内の場合、アイデンティティベース、リソースベースどちらか片方のポリシーで Allow が設定されている場合、そのリクエストは許可される。ただし、明示的な拒否がある場合は拒否が優先される。
+**同一の AWS アカウント内の場合、アイデンティティベース、リソースベースどちらか片方のポリシーで Allow が設定されている場合、そのリクエストは許可される。ただし、明示的な拒否がある場合は拒否が優先される。**
 
-一方で、クロスアカウントの場合は、両方のポリシーで Allow しないと許可されない。
+**一方で、クロスアカウントの場合は、両方のポリシーで Allow しないと許可されない。**
 
 
 [ポリシーの例](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/access_policies_examples.html)
@@ -394,5 +394,6 @@ aws:SourceIp、aws:SourceVpc、aws:SourceVpce、aws:userid などのキーを Co
 * Black Belt
   * [20190129 AWS Black Belt Online Seminar AWS Identity and Access Management (AWS IAM) Part1](https://www.slideshare.net/AmazonWebServicesJapan/20190129-aws-black-belt-online-seminar-aws-identity-and-access-management-iam-part1)
   * [20190130 AWS Black Belt Online Seminar AWS Identity and Access Management (AWS IAM) Part2](https://www.slideshare.net/AmazonWebServicesJapan/20190130-aws-black-belt-online-seminar-aws-identity-and-access-management-aws-iam-part2)
-* [AWSマルチアカウントにおけるIAMユーザー設計戦略を考えてみる](https://iselegant.hatenablog.com/entry/2020/05/24/215808)
-* [IAM ロールの PassRole と AssumeRole をもう二度と忘れないために絵を描いてみた](https://dev.classmethod.jp/articles/iam-role-passrole-assumerole/)
+* 勉強になる記事
+  * [AWSマルチアカウントにおけるIAMユーザー設計戦略を考えてみる](https://iselegant.hatenablog.com/entry/2020/05/24/215808)
+  * [IAM ロールの PassRole と AssumeRole をもう二度と忘れないために絵を描いてみた](https://dev.classmethod.jp/articles/iam-role-passrole-assumerole/)
