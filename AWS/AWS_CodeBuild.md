@@ -552,7 +552,7 @@ $ codebuild-resume
   * [CodeBuild とは](https://docs.aws.amazon.com/ja_jp/codebuild/latest/userguide/welcome.html)
 * サービス紹介ページ
   * [AWS CodeBuild](https://aws.amazon.com/jp/codebuild/)
-* [よくある質問](https://aws.amazon.com/jp/codebuild/faqs/)
+  * [よくある質問](https://aws.amazon.com/jp/codebuild/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_CodeBuild)
 * Black Belt
   * [AWS Black Belt Online Seminar 2017 AWS Code Services ( CodeCommit, CodeBuild )](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-2017-aws-code-services-codecommit-codebuild)

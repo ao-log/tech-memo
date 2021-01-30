@@ -1,5 +1,5 @@
 
-# StepFunctions
+# Step Functions
 
 ステートマシンを作り実行できるサービス。
 
@@ -155,7 +155,7 @@ Lambda, API Gateway, EventBridge など。
 # 参考
 
 * Document
-  * [StepFunctions ドキュメント](https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/welcome.html)
+  * [Step Functions ドキュメント](https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/welcome.html)
 * サービス紹介ページ
   * [AWS Step Functions](https://aws.amazon.com/jp/step-functions/)
   * [よくある質問](https://aws.amazon.com/jp/step-functions/faqs/)

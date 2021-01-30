@@ -283,10 +283,11 @@ HTTP ステータスコードごとのトラブルシューティング方法が
   * [Elastic Load Balancing とは](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/userguide/what-is-load-balancing.html)
   * [Application Load Balancer とは](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/introduction.html)
   * [Network Load Balancer とは](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/network/introduction.html)
-* [Elastic Load Balancing の特徴](https://aws.amazon.com/jp/elasticloadbalancing/)
-* [よくある質問](https://aws.amazon.com/jp/elasticloadbalancing/faqs/)
+  * [API Reference](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/APIReference/API_Operations.html)
+* サービス紹介ページ
+  * [Elastic Load Balancing](https://aws.amazon.com/jp/elasticloadbalancing/)
+  * [よくある質問](https://aws.amazon.com/jp/elasticloadbalancing/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Elastic_Load_Balancing)
 * Black Belt
   * [20191029 AWS Black Belt Online Seminar Elastic Load Balancing (ELB)](https://www.slideshare.net/AmazonWebServicesJapan/20191029-aws-black-belt-online-seminar-elastic-load-balancing-elb)
-* [Actions](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/APIReference/API_Operations.html)
 
