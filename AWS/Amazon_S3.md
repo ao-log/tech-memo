@@ -226,9 +226,11 @@ IAM ユーザーのポリシー例が載っている。
 
 # 参考
 
-* [Amazon S3とは](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/dev/Welcome.html)
-* [Amazon S3](https://aws.amazon.com/jp/s3/)
-* [よくある質問](https://aws.amazon.com/jp/s3/faqs/)
+* Document
+  * [Amazon S3とは](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/dev/Welcome.html)
+* サービス紹介ページ
+  * [Amazon S3](https://aws.amazon.com/jp/s3/)
+  * [よくある質問](https://aws.amazon.com/jp/s3/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_Simple_Storage_Service_.28Amazon_S3.29)
 * Black Belt
   * [20190220 AWS Black Belt Online Seminar Amazon S3 / Glacier](https://www.slideshare.net/AmazonWebServicesJapan/20190220-aws-black-belt-online-seminar-amazon-s3-glacier)

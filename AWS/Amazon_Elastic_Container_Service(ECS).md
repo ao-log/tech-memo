@@ -813,14 +813,18 @@ aws ssm get-parameters ¥
 
 # 参考
 
-* [Amazon Elastic Container Service とは?](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/Welcome.html)
-* [よくある質問](https://aws.amazon.com/jp/ecs/faqs/)
+* Document
+  * [Amazon Elastic Container Service とは?](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/Welcome.html)
+* サービス紹介ページ
+  * [Amazon Elastic Container Service](https://aws.amazon.com/jp/ecs/)
+  * [よくある質問](https://aws.amazon.com/jp/ecs/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_Elastic_Container_Service_.28Amazon_ECS.29)
-* [20200422 AWS Black Belt Online Seminar Amazon Elastic Container Service (Amazon ECS)](https://www.slideshare.net/AmazonWebServicesJapan/20200422-aws-black-belt-online-seminar-amazon-elastic-container-service-amazon-ecs)
-* [20190731 Black Belt Online Seminar Amazon ECS Deep Dive](https://www.slideshare.net/AmazonWebServicesJapan/20190731-black-belt-online-seminar-amazon-ecs-deep-dive-162160987)
-* [20180220 AWS Black Belt Online Seminar - Amazon Container Services](https://www.slideshare.net/AmazonWebServicesJapan/20180214-aws-black-belt-online-seminar-amazon-container-services)
-* [20190925 AWS Black Belt Online Seminar AWS Fargate](https://www.slideshare.net/AmazonWebServicesJapan/20190925-aws-black-belt-online-seminar-aws-fargate)
-* [20191127 AWS Black Belt Online Seminar Amazon CloudWatch Container Insights で始めるコンテナモニタリング入門](https://www.slideshare.net/AmazonWebServicesJapan/20191127-aws-black-belt-online-seminar-amazon-cloudwatch-container-insights)
+* Black Belt
+  * [20200422 AWS Black Belt Online Seminar Amazon Elastic Container Service (Amazon ECS)](https://www.slideshare.net/AmazonWebServicesJapan/20200422-aws-black-belt-online-seminar-amazon-elastic-container-service-amazon-ecs)
+  * [20190731 Black Belt Online Seminar Amazon ECS Deep Dive](https://www.slideshare.net/AmazonWebServicesJapan/20190731-black-belt-online-seminar-amazon-ecs-deep-dive-162160987)
+  * [20180220 AWS Black Belt Online Seminar - Amazon Container Services](https://www.slideshare.net/AmazonWebServicesJapan/20180214-aws-black-belt-online-seminar-amazon-container-services)
+  * [20190925 AWS Black Belt Online Seminar AWS Fargate](https://www.slideshare.net/AmazonWebServicesJapan/20190925-aws-black-belt-online-seminar-aws-fargate)
+  * [20191127 AWS Black Belt Online Seminar Amazon CloudWatch Container Insights で始めるコンテナモニタリング入門](https://www.slideshare.net/AmazonWebServicesJapan/20191127-aws-black-belt-online-seminar-amazon-cloudwatch-container-insights)
 * [AWS コンテナサービス入門](https://pages.awscloud.com/rs/112-TZM-766/images/C3-01.pdf)
 
 

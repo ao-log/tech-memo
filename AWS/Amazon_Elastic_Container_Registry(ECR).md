@@ -226,8 +226,10 @@ KMS による暗号化設定について書かれている。
 
 # 参考
 
-* [Amazon Elastic Container Registry とは](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/what-is-ecr.html)
-* [Amazon Elastic Container Registry の特徴](https://aws.amazon.com/jp/ecr/features/)
-* [よくある質問](https://aws.amazon.com/jp/ecr/faqs/)
-* [Amazon Elastic Container Registry](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/APIReference/Welcome.html)
+* Document
+  * [Amazon Elastic Container Registry とは](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/what-is-ecr.html)
+  * [API Reference](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/APIReference/Welcome.html)
+* サービス紹介ページ
+  * [Amazon Elastic Container Registry](https://aws.amazon.com/jp/ecr/)
+  * [よくある質問](https://aws.amazon.com/jp/ecr/faqs/)
 

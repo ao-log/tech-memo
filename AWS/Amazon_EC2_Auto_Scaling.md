@@ -206,8 +206,10 @@ $ aws ec2 create-auto-scaling-group \
 
 # 参考
 
-* [[AWS Black Belt Online Seminar] Amazon EC2 Auto Scaling and AWS Auto Scaling 資料及び QA 公開](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ec2-auto-scaling-and-aws-auto-scaling-2019/)
-* [Amazon EC2 Auto Scaling ドキュメント](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html)
+* Document
+  * [Amazon EC2 Auto Scaling ドキュメント](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html)
+* Black Belt
+  * [20191002 AWS Black Belt Online Seminar Amazon EC2 Auto Scaling and AWS Auto Scaling](https://www.slideshare.net/AmazonWebServicesJapan/20191002-aws-black-belt-online-seminar-amazon-ec2-auto-scaling-and-aws-auto-scaling-178995835?ref=https://aws.amazon.com/)
 
 
 

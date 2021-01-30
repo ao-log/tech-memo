@@ -151,12 +151,14 @@ VPC 内のリソースから各サービス、エンドポイントに対して�
 
 # 参考
 
-* [Amazon VPC とは?](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/what-is-amazon-vpc.html)
-* [Amazon VPC の特徴](https://aws.amazon.com/jp/vpc/)
-* [よくある質問](https://aws.amazon.com/jp/vpc/faqs/)
+* Document
+  * [Amazon VPC とは?](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/what-is-amazon-vpc.html)
+  * [Amazon VPC actions](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/OperationList-query-vpc.html)
+* サービス紹介ページ
+  * [Amazon VPC](https://aws.amazon.com/jp/vpc/)
+  * [よくある質問](https://aws.amazon.com/jp/vpc/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_Virtual_Private_Cloud_.28Amazon_VPC.29)
 * Black Belt
   * [20201021 AWS Black Belt Online Seminar Amazon VPC](https://www.slideshare.net/AmazonWebServicesJapan/20201021-aws-black-belt-online-seminar-amazon-vpc)
-  * [[AWS Black Belt Online Seminar] Amazon VPC Advanced 資料及び QA 公開](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-vpc-advanced-2019/)
-* [Amazon VPC actions](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/OperationList-query-vpc.html)
+  * [20190417 AWS Black Belt Online Seminar Amazon VPC Advanced](https://www.slideshare.net/AmazonWebServicesJapan/20190417-aws-black-belt-online-seminar-amazon-vpc-advanced?ref=https://aws.amazon.com/)
 

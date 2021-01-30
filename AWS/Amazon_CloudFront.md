@@ -221,9 +221,11 @@ HTTP ステータスコードに対応して、カスタムエラーメッセー
 
 # 参考
 
-* [Amazon CloudFront とは](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
-* [Amazon CloudFront](https://aws.amazon.com/jp/cloudfront/)
-* [よくある質問](https://aws.amazon.com/jp/cloudfront/faqs/)
+* Document
+  * [Amazon CloudFront とは](https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+* サービス紹介ページ
+  * [Amazon CloudFront](https://aws.amazon.com/jp/cloudfront/)
+  * [よくある質問](https://aws.amazon.com/jp/cloudfront/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_CloudFront)
 * Black Belt
   * [20190730 AWS Black Belt Online Seminar Amazon CloudFrontの概要](https://www.slideshare.net/AmazonWebServicesJapan/20190730-aws-black-belt-online-seminar-amazon-cloudfront)

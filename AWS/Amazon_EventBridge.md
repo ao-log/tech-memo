@@ -317,9 +317,12 @@ Lambda 関数に対する適切なアクセス権限が設定されているこ�
 
 # 参考
 
-* [Amazon EventBridge とは](https://docs.aws.amazon.com/ja_jp/eventbridge/latest/userguide/what-is-amazon-eventbridge.html)
-* [Amazon EventBridge の特徴](https://aws.amazon.com/jp/eventbridge/features/)
-* [よくある質問](https://aws.amazon.com/jp/eventbridge/faqs/)
-* [20200122 AWS Black Belt Online Seminar Amazon EventBridge](https://www.slideshare.net/AmazonWebServicesJapan/20200122-aws-black-belt-online-seminar-amazon-eventbridge)
-* [Amazon EventBridge API Reference](https://docs.aws.amazon.com/eventbridge/latest/APIReference/Welcome.html)
+* Document
+  * [Amazon EventBridge とは](https://docs.aws.amazon.com/ja_jp/eventbridge/latest/userguide/what-is-amazon-eventbridge.html)
+  * [Amazon EventBridge API Reference](https://docs.aws.amazon.com/eventbridge/latest/APIReference/Welcome.html)
+* サービス紹介ページ
+  * [Amazon EventBridge](https://aws.amazon.com/jp/eventbridge/)
+  * [よくある質問](https://aws.amazon.com/jp/eventbridge/faqs/)
+* Black Belt
+  * [20200122 AWS Black Belt Online Seminar Amazon EventBridge](https://www.slideshare.net/AmazonWebServicesJapan/20200122-aws-black-belt-online-seminar-amazon-eventbridge)
 

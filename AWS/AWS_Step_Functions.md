@@ -154,6 +154,11 @@ Lambda, API Gateway, EventBridge など。
 
 # 参考
 
-* [20190522 AWS Black Belt Online Seminar AWS Step Functions](https://www.slideshare.net/AmazonWebServicesJapan/20190522-aws-black-belt-online-seminar-aws-step-functions)
-* [StepFunctions ドキュメント](https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/welcome.html)
+* Document
+  * [StepFunctions ドキュメント](https://docs.aws.amazon.com/ja_jp/step-functions/latest/dg/welcome.html)
+* サービス紹介ページ
+  * [AWS Step Functions](https://aws.amazon.com/jp/step-functions/)
+  * [よくある質問](https://aws.amazon.com/jp/step-functions/faqs/)
+* Black Belt
+  * [20190522 AWS Black Belt Online Seminar AWS Step Functions](https://www.slideshare.net/AmazonWebServicesJapan/20190522-aws-black-belt-online-seminar-aws-step-functions)
 

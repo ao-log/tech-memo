@@ -296,11 +296,13 @@ EFA を使用するすべてのインスタンスは、同じクラスタープ�
 
 # 参考
 
-* [AWS Batch とは](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/what-is-batch.html)
-* [AWS Batch の特徴](https://aws.amazon.com/jp/batch/features/)
-* [よくある質問](https://aws.amazon.com/jp/batch/faqs/)
+* Document
+  * [AWS Batch とは](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/what-is-batch.html)
+  * [API Reference](https://docs.aws.amazon.com/ja_jp/batch/latest/APIReference/Welcome.html)
+* サービス紹介ページ
+  * [AWS Batch](https://aws.amazon.com/jp/batch/)
+  * [よくある質問](https://aws.amazon.com/jp/batch/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_Batch)
 * Black Belt
   * [20190911 AWS Black Belt Online Seminar AWS Batch](https://www.slideshare.net/AmazonWebServicesJapan/20190911-aws-black-belt-online-seminar-aws-batch)
-* [API Reference](https://docs.aws.amazon.com/ja_jp/batch/latest/APIReference/Welcome.html)
 

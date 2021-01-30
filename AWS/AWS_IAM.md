@@ -387,9 +387,11 @@ aws:SourceIp、aws:SourceVpc、aws:SourceVpce、aws:userid などのキーを Co
 
 # 参考
 
-* [IAM とは](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/introduction.html)
-* [AWS Identity and Access Management (IAM)](https://aws.amazon.com/jp/iam/)
-* [よくある質問](https://aws.amazon.com/jp/iam/faqs/)
+* Document
+  * [IAM とは](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/introduction.html)
+* サービス紹介ページ
+  * [AWS Identity and Access Management (IAM)](https://aws.amazon.com/jp/iam/)
+  * [よくある質問](https://aws.amazon.com/jp/iam/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_Identity_and_Access_Management)
 * Black Belt
   * [20190129 AWS Black Belt Online Seminar AWS Identity and Access Management (AWS IAM) Part1](https://www.slideshare.net/AmazonWebServicesJapan/20190129-aws-black-belt-online-seminar-aws-identity-and-access-management-iam-part1)
