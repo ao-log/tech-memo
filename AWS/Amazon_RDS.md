@@ -209,7 +209,7 @@
 
 ## BlackBelt
 
-* [20180425 AWS Black Belt Online Seminar Amazon Relational Database Service (Amazon RDS)](https://www.slideshare.net/AmazonWebServicesJapan/20180425-aws-black-belt-online-seminar-amazon-relational-database-service-amazon-rds-96509889)
+[20180425 AWS Black Belt Online Seminar Amazon Relational Database Service (Amazon RDS)](https://www.slideshare.net/AmazonWebServicesJapan/20180425-aws-black-belt-online-seminar-amazon-relational-database-service-amazon-rds-96509889)
 
 * P20: マルチ AZ
   * フェイルオーバ時もエンドポイントは変わらない。
