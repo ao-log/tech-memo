@@ -239,7 +239,7 @@
   * [Amazon Relational Database Service (Amazon RDS) とは](https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/Welcome.html)
   * [API Reference](https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/APIReference/Welcome.html)
 * サービス紹介ページ
-  * [Amazon EventBridge](https://aws.amazon.com/jp/rds/)
+  * [Amazon Relational Database Service (RDS)](https://aws.amazon.com/jp/rds/)
   * [よくある質問](https://aws.amazon.com/jp/rds/faqs/)
 * Black Belt
   * [20180425 AWS Black Belt Online Seminar Amazon Relational Database Service (Amazon RDS)](https://www.slideshare.net/AmazonWebServicesJapan/20180425-aws-black-belt-online-seminar-amazon-relational-database-service-amazon-rds-96509889)

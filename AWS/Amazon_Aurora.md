@@ -48,3 +48,31 @@
 Amazon Aurora DB クラスターの管理
 から
 
+
+
+
+## BlackBelt
+
+[20190424 AWS Black Belt Online Seminar Amazon Aurora MySQL](https://www.slideshare.net/AmazonWebServicesJapan/20190424-aws-black-belt-online-seminar-amazon-aurora-mysql)
+
+* P11: Aurora のストレージ
+  * 自動でスケールアップ
+  * 3 つの AZ に 6 つのデータのコピーを作成
+* P13: ストレージノードクラスタ
+  * 各ログレコードは Log Sequence Number を持っている。不足、重複レコードを判別可能。ストレージノード間でゴシッププロトコルを使用し補完を行う。
+* P14: 2 つのコピーに障害が発生しても読み書きに影響なし。3 つのコピーに障害が発生しても読み込み可能。
+* P20: 6 つのコピーは全て同一ではない。3 つのフルセグメント。3 つのテールセグメント。
+
+
+
+# 参考
+
+* Document
+  * [Amazon Aurora とは](https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html)
+* サービス紹介ページ
+  * [Amazon Aurora](https://aws.amazon.com/jp/rds/aurora/)
+  * [よくある質問](https://aws.amazon.com/jp/rds/aurora/faqs/)
+* Black Belt
+  * [20190424 AWS Black Belt Online Seminar Amazon Aurora MySQL](https://www.slideshare.net/AmazonWebServicesJapan/20190424-aws-black-belt-online-seminar-amazon-aurora-mysql)
+  * [20190828 AWS Black Belt Online Seminar Amazon Aurora with PostgreSQL Compatibility](https://www.slideshare.net/AmazonWebServicesJapan/20190828-aws-black-belt-online-seminar-amazon-aurora-with-postgresql-compatibility-168930538)
+  * [20200929 AWS Black Belt Online Seminar Amazon Aurora MySQL Compatible Edition ユースケース毎のスケーリング手法](https://www.slideshare.net/AmazonWebServicesJapan/20200929-aws-black-belt-online-seminar-amazon-aurora-mysql-compatible-edition)
