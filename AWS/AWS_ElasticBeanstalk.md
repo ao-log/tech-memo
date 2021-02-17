@@ -385,6 +385,14 @@ eb terminate # 環境の終了
 
 
 
+## AWS サービスの統合
+
+[Amazon CloudWatch Logs で Elastic Beanstalk を使用する](https://docs.aws.amazon.com/ja_jp/elasticbeanstalk/latest/dg/AWSHowTo.cloudwatchlogs.html)
+
+指定したパスのログファイルを CloudWatch Logs に送信するように設定できる。
+
+
+
 # 参考
 
 * Document
