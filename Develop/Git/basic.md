@@ -23,6 +23,10 @@ git log --graph
 // リポジトリのログの確認
 git reflog
 
+// コミットの統合。2 つめのコミットの pick を fixup に書き換える。
+git rebase -i HEAD~2
+
+
 // 差分確認
 git diff
 // 最新コミットとの差分
