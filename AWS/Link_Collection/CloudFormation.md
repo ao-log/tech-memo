@@ -13,6 +13,7 @@
     * Rain がイケてそう？
 
 
+
 ## 記事
 
 [CloudFormationのCLI実行ツール Rain がイケてそうなので紹介したい](https://dev.classmethod.jp/articles/aws-cloudformation-rain/)
@@ -25,6 +26,9 @@
 [【小ネタ】 AWS CloudFormationテンプレートでAWSアカウントごとにリソース作成有無を決定する](https://dev.classmethod.jp/articles/cfn-create-resources-depending-on-accounts/)
 
 * Conditions, Mappings を使って実現
+
+
+[[アップデート] CloudFormation StackSetsでスタックを複数リージョンに”同時デプロイ”が可能に！【時短テク】](https://dev.classmethod.jp/articles/deploy-concurrently-across-multiple-aws-regions-using-cfn-stacksets/)
 
 
 
