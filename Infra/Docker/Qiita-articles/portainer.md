@@ -1,3 +1,9 @@
+以下に投稿した記事。
+
+https://qiita.com/ao_log/items/d8ef847c826746f9e84b
+
+# 記事
+
 コンテナを管理する方法は色々あると思うのですが、 自宅で技術検証をするときは portainer が便利そうでした。
 公式サイトはこちらです。軽量な管理 UI で、簡単に Docker ホスト、Swarm クラスタを管理できると記載されています。
 https://portainer.io/
