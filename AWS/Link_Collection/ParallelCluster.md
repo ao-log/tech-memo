@@ -1,6 +1,10 @@
 
 ## 記事
 
+[AWS ParallelCluster のメジャーアップデート v3.0.0 がリリースされました](https://dev.classmethod.jp/articles/aws-parallel-cluster-v300-released/)
+
+
+
 [AWS ParallelCluster でもSSH接続はやめて、セッションマネージャーで接続できます](https://dev.classmethod.jp/articles/connect-to-aws-parallelcluster-with-session-manager/)
 
 

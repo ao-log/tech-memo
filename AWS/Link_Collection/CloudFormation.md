@@ -1,4 +1,10 @@
 
+## AWS Blog
+
+[AWS CloudFormation の新機能 — 障害ポイントからスタックオペレーションをすばやく再試行する](https://aws.amazon.com/jp/blogs/news/new-for-aws-cloudformation-quickly-retry-stack-operations-from-the-point-of-failure-2/)
+
+
+
 ## スライド
 
 [CI/CDプロセスにCloudFormationを本気導入するために考えるべきこと](https://speakerdeck.com/hamadakoji/cdpurosesunicloudformationwoben-qi-dao-ru-surutamenikao-erubekikoto)
@@ -29,6 +35,11 @@
 
 
 [[アップデート] CloudFormation StackSetsでスタックを複数リージョンに”同時デプロイ”が可能に！【時短テク】](https://dev.classmethod.jp/articles/deploy-concurrently-across-multiple-aws-regions-using-cfn-stacksets/)
+
+
+
+[AWS CloudFormation と AWS SAM を使用したサーバーレスアプリケーションの開発とデプロイ](https://aws.amazon.com/jp/blogs/news/build-deploy-serverless-app-using-aws-serverless-application-model-and-aws-cloudformation/)
+
 
 
 
