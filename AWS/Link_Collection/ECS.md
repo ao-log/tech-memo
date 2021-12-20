@@ -1,6 +1,59 @@
 
 ### AWS Blog
 
+#### Categories
+
+[Containers](https://aws.amazon.com/jp/blogs/containers/)
+
+[Category: Amazon Elastic Container Service](https://aws.amazon.com/jp/blogs/news/category/compute/amazon-elastic-container-service/)
+
+#### Blogs
+
+[詳解: Amazon ECSのタスクネットワーク](https://aws.amazon.com/jp/blogs/news/under-the-hood-task-networking-for-amazon-ecs/)
+
+* ネットワークスタックはネットワークの namespace を通じて設定される。
+* ECS Agent から CNI プラグインを呼び出して操作。複数のプラグインを順に呼び出す。
+* 最初に呼び出されるものは ecs-eni プラグイン。ENI を namespace にアタッチ。
+* ecs-bridge と ecs-ipamプラグインにより認証情報エンドポイントに HTTP リクエストできるように設定。
+* 処理の流れ
+  * eth1 を作成。
+  * eth1 をタスク用の namespace に移動。
+* pause コンテナを作成。ネットワークスタックの設定とコンテナ内で実行されるコマンドのレースコンディションを防ぐため。
+* pause コンテナの network namespace をセットアップ。
+* タスク定義の各コンテナを開始。
+
+
+[詳細: Fargate データプレーン](https://aws.amazon.com/jp/blogs/news/under-the-hood-fargate-data-plane/)
+
+* Docker Engine を Containerd に置き換えた
+
+他にも Fargate の実装にあたっては以下のカスタマイズをおこなっている。
+
+* awsvpc のサポート。Container Networking Interface (CNI) プラグインを利用しネットワークをセットアップ。
+* FireLens のサポート。
+* ECS タスクのメタデータエンドポイント。統計情報などを採取できるようにローカルの HTTP エンドポイントを提供。
+
+以下の特徴がある。
+
+* pause コンテナは不要となった。Containerd は、コンテナの起動時に外部で作成されたネットワーク名前空間の使用をサポートしているため。
+* さまざまな宛先へのログ送信のサポート。Containerd の Shim ログ記録プラグインを拡張している。amazon-ecs-shim-loggers-for-containerd リポジトリ。
+* ランタイムは runC のほか FireCracker に切り替えられる構造。
+* Fargate エージェント。
+
+コンテナ起動時の流れがシーケンス図で示されている。
+
+* network namespace の作成
+* Customer ENI のプロビジョニング
+* AWS Secrets Manager からシークレットの取得
+* コンテナイメージのプル
+* containerd へコンテナ開始の指示
+* コンテナランタイムへコンテナ開始の指示。logging shim plugin の開始。
+
+Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargate VPC に繋がっている。
+カスタマータスクゾーンにて container runtime shim を介して runc によりコンテナが起動。Customer ENI により Customer の VPC に繋がっている。
+
+
+
 [ECS のアプリケーションを正常にシャットダウンする方法](https://aws.amazon.com/jp/blogs/news/graceful-shutdowns-with-ecs/)
 
 * エントリプロセス
@@ -21,8 +74,6 @@
   * 登録解除後に SIGTERM なので、登録解除の遅延は 120 秒未満にする必要がある。
 
 
-[詳解: Amazon ECSのタスクネットワーク](https://aws.amazon.com/jp/blogs/news/under-the-hood-task-networking-for-amazon-ecs/)
-
 
 [詳解 FireLens – Amazon ECS タスクで高度なログルーティングを実現する機能を深く知る](https://aws.amazon.com/jp/blogs/news/under-the-hood-firelens-for-amazon-ecs-tasks/)
 
@@ -35,18 +86,55 @@
   * カスタムログを include
   * タスク定義で設定した内容に応じて OUTPUT プラグインの設定
 
+[Fluent Bit による集中コンテナロギング](https://aws.amazon.com/jp/blogs/news/centralized-container-logging-fluent-bit/)
+
+[Amazon ECS Fargate/EC2 起動タイプでの理論的なコスト最適化手法](https://aws.amazon.com/jp/blogs/news/theoretical-cost-optimization-by-amazon-ecs-launch-type-fargate-vs-ec2/)
+
+[Amazon ECS クラスターの Auto Scaling を深く探る](https://aws.amazon.com/jp/blogs/news/deep-dive-on-amazon-ecs-cluster-auto-scaling/)
 
 [CloudWatch と Prometheus のカスタムメトリクスに基づく Amazon ECS サービスのオートスケーリング](https://aws.amazon.com/jp/blogs/news/autoscaling-amazon-ecs-services-based-on-custom-cloudwatch-and-prometheus-metrics/)
 
+[新機能 – AWS ECS Cluster Auto ScalingによるECSクラスターの自動スケーリング](https://aws.amazon.com/jp/blogs/news/aws-ecs-cluster-auto-scaling-is-now-generally-available/)
+
+[Amazon ECS向けAmazon CloudWatch Container Insightsについて](https://aws.amazon.com/jp/blogs/news/introducing-container-insights-for-amazon-ecs/)
+
+[Bottlerocket のセキュリティ機能 〜オープンソースの Linux ベースオペレーティングシステム〜](https://aws.amazon.com/jp/blogs/news/security-features-of-bottlerocket-an-open-source-linux-based-operating-system/)
+
+[AWS Distro for OpenTelemetry コレクターを使用したクロスアカウントの Amazon ECS メトリクス収集](https://aws.amazon.com/jp/blogs/news/using-aws-distro-for-opentelemetry-collector-for-cross-account-metrics-collection-on-amazon-ecs/)
+
+[Amazon ECS でのデーモンサービスの改善](https://aws.amazon.com/jp/blogs/news/improving-daemon-services-in-amazon-ecs/)
+
+[Amazon ECS と AWS Fargate を利用した Twelve-Factor Apps の開発](https://aws.amazon.com/jp/blogs/news/developing-twelve-factor-apps-using-amazon-ecs-and-aws-fargate/)
+
+[New – Amazon ECS Exec による AWS Fargate, Amazon EC2 上のコンテナへのアクセス](https://aws.amazon.com/jp/blogs/news/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/)
+
+[Amazon ECS deployment circuit breaker のご紹介](https://aws.amazon.com/jp/blogs/news/announcing-amazon-ecs-deployment-circuit-breaker-jp/)
 
 [AWS App Mesh を使用した Amazon ECS でのカナリアデプロイパイプラインの作成](https://aws.amazon.com/jp/blogs/news/create-a-pipeline-with-canary-deployments-for-amazon-ecs-using-aws-app-mesh/)
 
+[AWS Cloud Map:アプリケーションのカスタムマップの簡単な作成と維持](https://aws.amazon.com/jp/blogs/news/aws-cloud-map-easily-create-and-maintain-custom-maps-of-your-applications/)
+
+[AWS CodeDeploy による AWS Fargate と Amazon ECS でのBlue/Greenデプロイメントの実装](https://aws.amazon.com/jp/blogs/news/use-aws-codedeploy-to-implement-blue-green-deployments-for-aws-fargate-and-amazon-ecs/)
+
+[Amazon ECR をソースとしてコンテナイメージの継続的デリバリパイプラインを構築する](https://aws.amazon.com/jp/blogs/news/build-a-continuous-delivery-pipeline-for-your-container-images-with-amazon-ecr-as-source/)
 
 [Amazon ECS on AWS Fargate を利用したコンテナイメージのビルド](https://aws.amazon.com/jp/blogs/news/building-container-images-on-amazon-ecs-on-aws-fargate/)
 
 
+## Black Belt
+
 [[AWS Black Belt Online Seminar] AWS コンテナサービス開始のおしらせ](https://aws.amazon.com/jp/blogs/news/aws-bb-containers-start/)
 
+[[AWS Black Belt Online Seminar] CON246 ログ入門 資料公開](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con246-log/)
+
+[[AWS Black Belt Online Seminar] CON245 Configuration & Secret Management 入門 資料公開](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con245-config/)
+
+
+[202109 AWS Black Belt Online Seminar Auto Scaling in ECS](https://www.slideshare.net/AmazonWebServicesJapan/202109-aws-black-belt-online-seminar-auto-scaling-in-ecs-250178830)
+
+[202109 AWS Black Belt Online Seminar Amazon ECS Capacity Providers](https://www.slideshare.net/AmazonWebServicesJapan/202109-aws-black-belt-online-seminar-amazon-ecs-capacity-providers)
+
+[202109 AWS Black Belt Online Seminar Amazon Elastic Container Service − EC2 スポットインスタンス / Fargate Spot ことはじめ](https://www.slideshare.net/AmazonWebServicesJapan/202109-aws-black-belt-online-seminar-amazon-elastic-container-service-ec-fargate-spot)
 
 
 ### tori さん
@@ -62,6 +150,16 @@
 * minimumHealthyPercent を小さめに maximumPercent を多めに設定することで、より少ないステップ数でデプロイが完了するようにする。
 
 
+[アプリケーション開発者は Amazon ECS あるいは Kubernetes をどこまで知るべきか](https://speakerdeck.com/toricls/you-build-it-you-run-it)
+
+
+
+
+## ECS Agent
+
+[aws/amazon-ecs-agent](https://github.com/aws/amazon-ecs-agent)
+
+[amazon-ecs-agent/proposals/eni.md](https://github.com/aws/amazon-ecs-agent/blob/master/proposals/eni.md)
 
 
 ## 記事
