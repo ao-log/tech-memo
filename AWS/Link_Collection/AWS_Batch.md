@@ -10,6 +10,9 @@
 
 [AWS Compute Blog - Tag: AWS Batch](https://aws.amazon.com/jp/blogs/compute/tag/aws-batch/)
 
+[AWS Batch ベストプラクティスまとめ](https://aws.amazon.com/jp/blogs/news/aws-batch-best-practices/)
+
+
 
 ## Multi-node
 
@@ -27,4 +30,9 @@
 
 [Introducing retry strategies for AWS Batch](https://aws.amazon.com/jp/blogs/compute/introducing-retry-strategies-for-aws-batch/)
 
+
+
+## 記事
+
+[AWS Batchでスケジュールポリシーを使ってジョブごとの重みに従ってコンピューティングリソースの割当が出来るようになりました](https://dev.classmethod.jp/articles/aws-batch-schedulepolicy-weight/)
 

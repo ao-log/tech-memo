@@ -304,6 +304,10 @@ Fargate の場合はサポートされない。**Fargate の場合はデフォ�
 * Firelens をログルーターとして使用することも可能。サイドカーとして稼働させる。
 * OUTPUT が様々なものに対応している。firehose など。
 
+[FireLens 設定を使用するタスク定義の作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/firelens-taskdef.html)
+
+ * AWS Fargate でホストされるタスクは、file 設定ファイルタイプのみをサポート
+
 #### Authentication
 
 [Private registry authentication for tasks](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html)
