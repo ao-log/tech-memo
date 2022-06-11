@@ -241,6 +241,51 @@ EFA を使用するすべてのインスタンスは、同じクラスタープ�
 
 
 
+## スケジューリングポリシー
+
+[スケジューリングポリシー](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/scheduling-policies.html)
+
+スケジューリングポリシーはジョブキューに対して 1:1 で設定する。
+
+[スケジューリングポリシーテンプレート](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/scheduling-policy-template.html)
+
+[API Reference](https://docs.aws.amazon.com/ja_jp/batch/latest/APIReference/API_CreateSchedulingPolicy.html) をあわせて参照するとよい。
+
+```json
+POST /v1/createschedulingpolicy HTTP/1.1
+Content-type: application/json
+
+{
+   "fairsharePolicy": { 
+      "computeReservation": number,
+      "shareDecaySeconds": number,
+      "shareDistribution": [ 
+         { 
+            "shareIdentifier": "string",
+            "weightFactor": number
+         }
+      ]
+   },
+   "name": "string",
+   "tags": { 
+      "string" : "string" 
+   }
+}
+```
+
+
+[スケジューリングポリシーパラメータ](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/scheduling-policy-parameters.html)
+
+* name: スケジュールポリシーの名前。
+* fairsharePolicy:
+  * computeReservation: 利用可能な maxVCPU を設定。予約される割合は ```(computeReservation/100)^ActiveFairShares``` で計算される。computeReservation が 50 の場合は active fair share identifier が 1 個の場合は 50 % の vCPU を予約する。active fair share identifier の個数で累乗計算される。
+  * shareDecaySeconds: 各 fair share identifier の割合を計算する期間の秒数。0 の場合は現在の使用量のみ考慮される。decay(減衰)によって、直近のジョブにより大きな重みを割り当てることが可能になる。
+  * shareDistribution: shareIdentifier ごとに重みを設定する配列。
+    * shareIdentifier: fair share identifier もしくは fair share identifier prefix を指定。「*」で終了する場合は prefix。
+    * weightFactor: 重み。低い値ほど高優先度。
+
+
+
 ## トラブルシューティング
 
 [トラブルシューティング](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/troubleshooting.html)

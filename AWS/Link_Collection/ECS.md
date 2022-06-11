@@ -7,6 +7,8 @@
 
 [Category: Amazon Elastic Container Service](https://aws.amazon.com/jp/blogs/news/category/compute/amazon-elastic-container-service/)
 
+
+
 #### Blogs
 
 [詳解: Amazon ECSのタスクネットワーク](https://aws.amazon.com/jp/blogs/news/under-the-hood-task-networking-for-amazon-ecs/)
@@ -53,7 +55,6 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 カスタマータスクゾーンにて container runtime shim を介して runc によりコンテナが起動。Customer ENI により Customer の VPC に繋がっている。
 
 
-
 [ECS のアプリケーションを正常にシャットダウンする方法](https://aws.amazon.com/jp/blogs/news/graceful-shutdowns-with-ecs/)
 
 * エントリプロセス
@@ -74,6 +75,8 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * 登録解除後に SIGTERM なので、登録解除の遅延は 120 秒未満にする必要がある。
 
 
+[詳解: Amazon Elastic Container Service と AWS Fargate のタスク起動レートの向上](https://aws.amazon.com/jp/blogs/news/under-the-hood-amazon-elastic-container-service-and-aws-fargate-increase-task-launch-rates/)
+
 
 [詳解 FireLens – Amazon ECS タスクで高度なログルーティングを実現する機能を深く知る](https://aws.amazon.com/jp/blogs/news/under-the-hood-firelens-for-amazon-ecs-tasks/)
 
@@ -86,55 +89,96 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * カスタムログを include
   * タスク定義で設定した内容に応じて OUTPUT プラグインの設定
 
+
 [Fluent Bit による集中コンテナロギング](https://aws.amazon.com/jp/blogs/news/centralized-container-logging-fluent-bit/)
 
-[Amazon ECS Fargate/EC2 起動タイプでの理論的なコスト最適化手法](https://aws.amazon.com/jp/blogs/news/theoretical-cost-optimization-by-amazon-ecs-launch-type-fargate-vs-ec2/)
 
 [Amazon ECS クラスターの Auto Scaling を深く探る](https://aws.amazon.com/jp/blogs/news/deep-dive-on-amazon-ecs-cluster-auto-scaling/)
 
-[CloudWatch と Prometheus のカスタムメトリクスに基づく Amazon ECS サービスのオートスケーリング](https://aws.amazon.com/jp/blogs/news/autoscaling-amazon-ecs-services-based-on-custom-cloudwatch-and-prometheus-metrics/)
 
 [新機能 – AWS ECS Cluster Auto ScalingによるECSクラスターの自動スケーリング](https://aws.amazon.com/jp/blogs/news/aws-ecs-cluster-auto-scaling-is-now-generally-available/)
 
+
+[カスタムメトリクスを用いた Amazon Elastic Container Service (ECS) のオートスケーリング](https://aws.amazon.com/jp/blogs/news/amazon-elastic-container-service-ecs-auto-scaling-using-custom-metrics/)
+
+* リクエストをポーリング、処理するようなワークロードではカスタムメトリクスによる対応が必要。
+* スケーリングメトリクスを計算する AWS Lambda 関数をトリガーする。EventBridge によって定期的に実行し、SQS メトリクスをポーチングし、ECS タスクで実行中のキャパシティを考慮して計算する。カスタムメトリクスとして CloudWatch Metrics に送信。
+* ターゲット追跡スケーリングポリシーでカスタムメトリクスを使用。
+
+
+[CloudWatch と Prometheus のカスタムメトリクスに基づく Amazon ECS サービスのオートスケーリング](https://aws.amazon.com/jp/blogs/news/autoscaling-amazon-ecs-services-based-on-custom-cloudwatch-and-prometheus-metrics/)カスタム
+
+
 [Amazon ECS向けAmazon CloudWatch Container Insightsについて](https://aws.amazon.com/jp/blogs/news/introducing-container-insights-for-amazon-ecs/)
 
-[Bottlerocket のセキュリティ機能 〜オープンソースの Linux ベースオペレーティングシステム〜](https://aws.amazon.com/jp/blogs/news/security-features-of-bottlerocket-an-open-source-linux-based-operating-system/)
 
 [AWS Distro for OpenTelemetry コレクターを使用したクロスアカウントの Amazon ECS メトリクス収集](https://aws.amazon.com/jp/blogs/news/using-aws-distro-for-opentelemetry-collector-for-cross-account-metrics-collection-on-amazon-ecs/)
 
+
+[Bottlerocket のセキュリティ機能 〜オープンソースの Linux ベースオペレーティングシステム〜](https://aws.amazon.com/jp/blogs/news/security-features-of-bottlerocket-an-open-source-linux-based-operating-system/)
+
+
 [Amazon ECS でのデーモンサービスの改善](https://aws.amazon.com/jp/blogs/news/improving-daemon-services-in-amazon-ecs/)
+
 
 [Amazon ECS と AWS Fargate を利用した Twelve-Factor Apps の開発](https://aws.amazon.com/jp/blogs/news/developing-twelve-factor-apps-using-amazon-ecs-and-aws-fargate/)
 
+
 [New – Amazon ECS Exec による AWS Fargate, Amazon EC2 上のコンテナへのアクセス](https://aws.amazon.com/jp/blogs/news/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/)
+
 
 [Amazon ECS deployment circuit breaker のご紹介](https://aws.amazon.com/jp/blogs/news/announcing-amazon-ecs-deployment-circuit-breaker-jp/)
 
-[AWS App Mesh を使用した Amazon ECS でのカナリアデプロイパイプラインの作成](https://aws.amazon.com/jp/blogs/news/create-a-pipeline-with-canary-deployments-for-amazon-ecs-using-aws-app-mesh/)
 
 [AWS Cloud Map:アプリケーションのカスタムマップの簡単な作成と維持](https://aws.amazon.com/jp/blogs/news/aws-cloud-map-easily-create-and-maintain-custom-maps-of-your-applications/)
 
+
+[AWS App Mesh を使用した Amazon ECS でのカナリアデプロイパイプラインの作成](https://aws.amazon.com/jp/blogs/news/create-a-pipeline-with-canary-deployments-for-amazon-ecs-using-aws-app-mesh/)
+
+
 [AWS CodeDeploy による AWS Fargate と Amazon ECS でのBlue/Greenデプロイメントの実装](https://aws.amazon.com/jp/blogs/news/use-aws-codedeploy-to-implement-blue-green-deployments-for-aws-fargate-and-amazon-ecs/)
+
 
 [Amazon ECR をソースとしてコンテナイメージの継続的デリバリパイプラインを構築する](https://aws.amazon.com/jp/blogs/news/build-a-continuous-delivery-pipeline-for-your-container-images-with-amazon-ecr-as-source/)
 
+
 [Amazon ECS on AWS Fargate を利用したコンテナイメージのビルド](https://aws.amazon.com/jp/blogs/news/building-container-images-on-amazon-ecs-on-aws-fargate/)
+
+
+[Amazon ECS on AWS Fargate のコスト最適化チェックリスト](https://aws.amazon.com/jp/blogs/news/cost-optimization-checklist-for-ecs-fargate/)
+
+* タグを使用するにはアカウント設定で「新しい Amazon リソースネーム (ARN) とリソース識別子 (ID) 形式をオプトイン」しておく必要がある。
+* コストエクスプローラーによって可視化。
+* Savings Plans によるコスト削減。
+* Fargate Spot の使用。
+* タスクの適切なサイジング。
+* Auto Scaling によって適切なタスク数を稼働。
+* 営業時間外にタスクを停止するようにスケジューリング。
+
+
+[Amazon ECS Fargate/EC2 起動タイプでの理論的なコスト最適化手法](https://aws.amazon.com/jp/blogs/news/theoretical-cost-optimization-by-amazon-ecs-launch-type-fargate-vs-ec2/)
+
 
 
 ## Black Belt
 
 [[AWS Black Belt Online Seminar] AWS コンテナサービス開始のおしらせ](https://aws.amazon.com/jp/blogs/news/aws-bb-containers-start/)
 
+
 [[AWS Black Belt Online Seminar] CON246 ログ入門 資料公開](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con246-log/)
+
 
 [[AWS Black Belt Online Seminar] CON245 Configuration & Secret Management 入門 資料公開](https://aws.amazon.com/jp/blogs/news/aws-black-belt-online-seminar-con245-config/)
 
 
 [202109 AWS Black Belt Online Seminar Auto Scaling in ECS](https://www.slideshare.net/AmazonWebServicesJapan/202109-aws-black-belt-online-seminar-auto-scaling-in-ecs-250178830)
 
+
 [202109 AWS Black Belt Online Seminar Amazon ECS Capacity Providers](https://www.slideshare.net/AmazonWebServicesJapan/202109-aws-black-belt-online-seminar-amazon-ecs-capacity-providers)
 
+
 [202109 AWS Black Belt Online Seminar Amazon Elastic Container Service − EC2 スポットインスタンス / Fargate Spot ことはじめ](https://www.slideshare.net/AmazonWebServicesJapan/202109-aws-black-belt-online-seminar-amazon-elastic-container-service-ec-fargate-spot)
+
 
 
 ### tori さん
@@ -160,6 +204,7 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [aws/amazon-ecs-agent](https://github.com/aws/amazon-ecs-agent)
 
 [amazon-ecs-agent/proposals/eni.md](https://github.com/aws/amazon-ecs-agent/blob/master/proposals/eni.md)
+
 
 
 ## 記事
@@ -221,11 +266,9 @@ Amazon ECS deployment circuit breaker
     * リソースを特定するための情報(ARN など)
 
 
-
 [CloudWatch Logs Insights でコンテナ単位のCPU・メモリ使用量などを確認する](https://dev.classmethod.jp/articles/ways-to-check-fargate-cpu-usage/)
 
 * Container Insight の [View performance logs] から Logs Insights に遷移する。既にクエリが入力済みの状態になっている。
-
 
 
 [Container Insights でコンテナ単位のCPU・メモリ使用率を表示させる](https://dev.classmethod.jp/articles/how-to-check-container-cpu-usage-by-container-insights/)
