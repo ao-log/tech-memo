@@ -1,4 +1,30 @@
 
+[AWS Load Balancer Controller を使った Blue/Green デプロイメント、カナリアデプロイメント、A/B テスト](https://aws.amazon.com/jp/blogs/news/using-aws-load-balancer-controller-for-blue-green-deployment-canary-deployment-and-a-b-testing/)
+
+以下のようなマニフェストにより Blue/Green デプロイができる。weight を調整することで徐々に重みづけを変えていくことも可能。
+
+```json
+alb.ingress.kubernetes.io/actions.blue-green: |
+  {
+     "type":"forward",
+     "forwardConfig":{
+       "targetGroups":[
+         {
+           "serviceName":"hello-kubernetes-v1",
+           "servicePort":"80",
+           "weight":0
+         },
+         {
+           "serviceName":"hello-kubernetes-v2",
+           "servicePort":"80",
+           "weight":100
+         }
+       ]
+     }
+   }
+```
+
+
 
 [Amazon EKS での Kubernetes アップグレードの計画](https://aws.amazon.com/jp/blogs/news/planning-kubernetes-upgrades-with-amazon-eks/)
 

@@ -90,6 +90,14 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * タスク定義で設定した内容に応じて OUTPUT プラグインの設定
 
 
+[詳解: Amazon ECS による CPU とメモリのリソース管理](https://aws.amazon.com/jp/blogs/news/how-amazon-ecs-manages-cpu-and-memory-resources/)
+
+二つのアプローチについて書かれている。
+* 柔軟性を最大化する: CPU を指定しない。この場合は cpu.shares に 2 が設定される。メモリはソフトリミット以上使用できるため競合し OOM Killer が発生する可能性がある。スワップを設定することにより、OOM Killer の確率を下げられる。
+* 制御を最大化する: 
+
+
+
 [Fluent Bit による集中コンテナロギング](https://aws.amazon.com/jp/blogs/news/centralized-container-logging-fluent-bit/)
 
 
