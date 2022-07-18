@@ -1,4 +1,17 @@
 
+[[待望のアプデ]EC2インスタンスメタデータサービスv2がリリースされてSSRF脆弱性等への攻撃に対するセキュリティが強化されました！](https://dev.classmethod.jp/articles/ec2-imdsv2-release/)
+
+* IMDSv1 の場合は GET メソッドでメタデータの取得ができる。
+```
+curl http://169.254.169.254/latest/meta-data/security-credentials/
+```
+
+* IMDSv2 の場合は事前に PUT で Token を取得する必要がある。
+* v2 のみに強制できる。
+* メタデータサービスを無効化できる。
+* メタデータレスポンスの TTL を短くし複数ホストを経由した取得を防止できる
+
+
 
 [EBSボリューム作成時のべき等性を担保できるようになりました](https://dev.classmethod.jp/articles/ensuring-idempotency-for-ebs/)
 

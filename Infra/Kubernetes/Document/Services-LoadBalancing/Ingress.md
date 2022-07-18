@@ -8,7 +8,7 @@
 * バックエンドとして Service が必要。Service は NodePort にする必要がある。
 
 
-#### EKS の場合の例
+## EKS の場合
 
 [Amazon EKS でのアプリケーション負荷分散](https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/alb-ingress.html)
 

@@ -6,7 +6,7 @@
 * PVC の Dynamic Provisioning を使用することで、PVC 作成タイミングで動的に PV が作成される。事前に Storage クラスの作成が必要。
 
 
-#### EKS の場合の例
+## EKS の場合
 
 * [Amazon EKS で永続的ストレージを使用するにはどうすればよいですか?](https://aws.amazon.com/jp/premiumsupport/knowledge-center/eks-persistent-storage/)
 * [Amazon EBS CSI ドライバー](https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/ebs-csi.html)
