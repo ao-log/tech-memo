@@ -10,3 +10,6 @@
 * kube-controller-manager
 * cloud-controller-manager
 
+
+[マニフェストファイルのサンプル](https://github.com/kubernetes/website/tree/main/content/en/examples)
+

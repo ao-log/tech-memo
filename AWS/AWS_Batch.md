@@ -228,6 +228,45 @@ AMI を自前で用意している場合は上記ドキュメントの内容を�
 ジョブの要件を満たすのに十分な大きさの追加インスタンスを選択する。中断される可能性が低いインスタンスタイプを優先。スポットを使用する設定の場合のみ使用可能。
 
 
+[コンピューティング環境の更新](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/updating-compute-environments.html)
+
+[AWS Batch、UpdateComputeEnvironment API の改良を追加](https://aws.amazon.com/jp/about-aws/whats-new/2022/04/aws-batch-adds-improvement-updatecomputeenvironment-api/)
+
+Fargate のコンピューティング環境は securityGroupIds、VPC subnets のみ変更可能。
+
+EC2 の場合以下を変更可能。
+* 配分戦略(BEST_FIT の場合は変更不可)
+* Bid percentage (bidPercentage)
+* EC2 configuration (ec2Configuration)
+* Key pair (ec2KeyPair)
+* Image ID (imageId)
+* Instance role (instanceRole)
+* Instance types (instanceTypes)
+* Launch template (launchTemplate)
+* Placement group (placementGroup)
+* Security groups (securityGroupIds)
+* VPC subnets (subnets)
+* EC2 tags (tags)
+* Compute environment type (EC2 or SPOT)
+* AMI
+
+二つの更新メカニズムがある。
+* スケーリングアップデート。vCPU 数を変更した時のようなインスタンスの増減。
+* インフラストラクチャアップデート。インスタンスのリプレースが発生。
+
+以下が前提条件
+* サービスロールは AWSServiceRoleForBatch
+* 配分戦略は BEST_FIT_PROGRESSIVE、SPOT_CAPACITY_OPTIMIZED
+
+更新中の動作
+* コンピューティング環境のステータスが UPDATING になる。
+* 現在実行中のジョブは updatePolicy に従って dispatch される
+* terminateJobsOnUpdate が true の場合: 実行中のジョブは終了する。リトライ設定によっては更新済みのコンピューティング環境上で実行される。
+* jobExecutionTimeoutMinutes が経過するまでの間はジョブの実行が許可される。
+* ジョブ終了後、古い環境のインスタンスは終了する。
+
+
+
 [メモリ管理](https://docs.aws.amazon.com/ja_jp/batch/latest/userguide/memory-management.html)
 
 メモリはインスタンスに搭載されている量全てを使用することはできない。
