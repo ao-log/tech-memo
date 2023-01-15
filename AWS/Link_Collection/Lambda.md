@@ -11,4 +11,5 @@
 
 [コンテナ利用者に捧げる AWS Lambda の新しい開発方式 !](https://aws.amazon.com/jp/builders-flash/202103/new-lambda-container-development/?awsf.filter-name=*all)
 
+[[2022年最新版]Lambdaの裏側教えます！！A closer look at AWS Lambda (SVS404-R) #reinvent](https://dev.classmethod.jp/articles/reinvent2020-session-svs404/)
 

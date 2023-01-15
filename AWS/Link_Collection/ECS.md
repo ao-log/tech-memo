@@ -11,6 +11,8 @@
 
 #### Blogs
 
+###### 内部的な仕組みの詳細
+
 [詳解: Amazon ECSのタスクネットワーク](https://aws.amazon.com/jp/blogs/news/under-the-hood-task-networking-for-amazon-ecs/)
 
 * ネットワークスタックはネットワークの namespace を通じて設定される。
@@ -75,19 +77,9 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * 登録解除後に SIGTERM なので、登録解除の遅延は 120 秒未満にする必要がある。
 
 
+###### リソース量の管理
+
 [詳解: Amazon Elastic Container Service と AWS Fargate のタスク起動レートの向上](https://aws.amazon.com/jp/blogs/news/under-the-hood-amazon-elastic-container-service-and-aws-fargate-increase-task-launch-rates/)
-
-
-[詳解 FireLens – Amazon ECS タスクで高度なログルーティングを実現する機能を深く知る](https://aws.amazon.com/jp/blogs/news/under-the-hood-firelens-for-amazon-ecs-tasks/)
-
-* FireLens を使えば、ファイルを編集して S3 に再アップロードするだけでよい。イメージをビルドし直す必要はない。
-* コンテナの標準出力ログは、Fluentd Docker ログドライバーを介して Unix ソケット経由で FireLens コンテナに送信される。
-* FireLens コンテナは、Fluentd Forward Protocol メッセージを TCP ソケットで LISTEN している
-* タスク起動時に設定ファイルが自動設定される。
-  * ログソース。ログソースは Unix および TCP ソケット
-  * ECS メタデータを追加するトランスフォーマー
-  * カスタムログを include
-  * タスク定義で設定した内容に応じて OUTPUT プラグインの設定
 
 
 [詳解: Amazon ECS による CPU とメモリのリソース管理](https://aws.amazon.com/jp/blogs/news/how-amazon-ecs-manages-cpu-and-memory-resources/)
@@ -97,9 +89,29 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 * 制御を最大化する: 
 
 
+[Fargate のサービスクォータが vCPU ベースに変更になります](https://aws.amazon.com/jp/blogs/news/migrating-fargate-service-quotas-to-vcpu-based-quotas/)
 
-[Fluent Bit による集中コンテナロギング](https://aws.amazon.com/jp/blogs/news/centralized-container-logging-fluent-bit/)
 
+###### Networking
+
+[AWS Cloud Map:アプリケーションのカスタムマップの簡単な作成と維持](https://aws.amazon.com/jp/blogs/news/aws-cloud-map-easily-create-and-maintain-custom-maps-of-your-applications/)
+
+
+###### Deploy
+
+[AWS CodeDeploy による AWS Fargate と Amazon ECS でのBlue/Greenデプロイメントの実装](https://aws.amazon.com/jp/blogs/news/use-aws-codedeploy-to-implement-blue-green-deployments-for-aws-fargate-and-amazon-ecs/)
+
+
+[Amazon ECR をソースとしてコンテナイメージの継続的デリバリパイプラインを構築する](https://aws.amazon.com/jp/blogs/news/build-a-continuous-delivery-pipeline-for-your-container-images-with-amazon-ecr-as-source/)
+
+
+[Amazon ECS on AWS Fargate を利用したコンテナイメージのビルド](https://aws.amazon.com/jp/blogs/news/building-container-images-on-amazon-ecs-on-aws-fargate/)
+
+
+[AWS App Mesh を使用した Amazon ECS でのカナリアデプロイパイプラインの作成](https://aws.amazon.com/jp/blogs/news/create-a-pipeline-with-canary-deployments-for-amazon-ecs-using-aws-app-mesh/)
+
+
+###### Auto Scaling
 
 [Amazon ECS クラスターの Auto Scaling を深く探る](https://aws.amazon.com/jp/blogs/news/deep-dive-on-amazon-ecs-cluster-auto-scaling/)
 
@@ -117,10 +129,41 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [CloudWatch と Prometheus のカスタムメトリクスに基づく Amazon ECS サービスのオートスケーリング](https://aws.amazon.com/jp/blogs/news/autoscaling-amazon-ecs-services-based-on-custom-cloudwatch-and-prometheus-metrics/)カスタム
 
 
+###### Fluent Bit
+
+[詳解 FireLens – Amazon ECS タスクで高度なログルーティングを実現する機能を深く知る](https://aws.amazon.com/jp/blogs/news/under-the-hood-firelens-for-amazon-ecs-tasks/)
+
+* FireLens を使えば、ファイルを編集して S3 に再アップロードするだけでよい。イメージをビルドし直す必要はない。
+* コンテナの標準出力ログは、Fluentd Docker ログドライバーを介して Unix ソケット経由で FireLens コンテナに送信される。
+* FireLens コンテナは、Fluentd Forward Protocol メッセージを TCP ソケットで LISTEN している
+* タスク起動時に設定ファイルが自動設定される。
+  * ログソース。ログソースは Unix および TCP ソケット
+  * ECS メタデータを追加するトランスフォーマー
+  * カスタムログを include
+  * タスク定義で設定した内容に応じて OUTPUT プラグインの設定
+
+[Fluent Bit による集中コンテナロギング](https://aws.amazon.com/jp/blogs/news/centralized-container-logging-fluent-bit/)
+
+
+###### Observability
+
 [Amazon ECS向けAmazon CloudWatch Container Insightsについて](https://aws.amazon.com/jp/blogs/news/introducing-container-insights-for-amazon-ecs/)
 
 
 [AWS Distro for OpenTelemetry コレクターを使用したクロスアカウントの Amazon ECS メトリクス収集](https://aws.amazon.com/jp/blogs/news/using-aws-distro-for-opentelemetry-collector-for-cross-account-metrics-collection-on-amazon-ecs/)
+
+
+###### その他の機能
+
+[New – Amazon ECS Exec による AWS Fargate, Amazon EC2 上のコンテナへのアクセス](https://aws.amazon.com/jp/blogs/news/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/)
+
+
+[Amazon ECS deployment circuit breaker のご紹介](https://aws.amazon.com/jp/blogs/news/announcing-amazon-ecs-deployment-circuit-breaker-jp/)
+
+
+###### Others
+
+[お誕生日おめでとう！AWS Fargate 5 周年](https://aws.amazon.com/jp/blogs/news/happy-5th-birthday-aws-fargate/)
 
 
 [Bottlerocket のセキュリティ機能 〜オープンソースの Linux ベースオペレーティングシステム〜](https://aws.amazon.com/jp/blogs/news/security-features-of-bottlerocket-an-open-source-linux-based-operating-system/)
@@ -130,27 +173,6 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 
 
 [Amazon ECS と AWS Fargate を利用した Twelve-Factor Apps の開発](https://aws.amazon.com/jp/blogs/news/developing-twelve-factor-apps-using-amazon-ecs-and-aws-fargate/)
-
-
-[New – Amazon ECS Exec による AWS Fargate, Amazon EC2 上のコンテナへのアクセス](https://aws.amazon.com/jp/blogs/news/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/)
-
-
-[Amazon ECS deployment circuit breaker のご紹介](https://aws.amazon.com/jp/blogs/news/announcing-amazon-ecs-deployment-circuit-breaker-jp/)
-
-
-[AWS Cloud Map:アプリケーションのカスタムマップの簡単な作成と維持](https://aws.amazon.com/jp/blogs/news/aws-cloud-map-easily-create-and-maintain-custom-maps-of-your-applications/)
-
-
-[AWS App Mesh を使用した Amazon ECS でのカナリアデプロイパイプラインの作成](https://aws.amazon.com/jp/blogs/news/create-a-pipeline-with-canary-deployments-for-amazon-ecs-using-aws-app-mesh/)
-
-
-[AWS CodeDeploy による AWS Fargate と Amazon ECS でのBlue/Greenデプロイメントの実装](https://aws.amazon.com/jp/blogs/news/use-aws-codedeploy-to-implement-blue-green-deployments-for-aws-fargate-and-amazon-ecs/)
-
-
-[Amazon ECR をソースとしてコンテナイメージの継続的デリバリパイプラインを構築する](https://aws.amazon.com/jp/blogs/news/build-a-continuous-delivery-pipeline-for-your-container-images-with-amazon-ecr-as-source/)
-
-
-[Amazon ECS on AWS Fargate を利用したコンテナイメージのビルド](https://aws.amazon.com/jp/blogs/news/building-container-images-on-amazon-ecs-on-aws-fargate/)
 
 
 [Amazon ECS on AWS Fargate のコスト最適化チェックリスト](https://aws.amazon.com/jp/blogs/news/cost-optimization-checklist-for-ecs-fargate/)
@@ -284,5 +306,12 @@ Amazon ECS deployment circuit breaker
 * コンテナ単位で表示させるにはタスク定義でコンテナの CPU、メモリを設定する必要がある。
 
 
+[AWS CDKでECS on FargateのCI/CDを実現する際の理想と現実](https://speakerdeck.com/tomoki10/ideal-and-reality-when-implementing-cicd-for-ecs-on-fargate-with-aws-cdk)
+
+
+[Compute EngineのNested Virtualizationを使ってFirecrackerの開発環境を構築してみた](https://dev.classmethod.jp/articles/setup-firecracker-devenv-on-compute-engine/)
+
+
+[ECS Service Connectによるサービスの新しいつなぎ方](https://speakerdeck.com/iselegant/a-new-way-to-connect-services-with-ecs-service-connect?slide=29)
 
 
