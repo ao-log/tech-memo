@@ -20,7 +20,7 @@ CloudWatch Events と同じ API になっている。
 
 イベントソースからイベントが発生し、イベントバスに送信。ルールに一致したイベントについてターゲットに送信する流れ。
 
-[Black Belt](https://www.slideshare.net/AmazonWebServicesJapan/20200122-aws-black-belt-online-seminar-amazon-eventbridge/21) に上記流れの図がある。
+[Black Belt](https://pages.awscloud.com/rs/112-TZM-766/images/20200122_BlackBelt_EventBridge.pdf) の p21 に上記流れの図がある。
 
 
 ## はじめに
@@ -97,7 +97,7 @@ Auto Scaling で起動されるインスタンスにコマンドを実行する�
   * イベントタイプ: インスタンスの起動と削除
   * EC2 Instance-launch Lifecycle Action
 * ターゲット: SSM 実行コマンド
-  * ドキュメン: AWS-RunShellScript
+  * ドキュメント: AWS-RunShellScript
   * Target key: tag:environment
   * Target value(s): production
 
@@ -324,5 +324,5 @@ Lambda 関数に対する適切なアクセス権限が設定されているこ�
   * [Amazon EventBridge](https://aws.amazon.com/jp/eventbridge/)
   * [よくある質問](https://aws.amazon.com/jp/eventbridge/faqs/)
 * Black Belt
-  * [20200122 AWS Black Belt Online Seminar Amazon EventBridge](https://www.slideshare.net/AmazonWebServicesJapan/20200122-aws-black-belt-online-seminar-amazon-eventbridge)
+  * [20200122 AWS Black Belt Online Seminar Amazon EventBridge](https://pages.awscloud.com/rs/112-TZM-766/images/20200122_BlackBelt_EventBridge.pdf)
 

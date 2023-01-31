@@ -229,10 +229,9 @@ HTTP ステータスコードごとのトラブルシューティング方法が
 
 
 
-
 ## BlackBelt
 
-[20191029 AWS Black Belt Online Seminar Elastic Load Balancing (ELB)](https://www.slideshare.net/AmazonWebServicesJapan/20191029-aws-black-belt-online-seminar-elastic-load-balancing-elb)
+[20191029 AWS Black Belt Online Seminar Elastic Load Balancing (ELB)](https://pages.awscloud.com/rs/112-TZM-766/images/20191029_AWS-Blackbelt_ELB.pdf)
 
 * 概要
   * P16:
@@ -289,5 +288,5 @@ HTTP ステータスコードごとのトラブルシューティング方法が
   * [よくある質問](https://aws.amazon.com/jp/elasticloadbalancing/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Elastic_Load_Balancing)
 * Black Belt
-  * [20191029 AWS Black Belt Online Seminar Elastic Load Balancing (ELB)](https://www.slideshare.net/AmazonWebServicesJapan/20191029-aws-black-belt-online-seminar-elastic-load-balancing-elb)
+  * [20191029 AWS Black Belt Online Seminar Elastic Load Balancing (ELB)](https://pages.awscloud.com/rs/112-TZM-766/images/20191029_AWS-Blackbelt_ELB.pdf)
 

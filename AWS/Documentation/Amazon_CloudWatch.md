@@ -143,7 +143,7 @@ Amazon S3 へエクスポート可能。
 
 ## BlackBelt
 
-* [20190326 AWS Black Belt Online Seminar Amazon CloudWatch](https://www.slideshare.net/AmazonWebServicesJapan/20190326-aws-black-belt-online-seminar-amazon-cloudwatch)
+* [20190326 AWS Black Belt Online Seminar Amazon CloudWatch](https://pages.awscloud.com/rs/112-TZM-766/images/20190326_AWS-BlackBelt_CloudWatch.pdf)
 
 * CloudWatch
   * P13:
@@ -169,5 +169,5 @@ Amazon S3 へエクスポート可能。
   * [よくある質問](https://aws.amazon.com/jp/cloudwatch/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_CloudWatch)
 * Black Belt
-  * [20190326 AWS Black Belt Online Seminar Amazon CloudWatch](https://www.slideshare.net/AmazonWebServicesJapan/20190326-aws-black-belt-online-seminar-amazon-cloudwatch)
+  * [20190326 AWS Black Belt Online Seminar Amazon CloudWatch](https://pages.awscloud.com/rs/112-TZM-766/images/20190326_AWS-BlackBelt_CloudWatch.pdf)
 

@@ -310,6 +310,8 @@ $ aws cloudformation delete-stack --stack-name myteststack
 マネジメントコンソールでは [Stack Actions] → [Import resources into stack] で対応可能。
 テンプレート側では "DeletionPolicy": "Retain" と指定しておく。
 
+対応しているリソースタイプは [インポートおよびドリフト検出オペレーションをサポートするリソース](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/resource-import-supported-resources.html) を参照すること。
+
 
 [スタック間でのリソースの移動](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/refactor-stacks.html)
 
@@ -758,10 +760,10 @@ UpdatePolicy:
 
 [CloudFormation ヘルパースクリプトリファレンス](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/cfn-helper-scripts-reference.html)
 
-* cfn-init: リソースメタデータの取得と解釈、パッケージのインストール、ファイルの作成、およびサービスの開始で使用。
-* cfn-signal: CreationPolicy または WaitCondition でシグナルを送信するために使用。
+* cfn-init: リソースメタデータの取得と解釈、パッケージのインストール、ファイルの作成、およびサービスの開始で使用
+* cfn-signal: CreationPolicy または WaitCondition でシグナルを送信するために使用
 * cfn-get-metadata: メタデータの取得に使用
-* cfn-hup: 変更が検出されたときにカスタムフックを実行するために使用。
+* cfn-hup: 変更が検出されたときにカスタムフックを実行するために使用。デーモンとして稼働させておく必要がある
 
 ヘルパースクリプトは /opt/aws/bin にインストールされている。
 
@@ -817,6 +819,11 @@ Resources:
         Timeout: PT5M
 ```        
 
+Workshop の [Helper scripts](https://catalog.workshops.aws/cfn101/en-US/basics/operations/helper-scripts) も参考になる。「3. Configure cfn-hup」にて cfn-hup の導入手順を説明している。
+
+* CreationPolicy を指定。UserData で cfn-init により Metadata.AWS::CloudFormation::Init を実行し、sfn-signal を送信
+* cfn-init 内では /etc/cfn/cfn-hup.conf、/etc/cfn/hooks.d/cfn-auto-reloader.conf を配置
+
 
 
 ## サンプルテンプレート
@@ -827,7 +834,7 @@ Resources:
 
 ## Black Belt
 
-[20200826 AWS Black Belt Online Seminar AWS CloudFormation](https://www.slideshare.net/AmazonWebServicesJapan/20200826-aws-black-belt-online-seminar-aws-cloudformation-238501102)
+[20200826 AWS Black Belt Online Seminar AWS CloudFormation](https://pages.awscloud.com/rs/112-TZM-766/images/20200826_AWS-BlackBelt_AWS-CloudFormation.pdf)
 
 * テンプレート
   * P26: テンプレートの要素
@@ -847,9 +854,10 @@ Resources:
   * P95: Dynamic Reference。SSM、Secrets Manager の値を参照したいときに使用。
 
 
-[20201006 AWS Black Belt Online Seminar AWS CloudFormation deep dive](https://www.slideshare.net/AmazonWebServicesJapan/20201006-aws-black-belt-online-seminar-aws-cloudformation-deep-dive)
+[20201006 AWS Black Belt Online Seminar AWS CloudFormation deep dive](https://pages.awscloud.com/rs/112-TZM-766/images/20201006_BlackBelt_CloudFormation_DeepDive.pdf)
 
 * P9: StackSets
+  * マネージド型では Organizations で「信頼されたアクセス」を有効にすると、StackSets 用の IAM ロールが自動作成される。管理アカウントから Switch Role して使用。セルフマネージド型では自前でロールを用意する必要がある。ロール名は固定
 * P20: リソースのインポート
 * P24: テンプレートのリファクタリング
 * P27: Ansible と組み合わせたサーバの構成管理

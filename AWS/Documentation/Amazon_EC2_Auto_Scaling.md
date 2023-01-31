@@ -15,6 +15,7 @@
 update-auto-scaling-group コマンドを使用して、Auto Scaling グループにサブネットを追加できる。
 set-subnets コマンドを使用して、Application Load Balancer で新しいサブネットを有効にする。
 
+
 [自動スケーリングのメリット](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/auto-scaling-benefits.html)
 
 Auto Scaling グループは可用性ゾーン間で不均衡になる可能性がある。
@@ -25,15 +26,11 @@ Auto Scaling グループは可用性ゾーン間で不均衡になる可能性�
 
 [ライフサイクル](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/AutoScalingGroupLifecycle.html)
 
-起動するまでの間は Pending。ライフサイクルフックを設定できる。
-
-正常に起動したインスタンスは InService の状態。 
-
-ヘルスチェックの失敗やスケールインによって、Terminating → Terminated へと遷移する。ライフサイクルフックを設定できる。
-
-デタッチすることもできる。
-
-スタンバイ状態にして一時的に外し、再び組み込むこともできる。
+* 起動するまでの間は Pending。ライフサイクルフックを設定できる
+* 正常に起動したインスタンスは InService の状態
+* ヘルスチェックの失敗やスケールインによって、Terminating → Terminated へと遷移する。ライフサイクルフックを設定できる
+* デタッチすることもできる
+* スタンバイ状態にして一時的に外し、再び組み込むこともできる。トラブルシューティングやメンテナンス用途
 
 
 
@@ -44,11 +41,14 @@ Auto Scaling グループは可用性ゾーン間で不均衡になる可能性�
 オンデマンドインスタンスとスポットインスタンスの組み合わせからなるフリートを使用可能。
 配分戦略で、オンデマンドとスポットの容量をどのように満たすかを設定可能。
 
+
 [起動テンプレートを使用した Auto Scaling グループの作成](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/create-asg-launch-template.html)
+
 
 [起動設定を使用した Auto Scaling グループの作成](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/create-asg.html)
 
 起動テンプレートもしくは起動設定から Auto Scaling Group を作成可能。ドキュメントでは、EC2 の最新機能を使用できるように**起動テンプレートが推奨されている。**
+
 
 [Elastic Load Balancing および Amazon EC2 Auto Scaling](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/autoscaling-load-balancer.html)
 
@@ -56,9 +56,11 @@ Auto Scaling グループは可用性ゾーン間で不均衡になる可能性�
 
 1 つのアベイラビリティーゾーンが異常ありまたは使用不可になると、Amazon EC2 Auto Scaling は、影響を受けていないアベイラビリティーゾーンで新しいインスタンスを起動する。異常のあるアベイラビリティーゾーンが正常な状態に戻ると、Amazon EC2 Auto Scaling は Auto Scaling グループのアベイラビリティーゾーンにわたって均等にインスタンスを自動的に再分散する。
 
+
 [最大インスタンス有効期限](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/asg-max-instance-lifetime.html)
 
 最大インスタンス有効期間の機能を設定しておくことで、稼働時間が最大許容時間に達したインスタンスが置き換えられる。
+
 
 [インスタンスの更新](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/asg-instance-refresh.html)
 
@@ -78,11 +80,13 @@ Auto Scaling グループは可用性ゾーン間で不均衡になる可能性�
 * 需要に基づくスケーリング（リソース使用率を指定値に維持）
 * 予測スケーリング
 
+
 #### 動的なスケーリング
 
 [動的スケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-scale-based-on-demand.html)
 
 CloudWatch アラームを使用してスケーリングする仕組みとなっている。
+
 
 [ターゲット追跡スケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-scaling-target-tracking.html)
 
@@ -103,6 +107,7 @@ CloudWatch アラームを使用してスケーリングする仕組みとなっ
 
 簡易スケーリング: 現在は非推奨。あるメトリクスが X % 以上になったら、といった条件でスケーリング。
 
+
 [スケジュールされたスケーリング](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/schedule_time.html)
 
 一度限り、あるいは cron のような定期的なスケーリングを設定可能。
@@ -111,23 +116,28 @@ CloudWatch アラームを使用してスケーリングする仕組みとなっ
 
 過去のメトリクスをもとに将来の需要を予測し、キャパシティの増減をスケジュールする。
 
+
 [終了ポリシー、スケールインからの保護](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-instance-termination.html)
 
 デフォルトの終了ポリシーではインスタンスが各 AZ に均等に配置されるようになっている。終了ポリシーは複数あり、変更することも可能。
 **スケールインから保護する設定**もある。インスタンスごとに個別に設定することも可能。
 
+
 [ライフサイクルフック](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/lifecycle-hooks.html)
 
-**インスタンスの起動時、削除時にカスタムアクションを実行可能。**タイムアウト期間（デフォルトは 1 時間）が経過するまで待機状態となる。（Pending:Wait、Terminating:Wait）。
+* インスタンスの起動時、削除時にカスタムアクションを実行できる（Pending:Wait、Terminating:Wait）
+* タイムアウト期間（デフォルトは 1 時間）が経過するまで待機状態となる
+* イベントが発行されるので EventBridge → Lambda → SSM の Run Command のような流れでインスタンスに対しコマンドを実行可能
+* ライフサイクルフックを追加した場合、ヘルスチェックの猶予期間が始まるのは、ライフサイクルフックアクションが完了してインスタンスが InService 状態になってから
+* ブログ記事もある
+  * [Building a Backup System for Scaled Instances using AWS Lambda and Amazon EC2 Run Command](https://aws.amazon.com/jp/blogs/compute/building-a-backup-system-for-scaled-instances-using-aws-lambda-and-amazon-ec2-run-command/)
 
-Amazon EventBridge、Amazon SNS、Amazon SQS を使用して通知を設定可能。
-
-なお、ライフサイクルフックを追加した場合、ヘルスチェックの猶予期間が始まるのは、ライフサイクルフックアクションが完了してインスタンスが InService 状態になってから。
 
 [インスタンスの一時的な削除](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-enter-exit-standby.html)
 
 スタンバイ状態にすることができる。
 スタンバイ状態にすると対象インスタンスはロードバランサから登録解除され、希望する容量の値も減少する。
+
 
 [スケーリングの中断](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-suspend-resume-processes.html)
 
@@ -146,6 +156,7 @@ EC2 インスタンスのチェックは、ステータスチェックにより�
 **ELB はデフォルトでは有効になっていない。**
 
 ヘルスチェックの猶予期間を設定することで、インスタンスの起動後、指定した時間の間ヘルスチェックを実施しない。
+
 
 [グループメトリクス](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/as-instance-monitoring.html)
 
@@ -177,6 +188,7 @@ $ aws ec2 create-launch-template \
 * セキュリティグループ
 * その他 EC2 インスタンスを起動するために使用するパラメータ
 
+
 #### Auto Scaling グループの作成
 
 [起動テンプレートを使用して Auto Scaling グループを作成する](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/create-asg-launch-template.html)
@@ -204,12 +216,25 @@ $ aws ec2 create-auto-scaling-group \
 ```
 
 
+## BlackBelt
+
+[20191002 AWS Black Belt Online Seminar Amazon EC2 Auto Scaling and AWS Auto Scaling](https://pages.awscloud.com/rs/112-TZM-766/images/20191002_AWS-Blakbelt_Auto_Scaling.pdf)
+
+* 各 AZ に均等になるようにインスタンスを配置しようとする
+* 動的なスケーリング
+  * ステップスケーリング: ウォームアップ期間中に次のアラームが発火した場合、現在起動中のインスタンス追加台数を差し引いた分だけ起動する
+  * ターゲット追跡スケーリング
+  * 予測スケーリング
+  * スケジュールスケーリング
+
+
+
 # 参考
 
 * Document
   * [Amazon EC2 Auto Scaling ドキュメント](https://docs.aws.amazon.com/ja_jp/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html)
 * Black Belt
-  * [20191002 AWS Black Belt Online Seminar Amazon EC2 Auto Scaling and AWS Auto Scaling](https://www.slideshare.net/AmazonWebServicesJapan/20191002-aws-black-belt-online-seminar-amazon-ec2-auto-scaling-and-aws-auto-scaling-178995835?ref=https://aws.amazon.com/)
+  * [20191002 AWS Black Belt Online Seminar Amazon EC2 Auto Scaling and AWS Auto Scaling](https://pages.awscloud.com/rs/112-TZM-766/images/20191002_AWS-Blakbelt_Auto_Scaling.pdf)
 
 
 

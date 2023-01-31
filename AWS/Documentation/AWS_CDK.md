@@ -57,5 +57,5 @@ cdk diff
   * [AWS クラウド開発キット](https://aws.amazon.com/jp/cdk/)
   * [よくある質問](https://aws.amazon.com/jp/cdk/faqs/)
 * Black Belt
-  * [20200303 AWS Black Belt Online Seminar AWS Cloud Development Kit (CDK)](https://www.slideshare.net/AmazonWebServicesJapan/20200303-aws-black-belt-online-seminar-aws-cloud-development-kit-cdk)
+  * [20200303 AWS Black Belt Online Seminar AWS Cloud Development Kit (CDK)](https://pages.awscloud.com/rs/112-TZM-766/images/20200303_BlackBelt_CDK.pdf)
 

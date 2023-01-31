@@ -121,12 +121,27 @@ $ sam deploy --guided \
 ```
 
 
+## Black Belt
+
+[20190814 AWS Black Belt Online Seminar AWS Serverless Application Model](https://pages.awscloud.com/rs/112-TZM-766/images/20190814_AWS-Blackbelt_SAM_rev.pdf)
+
+* 簡潔な記述でサーバレスの構成をデプロイできる
+* AWS::Serverless::Function の Events プロパティで API Gateway のパス、メソッドを指定可能。直感的に書ける。Events は他には S3、EventBridge など
+* CodeUri で指定したディレクトリの内容を ZIP にし、S3 バケットにアップロードされる
+* AutoPublishAlias を指定するとデプロイ時に新しい Lambda 関数バージョンを作成し、エイリアスを最新版に変更する
+* より詳細に API Gateway の設定を行いたい場合は AWS::Serverless::Api を使用する
+* SAM CLI
+  * sam init: 雛形作成
+  * sam build: .aws-sam/build 内にビルド
+
+
+
 # 参考
 
 * Document
   * [AWS Serverless Application Model (AWS SAM) とは](https://docs.aws.amazon.com/ja_jp/serverless-application-model/latest/developerguide/what-is-sam.htmll)
 * Black Belt
-  * [20190814 AWS Black Belt Online Seminar AWS Serverless Application Model](https://www.slideshare.net/AmazonWebServicesJapan/20190814-aws-black-belt-online-seminar-aws-serverless-application-model-165314501)
+  * [20190814 AWS Black Belt Online Seminar AWS Serverless Application Model](https://pages.awscloud.com/rs/112-TZM-766/images/20190814_AWS-Blackbelt_SAM_rev.pdf)
     * CloudFormation を拡張している。
     * AWS::Serverless::Function などのリソースタイプによって簡潔にテンプレートを書ける。
     * Event プロパティで Lambda 関数のトリガーを設定。
