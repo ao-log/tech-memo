@@ -55,6 +55,21 @@ Source(CodeCommit, ECR) → ECS(Blue/Green) のデプロイの流れ。
 * GitHub, GitHub Enterprise
 
 
+[他のアカウントのリソースを使用するパイプラインを作成する](https://docs.aws.amazon.com/ja_jp/codepipeline/latest/userguide/pipelines-create-cross-account.html)
+
+* アカウント A がパイプライン、S3 バケット、アカウント B が CodeDeploy という構成
+* アカウント A で必要な作業
+  * KMS カスタマーマネージドキーにて CodePipeline のサービスロールとアカウント B の IAM ロールへの許可が必要
+  * S3 バケットポリシーにてアカウント B を許可
+  * アカウント B への Switch Role 用 IAM ロール
+* アカウント B で必要な作業
+  * EC2 インスタンスロールへの S3 バケットへの書き込み許可、KMS カスタマーマネージドキーの暗号化の許可
+  * CodeDeploy 用のロールへの S3 バケットへのアクセス許可。信頼ポリシーでアカウント A を許可
+* パイプラインに必要な設定
+  * S3 バケット、KMS キーの指定
+  * デプロイアクションでアカウント B の CodeDeploy アプリケーション名、デプロイグループ名、IAM ロールを設定
+
+
 ## アクション
 
 [アクションの使用方法](https://docs.aws.amazon.com/ja_jp/codepipeline/latest/userguide/actions.html)
@@ -149,9 +164,9 @@ imagedefinitions.json が必要。
 
 
 
-## BlackBelt
+# BlackBelt
 
-[20201111 AWS Black Belt Online Seminar AWS CodeStar & AWS CodePipeline](https://www2.slideshare.net/AmazonWebServicesJapan/20201111-aws-black-belt-online-seminar-aws-codestar-aws-codepipeline)
+[20201111 AWS Black Belt Online Seminar AWS CodeStar & AWS CodePipeline](https://pages.awscloud.com/rs/112-TZM-766/images/20201111_BlackBelt_AWS%20CodeStar_AWS_CodePipeline.pdf)
 
 * P30: CodePipeline の各用語の定義
   * ステージ、アクション、入力/出力アーティファクト、トランジション
@@ -165,9 +180,9 @@ imagedefinitions.json が必要。
 * Document
   * * [CodePipeline とは](https://docs.aws.amazon.com/ja_jp/codepipeline/latest/userguide/welcome.html)
 * サービス紹介ページ
-  * [AWS CodeDeploy](https://aws.amazon.com/jp/codepipeline/features/)
+  * [AWS CodePipeline](https://aws.amazon.com/jp/codepipeline/features/)
   * [よくある質問](https://aws.amazon.com/jp/codepipeline/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_CodePipeline)
 * Black Belt
-  * [20201111 AWS Black Belt Online Seminar AWS CodeStar & AWS CodePipeline](https://www2.slideshare.net/AmazonWebServicesJapan/20201111-aws-black-belt-online-seminar-aws-codestar-aws-codepipeline)
+  * [20201111 AWS Black Belt Online Seminar AWS CodeStar & AWS CodePipeline](https://pages.awscloud.com/rs/112-TZM-766/images/20201111_BlackBelt_AWS%20CodeStar_AWS_CodePipeline.pdf)
 

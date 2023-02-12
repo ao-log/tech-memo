@@ -152,7 +152,7 @@ Route 53 Resolver。
 * [DNS フェイルオーバーで Route 53 のヘルスチェックを使用する方法を教えてください。](https://aws.amazon.com/jp/premiumsupport/knowledge-center/route-53-dns-health-checks/)
 
 
-## BlackBelt
+# BlackBelt
 
 [20191105 AWS Black Belt Online Seminar Amazon Route 53 Hosted Zone](https://www.slideshare.net/AmazonWebServicesJapan/20191105-aws-black-belt-online-seminar-amazon-route-53-hosted-zone-193836805)
 

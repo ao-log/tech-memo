@@ -216,7 +216,7 @@ $ aws ec2 create-auto-scaling-group \
 ```
 
 
-## BlackBelt
+# BlackBelt
 
 [20191002 AWS Black Belt Online Seminar Amazon EC2 Auto Scaling and AWS Auto Scaling](https://pages.awscloud.com/rs/112-TZM-766/images/20191002_AWS-Blakbelt_Auto_Scaling.pdf)
 

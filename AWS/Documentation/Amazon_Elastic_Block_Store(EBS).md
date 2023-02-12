@@ -134,7 +134,7 @@ I/O クレジットおよびバーストパフォーマンス
 
 
 
-## BlackBelt
+# BlackBelt
 
 [AWS Black Belt Online Seminar Amazon EBS 資料及び QA 公開](https://aws.amazon.com/jp/blogs/news/webinar-bb-amazon-ebs-2019/)
 

@@ -832,7 +832,7 @@ Workshop の [Helper scripts](https://catalog.workshops.aws/cfn101/en-US/basics/
 
 
 
-## Black Belt
+# Black Belt
 
 [20200826 AWS Black Belt Online Seminar AWS CloudFormation](https://pages.awscloud.com/rs/112-TZM-766/images/20200826_AWS-BlackBelt_AWS-CloudFormation.pdf)
 
@@ -880,6 +880,6 @@ Workshop の [Helper scripts](https://catalog.workshops.aws/cfn101/en-US/basics/
   * [AWS CloudFormation](https://aws.amazon.com/jp/cloudformation/)
   * [よくある質問](https://aws.amazon.com/jp/cloudformation/faqs/)
 * Black Belt
-  * [20200826 AWS Black Belt Online Seminar AWS CloudFormation](https://www.slideshare.net/AmazonWebServicesJapan/20200826-aws-black-belt-online-seminar-aws-cloudformation-238501102)
-  * [20201006 AWS Black Belt Online Seminar AWS CloudFormation deep dive](https://www.slideshare.net/AmazonWebServicesJapan/20201006-aws-black-belt-online-seminar-aws-cloudformation-deep-dive)
+  * [20200826 AWS Black Belt Online Seminar AWS CloudFormation](https://pages.awscloud.com/rs/112-TZM-766/images/20200826_AWS-BlackBelt_AWS-CloudFormation.pdf)
+  * [20201006 AWS Black Belt Online Seminar AWS CloudFormation deep dive](https://pages.awscloud.com/rs/112-TZM-766/images/20201006_BlackBelt_CloudFormation_DeepDive.pdf)
 

@@ -123,7 +123,7 @@ VPC 内のリソースから各サービス、エンドポイントに対して�
 
 
 
-## BlackBelt
+# BlackBelt
 
 [20201021 AWS Black Belt Online Seminar Amazon VPC](https://www.slideshare.net/AmazonWebServicesJapan/20201021-aws-black-belt-online-seminar-amazon-vpc)
 

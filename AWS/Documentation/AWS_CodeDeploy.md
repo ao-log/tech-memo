@@ -518,9 +518,9 @@ hooks:
 
 
 
-## BlackBelt
+# BlackBelt
 
-[20210126 AWS Black Belt Online Seminar AWS CodeDeploy](https://www.slideshare.net/AmazonWebServicesJapan/20210126-aws-black-belt-online-seminar-aws-codedeploy)
+[20210126 AWS Black Belt Online Seminar AWS CodeDeploy](https://pages.awscloud.com/rs/112-TZM-766/images/20210126_BlackBelt_CodeDeploy.pdf)
 
 * P18: デプロイ設定 - EC2
   * 各設定ごとに v2 をどのようにデプロイしているかを図解している。
@@ -540,6 +540,5 @@ hooks:
   * [よくある質問](https://aws.amazon.com/jp/codedeploy/faqs//)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_CodeDeploy)
 * Black Belt
-  * [20210126 AWS Black Belt Online Seminar AWS CodeDeploy](https://www.slideshare.net/AmazonWebServicesJapan/20210126-aws-black-belt-online-seminar-aws-codedeploy)
-  * [AWS Black Belt Online Seminar AWS Code Services Part 2](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-aws-code-services-part-2)
+  * [20210126 AWS Black Belt Online Seminar AWS CodeDeploy](https://pages.awscloud.com/rs/112-TZM-766/images/20210126_BlackBelt_CodeDeploy.pdf)
 

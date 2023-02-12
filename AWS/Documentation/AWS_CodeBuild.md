@@ -546,6 +546,22 @@ $ codebuild-resume
 ```
 
 
+
+# BlackBelt
+
+[AWS Black Belt Online Seminar CodeBuild](https://pages.awscloud.com/rs/112-TZM-766/images/20201125_AWS_BlackBelt_AWS_CodeBuild.pdf)
+
+* バッチビルド
+  * 同時実行、協調実行を定義する
+    * build-graph: 依存関係を定義できる。依存関係に従って順番に実行する
+    * build-list: 同時実行する
+    * build-matrix: 複数の組み合わせを並行実行する
+* reports: テストレポートの作成。作成したレポートはコンソール上で描画できる
+* ビルドをローカルで実行することも可能。CodeBuild の Dockerfile 類の GitHub リポジトリからクローンしてきて Docker イメージをビルドし、そちらでビルドできる
+* ブレークポイントを設定し、Session Manager でアクセスできる
+
+
+
 # 参考
 
 * Document
@@ -555,5 +571,5 @@ $ codebuild-resume
   * [よくある質問](https://aws.amazon.com/jp/codebuild/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_CodeBuild)
 * Black Belt
-  * [AWS Black Belt Online Seminar 2017 AWS Code Services ( CodeCommit, CodeBuild )](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-2017-aws-code-services-codecommit-codebuild)
+  * [AWS Black Belt Online Seminar CodeBuild](https://pages.awscloud.com/rs/112-TZM-766/images/20201125_AWS_BlackBelt_AWS_CodeBuild.pdf)
 

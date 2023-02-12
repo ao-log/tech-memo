@@ -68,7 +68,7 @@ Windows インスタンスでは、プライベートキーを使用して管理
 
 
 
-## BlackBelt
+# BlackBelt
 
 [AWS Black Belt Online Seminar Amazon EC2 - Windows](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-amazon-ec2-windows)
 

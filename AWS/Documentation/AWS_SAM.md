@@ -121,18 +121,44 @@ $ sam deploy --guided \
 ```
 
 
-## Black Belt
+# Black Belt
 
 [20190814 AWS Black Belt Online Seminar AWS Serverless Application Model](https://pages.awscloud.com/rs/112-TZM-766/images/20190814_AWS-Blackbelt_SAM_rev.pdf)
 
 * 簡潔な記述でサーバレスの構成をデプロイできる
-* AWS::Serverless::Function の Events プロパティで API Gateway のパス、メソッドを指定可能。直感的に書ける。Events は他には S3、EventBridge など
-* CodeUri で指定したディレクトリの内容を ZIP にし、S3 バケットにアップロードされる
-* AutoPublishAlias を指定するとデプロイ時に新しい Lambda 関数バージョンを作成し、エイリアスを最新版に変更する
-* より詳細に API Gateway の設定を行いたい場合は AWS::Serverless::Api を使用する
+* AWS::Serverless::Function
+  * Events プロパティで API Gateway のパス、メソッドを指定可能。直感的に書ける。Events は他には S3、EventBridge など
+  * CodeUri で指定したディレクトリの内容を ZIP にし、S3 バケットにアップロードされる
+  * Events プロパティで Lambda 関数実行のトリガーを設定
+    * S3 をイベントソースとする場合は、テンプレート内で S3 バケットを作成する必要がある。S3 オブジェクトキーなどのフィルタパターンを指定
+    * API Gateway。パス、メソッドなどを指定
+    * EventBridge スケジュール。cron 式を指定
+    * EventBridge。イベントパターンを指定
+    * DynamoDB Streams
+    * Kinesis Data Streams
+    * Amazon SNS。サブスクリプションフィルタパターンを指定
+    * Amazon SQS
+    * CloudWatch Logs。ロググループ、フィルタパターンを指定
+    * IoT ルール
+    * Alexa スキル
+  * AutoPublishAlias を指定するとデプロイ時に新しい Lambda 関数バージョンを作成し、エイリアスを最新版に変更する
+  * Deployment Preferences によりデプロイ設定を指定可能。トラフィックの移行方法を指定
+  * より詳細に API Gateway の設定を行いたい場合は AWS::Serverless::Api を使用する
+* AWS::Sebverless::Api
+  * ステージ名は必須
+  * CanalySetting によりカナリアリリースが可能
+* AWS::Serverless::SimpleTable
+  * DynamoDB のテーブルをより簡潔に記載できる
+* AWS::Serverless::LayerVersion
+  * Lambda レイヤーをデプロイ。ContentUri はローカルのパスを指定可能
+* AWS::Serverless::Application
+  * アプリケーションをデプロイする
 * SAM CLI
   * sam init: 雛形作成
   * sam build: .aws-sam/build 内にビルド
+  * sam local invoke: Lamda ランタイムを含む Docker コンテナ内でビルドした Lambda 関数を動作させることができる
+  * sam local start-api: API Gateway をトリガーとする Lambda 関数をローカルで検証することができる
+  * sam deploy: デプロイ
 
 
 

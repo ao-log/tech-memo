@@ -344,7 +344,7 @@ Content-type: application/json
 
 
 
-## ナレッジセンター
+# ナレッジセンター
 
 [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#AWS_Batch)
 
@@ -359,7 +359,7 @@ Content-type: application/json
 
 
 
-## Black Belt
+# Black Belt
 
 [20190911 AWS Black Belt Online Seminar AWS Batch](https://www.slideshare.net/AmazonWebServicesJapan/20190911-aws-black-belt-online-seminar-aws-batch)
 

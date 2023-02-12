@@ -209,7 +209,7 @@ KMS による暗号化設定について書かれている。
 
 
 
-## ナレッジセンター
+# ナレッジセンター
 
 [Amazon ECS の Amazon ECR エラー「CannotPullContainerError: API error」を解決する方法を教えてください。](https://aws.amazon.com/jp/premiumsupport/knowledge-center/ecs-pull-container-api-error-ecr/)
 

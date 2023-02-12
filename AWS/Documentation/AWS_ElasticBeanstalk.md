@@ -401,6 +401,6 @@ eb terminate # 環境の終了
   * [AWS Elastic Beanstalk](https://aws.amazon.com/jp/elasticbeanstalk/)
   * [よくある質問](https://aws.amazon.com/jp/elasticbeanstalk/faqs/)
 * Black Belt
-  * [AWS Black Belt Online Seminar 2017 AWS Elastic Beanstalk](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-2017-aws-elastic-beanstalk)
+  * [AWS Black Belt Online Seminar 2017 AWS Elastic Beanstalk](https://d1.awsstatic.com/webinars/jp/pdf/services/20170111_AWS-Blackbelt-Elastic-Beanstalk.pdf)
   * [AWS Black Belt Online Seminar 2017 AWS体験ハンズオン～Deploy with EB CLI編～](https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-2017-awsdeploy-with-eb-cli)
 
