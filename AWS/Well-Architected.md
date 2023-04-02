@@ -188,3 +188,33 @@ KPI をモニタリングし、閾値を超えた場合に自動処理をトリ�
 * イベント応答への対応の自動化
 * 応答は、ステークホルダー、エスカレーションプロセス
 および手順を含む事前定義されたプレイブックに従う必要がある
+
+
+
+# Documents
+
+[AWS Well-Architected](https://aws.amazon.com/jp/architecture/well-architected)
+
+[AWS Well-Architected Framework - Documentation](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/framework/welcome.html)
+
+[運用上の優秀性の柱](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/operational-excellence-pillar/welcome.html)
+
+[セキュリティの柱](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/security-pillar/welcome.html)
+
+[信頼性の柱](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/reliability-pillar/welcome.html)
+
+[パフォーマンス効率の柱](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/performance-efficiency-pillar/welcome.html)
+
+[コスト最適化の柱](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/cost-optimization-pillar/welcome.html)
+
+[持続可能性の柱](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/sustainability-pillar/sustainability-pillar.html)
+
+
+
+# BlackBelt
+
+[AWS Well-Architected Framework](https://pages.awscloud.com/rs/112-TZM-766/images/20181211_AWS-BlackBelt-Well-Architected.pdf)
+
+[AWS Well-Architected Frameworkによるコスト最適化](https://pages.awscloud.com/rs/112-TZM-766/images/20190312_AWS-BlackBelt_Cost_Optimazed_with_WA.pdf)
+
+
