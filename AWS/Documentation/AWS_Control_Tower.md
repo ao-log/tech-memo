@@ -1,18 +1,17 @@
-
-# Control Tower
+# Document
 
 [AWS Control Tower とは](https://docs.aws.amazon.com/ja_jp/controltower/latest/userguide/what-is-control-tower.html)
 
 Control Tower から新規 AWS アカウントを作成することができる。
 作成したアカウントには予防および発見的制御 (ガードレール) が適用される。
 
-#### 機能
+## 機能
 
 * ランディングゾーン: セキュリティ、コンプライアンスのベストプラクティスに基づくマルチアカウント環境。
 * ガードレール: 予防的と発見的の 2 種類がある。必須、強く推奨、選択的の 3 つのガイダンスカテゴリが適用される。
 * Account Factory: 新規アカウントをプロビジョニングする。
 
-#### 仕組み
+## 仕組み
 
 [AWS Control Tower の仕組み](https://docs.aws.amazon.com/ja_jp/controltower/latest/userguide/how-control-tower-works.html)
 
@@ -32,7 +31,6 @@ Control Tower から新規 AWS アカウントを作成することができる�
 * 必須ガードレールは無効化できない。
 * 予防ガードレール: アクションの実行を拒否する。SCP により実装されている。
 * 検出ガードレール: 定義した状態からずれている場合に検出する。AWS Config によって実装されている。
-
 
 
 

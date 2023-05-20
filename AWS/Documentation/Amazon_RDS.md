@@ -1,5 +1,4 @@
-
-# RDS
+# Document
 
 ## 概要
 
@@ -204,6 +203,39 @@
 * パスワード認証
 * IAM データベース認証
 * Kerberos 認証
+
+
+[MariaDB、MySQL、および PostgreSQL の IAM データベース認証](https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html)
+
+* DB インスタンス側の設定で IAM データベース認証を有効化しておく必要がある
+* 「rds-db:connect」のアクションに対する許可が必要
+* MariaDB、MySQL では、認AWSAuthenticationPlugin によって処理される
+```
+CREATE USER jane_doe IDENTIFIED WITH AWSAuthenticationPlugin AS 'RDS'; 
+```
+* PostgreSQL ではユーザーに rds_iam ロールを付与する
+```
+CREATE USER db_userx; 
+GRANT rds_iam TO db_userx;
+```
+* 認証トークンを使用して接続する。認証トークンの有効期限は 15 分だが、認証に成功した後の確立後のセッションには影響しない
+* 認証トークンは AWS CLI の場合は次のように取得できる
+```
+aws rds generate-db-auth-token \
+   --hostname rdsmysql.123456789012.us-west-2.rds.amazonaws.com \
+   --port 3306 \
+   --region us-west-2 \
+   --username jane_doe
+```
+* 接続時は以下のように password で認証トークンを指定する。SSL 証明書は事前にダウンロードしておく必要がある
+```
+mysql --host=hostName \
+    --port=portNumber \
+    --ssl-ca=full_path_to_ssl_certificate \
+    --enable-cleartext-plugin \
+    --user=userName \
+    --password=authToken
+```
 
 
 
