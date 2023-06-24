@@ -1,5 +1,5 @@
 
-# Route 53
+# Document
 
 ## 概要
 
@@ -62,13 +62,11 @@ DNS
 * DNS フェイルオーバー
 
 
-
 ## 開始方法
 
 [開始方法](https://docs.aws.amazon.com/ja_jp/Route53/latest/DeveloperGuide/getting-started.html)
 
 Route 53 のドメインを登録し、S3 の静的 Web サイトホスティングに対してレコードを設定する流れ。
-
 
 
 ## ドメイン名の登録
@@ -89,7 +87,6 @@ Route 53 のドメインを登録し、S3 の静的 Web サイトホスティン
 [ドメインの移管](https://docs.aws.amazon.com/ja_jp/Route53/latest/DeveloperGuide/domain-transfer.html)
 
 別のレジストラから Route 53、Route 53 から別のレジストラ、もしくは AWS アカウント間でドメイン登録を移管可能。
-
 
 
 ## DNS サービスとして Amazon Route 53 を設定
@@ -117,6 +114,14 @@ Route 53 のドメインを登録し、S3 の静的 Web サイトホスティン
 エイリアスレコードを作成することで Zone Apex にも CNAME のような別名リソースに転送するレコードを作成可能。
 
 
+[Amazon Route 53 での DNSSEC 署名の設定](https://docs.aws.amazon.com/ja_jp/Route53/latest/DeveloperGuide/dns-configuring-dnssec.html)
+
+* DNSSEC により DNS リゾルバーは DNS 応答が Route 53 から送信され改ざんされていないことを検証できる
+* キー署名キー(KSK)とゾーン署名キー(ZSK) の 2 種類のキーがある
+  * 署名対象が公開鍵(DNSKEY レコード)の鍵は KSK
+  * 署名対象がゾーンに含まれる残りのレコードとなる鍵は ZSK
+* KSK 作成には KMS のカスタマー管理キーが us-east-1 リージョンに必要
+
 
 ## Route 53 Resolver
 
@@ -126,7 +131,6 @@ Route 53 Resolver。
 
 * インバウンドエンドポイント: VPC 外から VPC 内の名前解決をできるようにする。
 * アウトバウンドエンドポイント: VPC 内から VPC 外の名前解決をできるようにする。
-
 
 
 ## Amazon Route 53 ヘルスチェックの作成と DNS フェイルオーバーの設定
@@ -152,9 +156,29 @@ Route 53 Resolver。
 * [DNS フェイルオーバーで Route 53 のヘルスチェックを使用する方法を教えてください。](https://aws.amazon.com/jp/premiumsupport/knowledge-center/route-53-dns-health-checks/)
 
 
+## Route 53 Resolver DNS Firewall
+
+[Route 53 Resolver DNS Firewall](https://docs.aws.amazon.com/ja_jp/Route53/latest/DeveloperGuide/resolver-dns-firewall.html)
+
+* VPC からのアウトバウンドトラフィックをフィルタリング、規制できる
+* ホワイトリスト、ブロックリストの両指定が可能
+* Firewall Manager により Organizations のアカウント全体の設定、管理を一元的に行うことができる
+* DNS Firewall は Route 53 Resolver を通過するアウトバウンドの通信が対象。一方で Network Firewall はネットワーク層、アプリケーション層のトラフィックに対してフィルタリング
+
+
+
 # BlackBelt
 
-[20191105 AWS Black Belt Online Seminar Amazon Route 53 Hosted Zone](https://www.slideshare.net/AmazonWebServicesJapan/20191105-aws-black-belt-online-seminar-amazon-route-53-hosted-zone-193836805)
+[Amazon Route 53 Resolver](https://pages.awscloud.com/rs/112-TZM-766/images/20191016_AWS_Blackbelt_Route53_Resolver.pdf)
+
+* DNS
+  * ネームサーバ: 権威サーバ。階層構造になっている
+  * フルサービスリゾルバ: ルートから順に問い合わせて名前解決する。TTL が失効するまでキャッシュを保持
+  * スタブリゾルバ: 一般には OS の DNS クライアント
+  * フォワーダー
+
+
+[Amazon Route 53 Hosted Zone](https://pages.awscloud.com/rs/112-TZM-766/images/20191105_AWS_Blackbelt_Route53_Hosted_Zone_A.pdf)
 
 * ドメイン名の基本
   * P11: 名前解決の流れ
@@ -180,7 +204,7 @@ Route 53 Resolver。
   * [よくある質問](https://aws.amazon.com/jp/route53/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_Route_53)
 * Black Belt
-  * [20191105 AWS Black Belt Online Seminar Amazon Route 53 Hosted Zone](https://www.slideshare.net/AmazonWebServicesJapan/20191105-aws-black-belt-online-seminar-amazon-route-53-hosted-zone-193836805)
-  * [20191016 AWS Black Belt Online Seminar Amazon Route 53 Resolver](https://www.slideshare.net/AmazonWebServicesJapan/20191016-aws-black-belt-online-seminar-amazon-route-53-resolver)
+  * [Amazon Route 53 Hosted Zone](https://pages.awscloud.com/rs/112-TZM-766/images/20191105_AWS_Blackbelt_Route53_Hosted_Zone_A.pdf)
+  * [Amazon Route 53 Resolver](https://pages.awscloud.com/rs/112-TZM-766/images/20191016_AWS_Blackbelt_Route53_Resolver.pdf)
 
 

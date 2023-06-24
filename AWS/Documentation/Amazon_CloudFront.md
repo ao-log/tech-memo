@@ -189,7 +189,7 @@ HTTP ステータスコードに対応して、カスタムエラーメッセー
 
 # Blackbelt
 
-[20201028 AWS Black Belt Online Seminar Amazon CloudFront deep dive](https://www.slideshare.net/AmazonWebServicesJapan/20201028-aws-black-belt-online-seminar-amazon-cloudfront-deep-dive)
+[20201028 AWS Black Belt Online Seminar Amazon CloudFront deep dive](https://pages.awscloud.com/rs/112-TZM-766/images/20201028_BlackBelt_Amazon_CloudFront_deep_dive.pdf)
 
 * P19: 用語集
 * P20: CloudFront の設定項目
@@ -218,6 +218,15 @@ HTTP ステータスコードに対応して、カスタムエラーメッセー
   * キャッシュファイルの無効化
 
 
+[20170927 - AWS Lambda@Edge](https://pages.awscloud.com/rs/112-TZM-766/images/20170927_AWS-BlackBelt-CloudFront-LambdaEdge.pdf)
+
+* Lambda Edge の説明は P60 から
+* Lambda@Edge は CloudFront エッジロケーションで実行される
+* Viewer Request → CloudFront → Origin Request、Origin Response → CloudFront → Viewew Response の流れ
+* Viewer Request に応じて URL を書き換え、エッジロケーションでアクセスコントロールを行うなどのユースケース
+* Lambda 関数を us-east-1 リージョンで作成し関連づける
+
+
 
 # 参考
 
@@ -228,5 +237,7 @@ HTTP ステータスコードに対応して、カスタムエラーメッセー
   * [よくある質問](https://aws.amazon.com/jp/cloudfront/faqs/)
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_CloudFront)
 * Black Belt
-  * [20190730 AWS Black Belt Online Seminar Amazon CloudFrontの概要](https://www.slideshare.net/AmazonWebServicesJapan/20190730-aws-black-belt-online-seminar-amazon-cloudfront)
-  * [20201028 AWS Black Belt Online Seminar Amazon CloudFront deep dive](https://www.slideshare.net/AmazonWebServicesJapan/20201028-aws-black-belt-online-seminar-amazon-cloudfront-deep-dive)
+  * [20190730 - CloudFrontの概要](https://pages.awscloud.com/rs/112-TZM-766/images/20190730_AWS-BlackBelt_Amazon_CloudFront.pdf)
+  * [20201028 - CloudFront deep dive](https://pages.awscloud.com/rs/112-TZM-766/images/20201028_BlackBelt_Amazon_CloudFront_deep_dive.pdf)
+  * [20170927 - AWS Lambda@Edge](https://pages.awscloud.com/rs/112-TZM-766/images/20170927_AWS-BlackBelt-CloudFront-LambdaEdge.pdf)
+  * [202304 - Amazon CloudFront( Cache Control 編 )](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2023_AmazonCloudFront-CacheControl_0430_v1.pdf)

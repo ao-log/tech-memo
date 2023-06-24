@@ -1,10 +1,11 @@
 
 # ELB
 
-3 種類のロードバランサーをサポート。
+4 種類のロードバランサーをサポート。
 
 * Application Load Balancer
 * Network Load Balancer
+* Gateway Load Balancer
 * Classic Load Balancer
 
 
@@ -16,14 +17,26 @@
 
 [Elastic Load Balancing の仕組み](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/userguide/how-elastic-load-balancing-works.html)
 
-* ALB は複数の AZ を有効にする必要がある。
-* **クロスゾーン負荷分散**は ALB では有効になっている。NLB ではデフォルト無効。
-* ELB は 1 つ以上の IP アドレスを返す。ALB は IP アドレスが変わる場合がある。
-* ALB はラウンドロビン。NLB はフローハッシュアルゴリズム(プロトコル、送信元 IP アドレス・ポート、送信先 IP アドレス・ポート、TCP シーケンス番号に基づく)
+* ALB は複数の AZ を有効にする必要がある
+* **クロスゾーン負荷分散**
+  * ALB では有効になっている
+  * NLB ではデフォルト無効
+* **ゾーンシフト**
+  * Amazon Route 53 Application Recovery Controller (Route 53 ARC) の機能。ロードバランサーのリソースを 1 回の操作で障害のない AZ に移動できる。クロスゾーン負荷分散が無効になっている
+  * ALB, NLB でのみサポート
+* ELB の IP アドレス
+  * ELB は 1 つ以上の IP アドレスを返す。ALB は IP アドレスが変わる場合がある。TTL は 60 秒
+  * NLB は静的。EIP と関連づけることができる
+* ルーティングアルゴリズム
+  * ALB はデフォルトはラウンドロビン
+  * NLB はフローハッシュアルゴリズム(プロトコル、送信元 IP アドレス・ポート、送信先 IP アドレス・ポート、TCP シーケンス番号に基づく)
 * HTTP 接続
-  * ALB はクライアントからは HTTP/0.9, HTTP/1.0, HTTP/1.1, HTTP/2.0 をサポート。バックエンド接続では HTTP/1.1 を使用。Keep-Alive はバックエンド接続でサポートされている。
-  * ALB は X-Forwarded-For、X-Forwarded-Proto、および X-Forwarded-Port ヘッダをリクエストに追加。
-* 作成時に、インターネット向け、内部向けのどちらかを選択。
+  * ALB
+    * クライアントからは HTTP/0.9, HTTP/1.0, HTTP/1.1, HTTP/2.0 をサポート。HTTP/2.0 は HTTPS リスナーのみ。バックエンド接続では HTTP/1.1 を使用。Keep-Alive はバックエンド接続でサポートされている。WebSockets に対応
+    * X-Forwarded-For、X-Forwarded-Proto、および X-Forwarded-Port ヘッダをリクエストに追加
+* 作成時に、インターネット向け、内部向けのどちらかを選択
+* MTU
+  * インターネットゲートウェイを介して送信されるトラフィックは 1500 MTU に制限される。越えるとフラグメント化されるが、Don't Fragment フラグが IP ヘッダーに設定されている場合はドロップされる
 
 
 
@@ -98,6 +111,10 @@ Keep-Alive が有効の場合、タイムアウト期間が終了するまでバ
 
 [リスナー](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-listeners.html)
 
+* WebSocket のサポートを提供
+* HTTPS リスナーで HTTP/2.0 をサポート。1 つの HTTP/2 コネクションで最大 128 のリクエストを並行して送信できる
+
+
 リスナールールは以下のものを設定可能。
 
 * authenticate-cognito
@@ -121,6 +138,20 @@ Keep-Alive が有効の場合、タイムアウト期間が終了するまでバ
 * 用意されたセキュリティポリシーを設定できる。セキュリティポリシーはプロトコルと暗号の組み合わせ。
 
 
+[ユーザーの認証](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/listener-authenticate-users.html)
+
+* 認証方法
+  * OIDC プロバイダー
+  * Cognito ユーザープール
+    * Facebook, Google などの IdP
+    * SAML, Microsoft AD など
+
+
+[X-Forwarded ヘッダー](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/x-forwarded-headers.html)
+
+* X-Forwarded-For リクエストヘッダーは `routing.http.xff_header_processing.mode` 属性により制御。デフォルトは append
+
+
 #### ターゲットグループ
 
 [ターゲットグループ](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-target-groups.html)
@@ -134,11 +165,20 @@ Keep-Alive が有効の場合、タイムアウト期間が終了するまでバ
 次の属性がある(ターゲットが instance, ip の場合)
 
 * deregistration_delay.timeout_seconds: **登録解除の遅延**の時間
-* load_balancing.algorithm.type: ロードバランサがターゲットを選択する方法。デフォルトは round_robin。least_outstanding_requests も設定可能。
+* load_balancing.algorithm.type: ロードバランサがターゲットを選択する方法。デフォルトは round_robin。least_outstanding_requests も設定可能
+* load_balancing.cross_zone.enabled
 * slow_start.duration_seconds: スロースタートの期間
 * stickiness.enabled
+* stickiness.app_cookie.cookie_name
+* stickiness.app_cookie.duration_seconds
 * stickiness.lb_cookie.duration_seconds
 * stickiness.type
+* target_group_health.dns_failover.minimum_healthy_targets.count
+* target_group_health.dns_failover.minimum_healthy_targets.percentage
+* target_group_health.unhealthy_state_routing.minimum_healthy_targets.count
+* target_group_health.unhealthy_state_routing.minimum_healthy_targets.percentage
+* lambda.multi_value_headers.enabled
+
 
 
 [ヘルスチェック](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/target-group-health-checks.html)
@@ -226,6 +266,59 @@ IP アドレスの場合、登録する IP アドレスはターゲットは次�
 [トラブルシューティング](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html)
 
 HTTP ステータスコードごとのトラブルシューティング方法がある。
+
+
+
+## NLB
+
+[Network Load Balancer とは?](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/network/introduction.html)
+
+
+#### ロードバランサー
+
+[ロードバランサー](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/network/network-load-balancers.html)
+
+* アイドル接続に対しては 350 秒経過すると RST パケットが送信される
+
+
+#### リスナー
+
+[Network Load Balancer の TLS リスナー](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/network/create-tls-listener.html)
+
+* ロードバランサーに証明書をデプロイする必要がある
+* ターゲットにリクエストを送信する前に復号する
+* ロードバランサー側で復号したくない場合は、TLS ではなく TCP リスナーを使用する
+
+
+
+## GLB
+
+[Gateway Load Balancer とは？](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/gateway/introduction.html)
+
+* 仮想アプライアンスに対するロードバランサ
+* ネットワーク層で動作
+* 仮想アプライアンスと同じ VPC に配置する
+* ポート 6081 で GENEVE プロトコルを使用してアプリケーショントラフィックを交換
+
+
+[はじめに](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/gateway/getting-started.html)
+
+* インターネットからのルーティング経路
+  * インターネットゲートウェイ
+  * Gateway Load Balancer エンドポイント
+  * Gateway Load Balancer
+  * セキュリティアプライアンス
+  * Gateway Load Balancer
+  * Gateway Load Balancer エンドポイント
+  * アプリケーションサーバ
+* アプリケーションサーバからのルーティング経路
+  * アプリケーションサーバ
+  * Gateway Load Balancer エンドポイント
+  * Gateway Load Balancer
+  * セキュリティアプライアンス
+  * Gateway Load Balancer
+  * Gateway Load Balancer エンドポイント
+  * インターネットゲートウェイ
 
 
 
