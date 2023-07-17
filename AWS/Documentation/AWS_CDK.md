@@ -48,6 +48,18 @@ cdk diff
 ```
 
 
+## 概念
+
+[概念](https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/core_concepts.html)
+
+* App: 最上位の概念。複数のスタックの生成、依存関係を定義
+* Stack: CloudFormation スタック。リージョン、アカウントを保持
+* Construct: スタック内に作成される AWS リソース
+  * L1 コンストラクト: CloudFormation と 1:1 で対応。CFn で始まる
+  * L2 コンストラクト: 抽象度の高いクラス
+  * L3 コンストラクト: 複数種類のリソースから構成される一般的な構成を作成
+
+
 # 参考
 
 * Document
