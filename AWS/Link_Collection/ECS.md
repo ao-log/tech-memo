@@ -97,6 +97,27 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [AWS Cloud Map:アプリケーションのカスタムマップの簡単な作成と維持](https://aws.amazon.com/jp/blogs/news/aws-cloud-map-easily-create-and-maintain-custom-maps-of-your-applications/)
 
 
+#### Build
+
+[Building better container images](https://aws.amazon.com/jp/blogs/containers/building-better-container-images/)
+
+* コンテナイメージは最適化され、セキュアで信頼できることが肝要
+* プラクティス
+  * 信頼できるソースからベースイメージを取得する
+  * イメージは随時最新にする
+  * latest ではなく、個別のタグをつける
+  * ECR では暗号化のほか、ライフサイクル管理、レプリケーション、キャッシング、脆弱性スキャンなどの機能がある
+  * Bottlerocket は最小限のソフトウェアしか含まれないため、よりセキュア
+  * コンテナイメージの署名
+  * レイヤー数を少なくすることで複雑性を少なくし、イメージサイズも肥大化しなくなる
+  * マルチステージビルド
+  * シークレット管理。Secrets Manager などを活用
+  * scratch イメージの使用
+  * 不要パッケージ、ファイルの削除
+  * ディストロレスイメージの使用
+  * コンテナ内プロセスを非 root ユーザで動作
+
+
 #### Deploy
 
 [AWS CodeDeploy による AWS Fargate と Amazon ECS でのBlue/Greenデプロイメントの実装](https://aws.amazon.com/jp/blogs/news/use-aws-codedeploy-to-implement-blue-green-deployments-for-aws-fargate-and-amazon-ecs/)
@@ -127,6 +148,33 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 
 
 [CloudWatch と Prometheus のカスタムメトリクスに基づく Amazon ECS サービスのオートスケーリング](https://aws.amazon.com/jp/blogs/news/autoscaling-amazon-ecs-services-based-on-custom-cloudwatch-and-prometheus-metrics/)カスタム
+
+
+#### Faster Container Startup
+
+[AWS Fargate Enables Faster Container Startup using Seekable OCI](https://aws.amazon.com/jp/blogs/aws/aws-fargate-enables-faster-container-startup-using-seekable-oci/)
+
+* 概要
+  * スケールアウト時の所要時間の長さは課題の一つ
+  * [Research Paper](https://www.usenix.org/conference/fast16/technical-sessions/presentation/harter) によるとコンテナイメージのダウンロードはスタートアップ処理の 76 % の時間を占める。しかし、コンテナが稼働するのに有益なファイルの平均は 6.4 % ほど
+  * 従来はコンテナレジストリからイメージをダウンロードし展開していた
+  * この方法への対応方法としては Lazy loadinig。アプリケーションの起動と並行してダウンロードを行う
+  * 去年、[コンテナイメージを遅延読み込みする Seekable OCI の紹介](https://aws.amazon.com/jp/about-aws/whats-new/2022/09/introducing-seekable-oci-lazy-loading-container-images/) のアナウンスを行った
+  * [soci-snapshotter](https://github.com/awslabs/soci-snapshotter/tree/main) を OSS として公開。これは containerd で Lazy loading を有効にするプラグインである
+  * Fargate は Seekable OCI (SOCI) をサポートした
+  * SOCI は既存コンテナにファイルのインデックスを作成する
+  * コンテナイメージを全てダウンロードすることなく、個別のファイルを展開することを可能にする
+  * SOCI インデックスはコンテナイメージとは別に生成、保存されるので、コンテナイメージのコンバートのような作業は不要で、イメージの署名内容も影響を受けない
+  * Fargate は自動的に SOCI インデックスを検出し、コンテナイメージのプルの完了を待つことなくコンテナプロセスを稼働する
+* Let's started
+  * Use AWS SOCI Index Builder は CloudFormation で構築できる。Lambda 関数により SOCI インデックスをプッシュする
+  * soci-snapshotter が提供する `soci` コマンドにより SOCI インデックスを作成することも可能
+  * `nerdctl` によりイメージをプルする。理由としては Docker Engine はデフォルトでは Docker Engine のイメージストアに格納し、containerd のイメージストアには格納しないため
+  * SOCI インデックスは SOCI インデックスマニフェスト、zTOCs のセットから構成される。SOCI インデックスマニフェストでは、コンテナイメージのマニフェストの一つのレイヤーごとに ztoc のレイヤーが対応している
+  * SOCI インデックスを作成するために `soci` コマンドを使用する。`soci create <イメージ>` で作成可能
+  * ztoc skipped となったレイヤについてはプルが完了するのを待ち、その後コンテナプロセスが起動する。スキップされなかったレイヤは lazy loading の対象
+  * `sudo soci push --user AWS:$PASSWORD $ECRSOCIURI` により SOCI 関連アーティファクトをプッシュする。ECR のコンソール画面では Artifact Type が SOCI Index, Image Index となっているオブジェクトがプッシュされている
+  * SOCI インデックスがあるイメージの場合は RunTask で createdAt、startedAt の間に要する時間が短くなる
 
 
 #### Fluent Bit

@@ -163,7 +163,10 @@
 
 [ManagedScaling](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_ManagedScaling.html)
 
-**TODO**
+* instanceWarmupPeriod: 新規起動した EC2 インスタンスが Auto Scaling グループの CloudWatch メトリクスに寄与できるようになるまでの時間(インスタンス起動後に次のスケールアウトが発生するまでの期間？)
+* maximumScalingStepSize: スケールアウト時に同時に起動するインスタンスの最大数。スケールインには寄与しないパラメータ
+* minimumScalingStepSize: スケールアウト時に同時に起動するインスタンスの最小数。スケールインには寄与しないパラメータ。Desired より多くなる見込みの場合でもこのパラメータの分だけ起動する
+* targetCapacity: 0 〜 100 で指定。例えば 90 で指定した場合は 10 % 分の余剰リソースを起動する
 
 
 [PlacementConstraint](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_PlacementConstraint.html)
