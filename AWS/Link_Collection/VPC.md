@@ -1,4 +1,23 @@
 
+[AWS におけるパブリック IPv4 アドレスの使用状況の特定と最適化](https://aws.amazon.com/jp/blogs/news/identify-and-optimize-public-ipv4-address-usage-on-aws/)
+
+* パブリック IP アドレスの種類
+  * Amazon EC2 パブリック IPv4 アドレス
+  * Amazon が所有する Elastic IP アドレス
+  * サービス管理のパブリック IPv4 アドレス
+  * Bring Your Own IP (BYOIP) の 4 種類のパブリック IPv4 アドレス
+* 確認方法
+  * Cost and Usage Report (CUR)
+    * 使用中のパブリック IPv4 アドレス、アイドル状態のパブリック IPv4 アドレスの使用状況データを確認可能
+  * Amazon VPC IPAM Public IP Insights
+    * 無料の機能。ダッシュボードを通してアカウント内でどのリソース及びサービスがパブリック IPv4 アドレスを使用しているか確認できる
+* ベストプラクティス
+  * サブネットでのパブリック IPv4 アドレスの自動割り当てを無効にする
+  * インスタンスの起動時にパブリック IP アドレスを自動割り当てするよう変更することを検討
+  * リモートアクセスでは Amazon EC2 Instance Connect (EIC) Endpoints を利用
+  * インバウンドのインターネットトラフィックには、Elastic Load Balancers または AWS Global Accelerator の使用を検討
+
+
 [『VPC 間通信ができる新サービス VPC Lattice』というタイトルで DevelopersIO 2023 札幌に登壇しました #devio2023](https://dev.classmethod.jp/articles/devio2023-sapporo-vpc-lattice/)
 
 * VPC Lattice

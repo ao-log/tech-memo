@@ -3,7 +3,7 @@
 
 [Architecture Overview](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/arch-overview.html)
 
-```nvidia-container-runtime-hook``` により runc の prestart に hook をかけている。
+`nvidia-container-runtime-hook` により runc の prestart に hook をかけている。
 
 OCI のランタイム標準は [こちら](https://github.com/opencontainers/runtime-spec/blob/main/config.md)。
 
@@ -27,14 +27,14 @@ ExecStart=/usr/bin/dockerd --host=fd:// --add-runtime=nvidia=/usr/bin/nvidia-con
 EOF
 ```
 
-docker コマンドでは ```--gpus``` により GPU を指定可能。以下のような指定方法ができる。
+docker コマンドでは `--gpus` により GPU を指定可能。以下のような指定方法ができる。
 
 * 0,1,2, or GPU-fef8089b
 * all: デフォルト
 * none
 * void
 
-GPU UUID は ```nvidia-smi``` コマンドによってクエリ可能。
+GPU UUID は `nvidia-smi` コマンドによってクエリ可能。
 ```
 nvidia-smi -i 3 --query-gpu=uuid --format=csv
 ```

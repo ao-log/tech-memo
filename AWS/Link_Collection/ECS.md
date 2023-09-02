@@ -201,12 +201,35 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [AWS Distro for OpenTelemetry コレクターを使用したクロスアカウントの Amazon ECS メトリクス収集](https://aws.amazon.com/jp/blogs/news/using-aws-distro-for-opentelemetry-collector-for-cross-account-metrics-collection-on-amazon-ecs/)
 
 
+#### FIS
+
+[AWS Fault Injection Simulator の Amazon ECS に関する新機能のお知らせ](https://aws.amazon.com/jp/blogs/news/announcing-aws-fault-injection-simulator-new-features-for-amazon-ecs-workloads/)
+
+* 「CPU 負荷をかける」「ストレージ I/O 負荷をかける」「プロセスの停止」「ネットワークトラフィックの停止」「ネットワークレイテンシーの増加」「パケットロス」などのフォールとインジェクションアクションが追加された
+* SSM Agent がサイドカーとして動作し、Run Command により障害試験を行う。そのため、SSM Agent のサイドカーが必要
+* CloudWatch アラームと連携し、アラームが発火した時に試験を止めることができる
+
+
+
 #### その他の機能
 
 [New – Amazon ECS Exec による AWS Fargate, Amazon EC2 上のコンテナへのアクセス](https://aws.amazon.com/jp/blogs/news/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/)
 
 
 [Amazon ECS deployment circuit breaker のご紹介](https://aws.amazon.com/jp/blogs/news/announcing-amazon-ecs-deployment-circuit-breaker-jp/)
+
+
+[Amazon ECS on AWS Fargate で設定可能な Linux パラメータの追加](https://aws.amazon.com/jp/blogs/news/announcing-additional-linux-controls-for-amazon-ecs-tasks-on-aws-fargate/)
+
+* Fargate タスクにおいても Linux カーネルパラメータを調整できるようになった
+  * 以下のカーネルパラメータは要望が多かった
+    * `net.core.somaxconn`
+    * `net.ipv4.ip_local_port_range`
+  * `containerDefinitions.systemControls` にて namespace, value を設定可能
+* コンテナ間で PID namespace を共有できるようになった
+  * `pidMode` を `task` に設定することで PID namespace を設定可能
+  * サイドカーコンテナにアクセスした場合、アプリケーションコンテナのプロセスも確認できる。nginx プロセスが PID 7 になっていたりする
+  * `pause` プロセスが PID 1 になる
 
 
 #### Others

@@ -215,9 +215,9 @@ mkdir rootfs
 docker export $(docker create busybox) | tar -C rootfs -xvf -
 ```
 
-```runc spec``` により config.spec のテンプレートを作成可能。
+`runc spec` により config.spec のテンプレートを作成可能。
 
-```runc run``` によりコンテナを実行。
+`runc run` によりコンテナを実行。
 
 
 

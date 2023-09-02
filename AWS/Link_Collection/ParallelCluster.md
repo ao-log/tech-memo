@@ -1,6 +1,14 @@
 
 ## 記事
 
+[AWS ParallelCluster 3.7.0 で Ubuntu 22.04 や専用のログインノードの追加など新たにサポートされました](https://dev.classmethod.jp/articles/aws-parallelcluster-v370-released/)
+
+* Ubuntu 22.04 LTS を新規サポート
+* 新機能ログインノードをサポート
+* EBS のルートボリュームの必要最小サイズが 35GB から 40 GB へ引き上げ
+* IMDSv2 がデフォルト。インスタンスメタデータを参照するようなカスタムブートストラップアクション、ジョブ利用時に注意
+
+
 [AWS ParallelCluster のメジャーアップデート v3.0.0 がリリースされました](https://dev.classmethod.jp/articles/aws-parallel-cluster-v300-released/)
 
 

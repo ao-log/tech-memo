@@ -73,11 +73,11 @@ $ dig mysql
 
 **Security scanning**
 
-```docker scan イメージ``` によりイメージのスキャンが可能。
+`docker scan イメージ` によりイメージのスキャンが可能。
 
 **Image layering**
 
-```docker image history イメージ``` によりレイヤーの確認が可能。
+`docker image history イメージ` によりレイヤーの確認が可能。
 
 **Layer caching**
 
