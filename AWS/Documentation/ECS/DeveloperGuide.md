@@ -997,16 +997,129 @@ CodeDeply の Blue/Green Deployment の考慮事項
 
 [Service Connect](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-connect.html)
 
-**TODO**
+* 特徴
+  * サービスディスカバリ、サービスメッシュの両方が構築される
+  * VPC DNS に依存しない名前空間内のサービスを参照する
+  * Cloud Map に Service Connect エンドポイントが作成される
+  * envoy コンテナがインジェクトされる
+  * envoy コンテナにより CloudWatch メトリクスが生成される
+  * アプリケーションは Service Connect のエンドポイントへの接続のみプロキシを使用
+  * プロキシはラウンドロビン負荷分散、外れ値検出、再試行を実行する
+* 設定手順
+  * タスク定義では portMappings の設定が必要
+  * ECS クラスターに名前空間を設定しておくのが簡便な方法
+  * サービス定義にて Service Connect の設定を行う
+* 考慮事項
+  * 以下は未サポート
+    * Windows
+    * ECS Anywhere
+    * Blue/Green デプロイ
+    * スタンドアローンのタスク
+  * [Service Connect Agent](https://github.com/aws/amazon-ecs-service-connect-agent) が必要
+  * デプロイ後に追加された新しいエンドポイントは解決できない。再デプロイが必要
+
+
+[概念](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-connect-concepts.html)
+
+* 接続に関して
+  * 同じ名前空間内の接続に適している
+  * 以下の場合は接続できるものの Service Connect エンドポイント名を解決できない
+    * 他の名前空間の ECS タスク
+    * Service Connect が使用されていない ECS タスク
+    * ECS 外部のアプリケーション
+* 用語
+  * ポート名: ポートに名前をつけて識別する。タスク定義側では `containerDefinitions.portMappings.name`、サービス定義側では `serviceConnectConfiguration.services.portName`
+  * クライアントエイリアス: サービス定義側。Service Connect エンドポイントのポート番号。更に エンドポイントの DNS 名を割り当て検出名を `serviceConnectConfiguration.services.dnsName` で上書きすることも可能。複数のクライアントエイリアスを設定可能
+  * 検出名: サービスディスカバリでどの名前で検出されるかを設定。未設定時はポート名が使用される
+  * エンドポイント: 対象サービスに接続するための URL。例としては `http://blog:80`
+  * クライアントサービス: 名前空間が設定されている場合は、同名前空間内のエンドポイントを名前解決可能
+  * クライアント/サーバーサービス: 名前空間と少なくとも 1 つのエンドポイントが設定されている必要がある。同一名前空間内の他のサービスから名前解決できるようになる
+* 設定
+  * クラスターにはデフォルトの名前空間を設定可能
+  * クライアントサービス作成時は名前空間の選択が必要
+  * クライアント/サーバーサービス作成時は名前空間に加えて Service Connect サービス設定が必要
+* その他考慮点
+  * デプロイ後に追加されたエンドポイントは名前解決できない。名前解決したい場合はデプロイし直す必要がある
+  * Service Connect プロキシコンテナのタスクに対する CPU とメモリとして、256 CPU ユニットと少なくとも 64 MiB のメモリを追加することをお勧め
+* プロキシ
+  * 負荷分散戦略はラウンドロビン
+  * 外れ値検知(outlier detection)。パッシブなヘルスチェック。直近 30 秒以内に 5 つ以上の接続が失敗した場合、当該 ECS タスクへは 30 〜 300 秒ルーティングしない
+  * 再試行回数は 2 回。2 回目の試行では前の接続先ホストを使用しない
+  * デフォルトのタイムアウト値は 15 秒
+
+
+[チュートリアル: AWS CLI を使用した Fargate での Service Connect の使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-service-connect.html)
+
+* ECS クラスター作成。下記コマンドにより Cloud Map の名前空間も作成される
+  * `aws ecs create-cluster --cluster-name tutorial --service-connect-defaults namespace=service-connect`
+* タスク定義作成。`portMappings` の `name`、`appProtocol` が Service Connect の固有設定
+```json
+{
+    "family": "service-connect-nginx",
+    "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+        ...
+        "portMappings": [
+            {
+                "containerPort": 80,
+                "protocol": "tcp",
+                "name": "nginx",
+                "appProtocol": "http"
+            }
+        ],
+        ...
+}
+```
+* サービス作成
+```json
+{
+    "cluster": "tutorial",
+    "serviceName": "service-connect-nginx-service",
+    "taskDefinition": "service-connect-nginx",
+    ...
+    "serviceConnectConfiguration": {
+        "enabled": true,
+        "services": [
+            {
+                "portName": "nginx",
+                "clientAliases": [
+                    {
+                        "port": 80
+                    }
+                ]
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "/ecs/service-connect-proxy",
+                "awslogs-region": "us-west-2",
+                "awslogs-stream-prefix": "service-connect-proxy"
+            }
+        }
+    }
+}
+```
+* 名前空間内の ECS クライアントアプリケーションは、`portName` および `clientAliases` のポートを使用してこのサービスに接続。例えば `http://nginx:80/`
+* 上記例にはないが、`serviceConnectConfiguration.services.clientAliases.dnsName` で指定した FQDN に対して接続することも可能。namespace とは全く関係ない内容でもよい
+* 外部アプリケーションからは IP アドレス、ポート番号で接続
+* logConfiguration により CloudWatch Logs にプロキシログを送信
+* 当該タスクの IP アドレス、ポート番号宛に `curl` すると `server: envoy` ヘッダーがついている
 
 
 [サービスディスカバリ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-discovery.html)
 
-* FQDN で 名前解決できるようになる。CloudMap と連携し、サービスの検出名前空間を設定することで、タスク起動時に ConfigMap にインスタンスとして追加され、Route 53 のプライベートホストゾーンに A レコードが設定される仕組み。
+* FQDN で 名前解決できるようになる。CloudMap と連携し、サービスの検出名前空間を設定することでタスク起動時に ConfigMap にインスタンスとして追加され、Route 53 のプライベートホストゾーンに A (or SRV) レコードが設定される仕組み
 * 以下のコンポーネントから構成される
   * 名前空間: FQDN のようなもの
   * サービス名: サービス名
   * インスタンス: 実リソース。ECS タスクなど
+* awsvpc の場合は A レコードまたは SRV レコード。bridge, host の場合は SRV レコードのみに対応
+* 全てのレコードに問題がある場合は、異常なレコードを最大 8 個返却する
+* コンテナレベルのヘルスチェック結果が CloudMap のカスタムヘルスチェック API に送信される
+* ECS サービスを新規作成する場合にのみ設定可能
 
 
 [サービスの調整ロジック](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-throttle-logic.html)

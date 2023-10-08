@@ -216,9 +216,38 @@
   * CODE_DEPLOY, EXTERNAL の場合のみ含まれる情報
 
 
+[ServiceConnectClientAlias](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_ServiceConnectClientAlias.html)
+
+* port: Service Connect 向けの LISTEN ポート番号。同 namespace 内のタスクからこのポート番号を使用できる
+* dnsName:
+  * サービスに接続するための DNS 名
+  * 未指定時は `discoveryName.namespace` になる
+  * `discoveryName` 未指定時は `portName.namespace` になる
+
+
+[ServiceConnectConfiguration](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_ServiceConnectConfiguration.html)
+
+* enabled
+* logConfiguration
+* namespace: 名前空間名もしくは Cloud Map の ARN
+* services
+  * 他の ECS サービスから接続するための名前
+  * クライアントとしてのみ使用する場合は、この設定は不要
+  * `ServiceConnectService` オブジェクトをリストで指定。つまり複数設定できる
+
+
 [ServiceConnectService](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_ServiceConnectService.html)
 
-**TODO**
+* portName: タスク定義の `portMappings` を指定
+* clientAliases: `ServiceConnectClientAlias` を複数指定可能
+* discoveryName: Cloud Map に作成されるサービス名。未指定時は `portMappings` が使用される
+* ingressPortOverride: 指定したポート番号宛の通信を `portMapping` で指定されたポート番号にバイパスする
+
+
+[ServiceConnectServiceResource](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_ServiceConnectServiceResource.html)
+
+* discoveryArn: Cloud Map の名前空間の ARN
+* discoveryName: Cloud Map に作成されるサービス名。未指定時は `portMappings` が使用される
 
 
 [ServiceRegistry](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_ServiceRegistry.html)

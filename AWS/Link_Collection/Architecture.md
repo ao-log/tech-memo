@@ -13,9 +13,43 @@
   * 作業単位ごとに 1 つのリクエストのログエントリを作成する。
 
 
+[サーバーレスアプリケーション開発におけるエラーハンドリング ~ イベント駆動のデータ加工、連携処理パターン ~](https://aws.amazon.com/jp/builders-flash/202308/serverless-error-handling-3/?awsf.filter-name=*all)
+
+* イベントの生成をトリガーとして、Push 方式で非同期に呼び出すのが特徴
+* プロデューサの例は S3、イベントルーターの例は SNS, EventBridge、コンシューマの例は Lambda
+* エラーハンドリング
+  * イベントルーター
+    * データを送信できない場合は AWS 管理のイベントルーターがリトライを試みる
+  * Lambda 関数
+    * 実行前の呼び出し時のエラーへの対応。Maximum Event Age により設定可能
+    * Lambda 関数がエラーを返した場合の対応。Maximum Retry Attempts により設定可能
+* データ送信できない場合やリトライポリシーを超えた場合
+  * SQS
+    * Dead Letter Queue (DLQ)
+  * Lambda
+    * Lambda Destinations
+
+
 [負荷制限を使用して過負荷を回避する](https://aws.amazon.com/jp/builders-library/using-load-shedding-to-avoid-overload/?did=ba_card&trk=ba_card)
 
 * サーバーが過負荷になると、受信リクエストをトリアージして、どのリクエストを受け入れ、どのリクエストを拒否するかを決定する機会がある
 * 優先順位付けとスロットリングを一緒に使用して、サービスを過負荷から保護
+
+
+[負荷テスト on AWS のすすめ](https://aws.amazon.com/jp/builders-flash/202309/distributed-test-on-aws-2/?awsf.filter-name=*all)
+
+* 一口に負荷試験と言っても目的に応じたさまざまな種類がある。ピーク負荷試験、限界性能試験、長時間負荷試験など
+
+
+[マイグレーションの勉強方法を聞いてみた。](https://aws.amazon.com/jp/builders-flash/202309/way-to-learn-migration/?awsf.filter-name=*all)
+
+* プロジェクト管理スキルも重要
+
+
+#### 外部記事
+
+[DevelopersIOブログの記事配信がCloudFront経由になりました](https://dev.classmethod.jp/articles/developersio-cdn-cloudfront/)
+
+
 
 

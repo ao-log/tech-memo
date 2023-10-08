@@ -97,6 +97,33 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [AWS Cloud Map:アプリケーションのカスタムマップの簡単な作成と維持](https://aws.amazon.com/jp/blogs/news/aws-cloud-map-easily-create-and-maintain-custom-maps-of-your-applications/)
 
 
+[ECS Anywhere のプライベート接続を確立する方法](https://aws.amazon.com/jp/blogs/news/how-to-establish-private-connectivity-with-ecs-anywhere/)
+
+* ECS Anywhere で稼働させているホストとコントロールプレーンとの通信をプライベートにする方法についての記事
+* SSM Agent, ECS Agent 用に各エンドポイントとの疎通性が必要
+* AWS Direct Connect とサイト間 VPN の 2 つのオプションがある
+* アーキテクチャ
+  * オンプレミス
+    * カスタマーゲートウェイが必要
+    * 各 VPC エンドポイント(ecs-a, ecs-t, ecs, ssm, smmessages, ec2messages)への DNS クエリを Route 53 インバウンドリゾルバーエンドポイントに転送
+  * AWS
+    * vgw 経由で通信
+    * ECS, SSM 用の VPC エンドポイント
+      * com.amazonaws.<region>.ecs-agent
+      * com.amazonaws.<region>.ecs-telemetry
+      * com.amazonaws.<region>.ecs
+      * com.amazonaws.<region>.ssm
+      * com.amazonaws.<region>.ssmmessages
+      * com.amazonaws.<region>.ec2messages
+    * ECR を使用する場合は更に以下の VPC エンドポイント
+      * com.amazonaws.<region>.ecr.dkr
+      * com.amazonaws.<region>.ecr.api
+      * com.amazonaws.<region>.s3
+    * awslogs を使用する場合は更に以下の VPC エンドポイント
+      * com.amazonaws.<region>.logs
+    * VPC 内に Route 53 リゾルバーのインバウンドエンドポイント
+
+
 #### Build
 
 [Building better container images](https://aws.amazon.com/jp/blogs/containers/building-better-container-images/)
@@ -130,6 +157,14 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 
 
 [AWS App Mesh を使用した Amazon ECS でのカナリアデプロイパイプラインの作成](https://aws.amazon.com/jp/blogs/news/create-a-pipeline-with-canary-deployments-for-amazon-ecs-using-aws-app-mesh/)
+
+
+[ECS Blueprints で Amazon ECS ベースのワークロードを加速しよう](https://aws.amazon.com/jp/blogs/news/accelerate-amazon-ecs-based-workloads-with-ecs-blueprints/)
+
+* [ECS Blueprints](https://github.com/aws-ia/ecs-blueprints) for AWS Cloud Development Kit (AWS CDK)
+* CDK で backend を構築する際の[コード](https://github.com/aws-ia/ecs-blueprints/tree/main/cdk/examples/backend_service)
+  * container_image="public.ecr.aws/aws-containers/ecsdemo-nodejs" になっている。よって、イメージは事前に用意しておく必要がある。ECS クラスター、サービス、タスク定義などを作成してくれる
+
 
 
 #### Auto Scaling
@@ -230,6 +265,22 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * `pidMode` を `task` に設定することで PID namespace を設定可能
   * サイドカーコンテナにアクセスした場合、アプリケーションコンテナのプロセスも確認できる。nginx プロセスが PID 7 になっていたりする
   * `pause` プロセスが PID 1 になる
+
+
+[AWS Fargate タスクのリタイア通知による運用の可視性の向上](https://aws.amazon.com/jp/blogs/news/improving-operational-visibility-with-aws-fargate-task-retirement-notifications/)
+
+* Fargate タスクがリタイアするまでに待機する日数を指定できる
+* アカウント設定の `fargateTaskRetirementWaitPeriod` で設定できる
+* Slack にリタイア通知を送る [サンプル](https://github.com/aws-samples/capturing-aws-fargate-task-retirement-notifications/tree/main) が提供されている。イベントのテストは `aws events put-events` で行うことができる
+  * Lambda 関数内の以下コードで Slack チャンネルにポストしている
+```python
+    # Post the message to the Slack channel.
+    req = Request(
+        slack_uri,
+        data=json.dumps(slack_message).encode('utf-8'),
+        headers={'content-type': 'application/json'}
+    )
+```
 
 
 #### Others

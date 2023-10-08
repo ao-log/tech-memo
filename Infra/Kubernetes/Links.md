@@ -7,6 +7,7 @@
 * [サイバー攻撃から Kubernetes クラスタを守るための効果的なセキュリティ対策](https://speakerdeck.com/kyohmizu/saibagong-ji-kara-kubernetes-kurasutawoshou-rutamefalsexiao-guo-de-nasekiyuriteidui-ce)
 * [Kubernetesのセキュリティについて整理してみた件](https://qiita.com/mamomamo/items/1651b8f9e44938c0de15)
 * [Debugging Kubernetes Pods: Deep Dive](https://betterprogramming.pub/debugging-kubernetes-pods-deep-dive-d6b2814cd8ce)
+* [Kubernetesソースコードリーディング入門](https://speakerdeck.com/bells17/kubernetessosukotoriteinkuru-men)
 
 
 # Document

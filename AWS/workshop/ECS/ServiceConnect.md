@@ -4,7 +4,7 @@
 
 ## [シナリオ 1 : Service Connect を設定した ECS アプリケーションをデプロイする](https://catalog.workshops.aws/ecs-service-connect/ja-JP/scenario-1)
 
-* CreateCluster で ```[serviceConnectDefaults](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_CreateCluster.html#ECS-CreateCluster-request-serviceConnectDefaults)``` を設定。これがデフォルトの名前空間になる。Cloud Map にも namespace ができる
+* CreateCluster で `[serviceConnectDefaults](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_CreateCluster.html#ECS-CreateCluster-request-serviceConnectDefaults)` を設定。これがデフォルトの名前空間になる。Cloud Map にも namespace ができる
 * ECS サービスでは nmaespace を指定しつつ、clientAliases.dnsName でそのサービスに接続する際の FQDN を指定する
 * ECS タスクは envoy コンテナがサイドカーとして稼働した状態になっている
 * CloudWatch Metrics では ClusterName、DiscoveryName、ServiceName、TargetDiscoveryName のディメンションがある。RequestCount, NewConnectionCount などのメトリクスがある

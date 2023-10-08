@@ -466,16 +466,48 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 ## タスク停止
 
-**TODO**
-
 [Amazon ECS タスクが停止するのはなぜですか?](https://repost.aws/ja/knowledge-center/ecs-task-stopped)
+
+* タスク停止理由を確認して原因を確認する。DescribeTasks ではタスク停止後 1 時間だけ停止理由を確認できる
+* 以下のようなタスク停止理由がある
+  * Essential container in task exited
+  * Task failed ELB health checks
+  * Failed container health checks
+  * (instance i-xx) (port x) is unhealthy in (reason Health checks failed)
+  * Service ABCService: ECS is performing maintenance on the underlying infrastructure hosting the task
+  * ECS service scaling event triggered
+  * ResourceInitializationError: unable to pull secrets or registry auth: execution resource retrieval failed
+  * CannotPullContainerError
+  * Task stopped by user
+* Exit status
+  * 0: 正常終了
+  * 1: アプリケーションのエラー
+  * 137: SIGKILL の発生。もしくは OOM Killer
+  * 139: segmentation fault
+  * 255: ENTRYPOINT, CMD のエラー
+
 
 [Amazon ECS サービスで実行中のタスク数が変更されたのはなぜですか?](https://repost.aws/ja/knowledge-center/ecs-running-task-count-change)
 
+* 以下の理由でタスク数が変更される
+  * ヘルスチェックの失敗によるタスク停止
+  * 希望タスク数の設定変更
+  * サービスの Auto Scaling によるスケールアウト/スケールイン
+  * サービスの Auto Scaling の min/max 変更
+  * デプロイ中の動作
+
+
 [Amazon ECS における OutOfMemory エラーのトラブルシューティング方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-resolve-outofmemory-errors)
+
+* リスクを軽減するための方法
+  * テスト環境でメモリ要件を把握
+  * スワップの有効化を検討
+  * タスク停止時のイベントをトリガーに SNS でメール送信する CloudFormation テンプレートが添えられている
 
 
 ## ストレージ
+
+**TODO**
 
 [Auto Scaling グループを使用してクラスターを手動で起動した場合、Amazon ECS コンテナインスタンスで使用可能なディスク容量を増やすにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-container-storage-increase-autoscale)
 
@@ -557,9 +589,23 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [AWS Fargate で Amazon ECS タスクのログドライバを設定するにはどうすればよいですか？](https://repost.aws/ja/knowledge-center/ecs-tasks-fargate-log-drivers)
 
+* タスク定義で設定すれば良い
+
+
 [AWS Fargate 上の Amazon ECS の複数の送信先にコンテナログを送信するにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-container-log-destinations-fargate)
 
+* FireLens を使用する
+* タスクロールには各送信先にログ送信するための権限が必要
+* Fargate の場合はカスタム設定ファイルを S3 に配置する対応を取れないので、イメージに含めておく必要がある
+
+
 [Amazon ECS コンテナログが Amazon CloudWatch Logs に配信されないのはなぜですか?](https://repost.aws/ja/knowledge-center/ecs-container-logs-cloudwatch)
+
+* タスク定義で awslogs ログドライバーが設定されていない
+* タスク実行ロールの権限不足
+* Logs のエンドポイントへの疎通性がない
+* アプリケーションのログレベル設定の問題
+
 
 [欠落した Amazon ECS または Amazon EKS のコンテナログをトラブルシューティングするにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-eks-troubleshoot-container-logs)
 

@@ -33,6 +33,22 @@ Control Tower から新規 AWS アカウントを作成することができる�
 * 検出ガードレール: 定義した状態からずれている場合に検出する。AWS Config によって実装されている。
 
 
+## AFT
+
+[AWS Control Tower Account Factory for Terraform (AFT) によるアカウントのプロビジョニング](https://docs.aws.amazon.com/ja_jp/controltower/latest/userguide/taf-account-provisioning.html)
+
+**外部資料**
+
+[ついにControl Towerのアカウント発行からカスタマイズまでIaC対応！Account Factory for Terraform (AFT)が新登場 #reinvent](https://dev.classmethod.jp/articles/ct-account-factory-for-terraform/)
+
+* AFT 管理専用の AWS アカウントが必要
+* AFT 専用の OU 上に AFT 管理専用のアカウントを配置することを推奨
+* 管理アカウント上で AFT モジュールを apply する。[AWS Control Tower Account Factory for Terraform のリソースに関する考慮事項](https://docs.aws.amazon.com/ja_jp/controltower/latest/userguide/aft-resources.html)に記載されているリソースが作成される
+* 運用で使用する「新規作成する AWS アカウントの情報」「ベースラインの設定内容」は別リポジトリで管理する
+* Service Catalog のアカウントファクトリー用のポートフォリオに AFT の IAM ロールを追加
+* AFT リポジトリにコードをプッシュすることで CodePipeline のパイプラインが動作。AWS アカウント発行の処理がされる
+
+
 
 # 参考
 
