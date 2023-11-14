@@ -535,7 +535,17 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [Amazon ECS で「Access Denied」(アクセス拒否) エラーを発生させないように IAM タスクロールを設定するにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-iam-task-roles-config-errors)
 
+* タスクロールを使用する
+* ネットワークモード `bridge`, `default` の場合は `ECS_ENABLE_TASK_IAM_ROLE=true` の設定が必要
+* ネットワークモード `host` の場合は `ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true` の設定が必要
+* プロキシ使用時は `NO_PROXY=169.254.169.254,169.254.170.2,/var/run/docker.sock` の設定が必要
+* 環境変数 `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` がセットされるのは PID 1 のプロセスのみ
+* iptables を設定。[タスク IAM ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-iam-roles.html) を参照すること
+
+
 [Amazon ECS タスクの実行中の「ECS がロールを引き受けることができません」というエラーをトラブルシューティングするには、どうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-unable-to-assume-role)
+
+* ロールが存在すること、信頼ポリシーにて Principal `ecs-tasks.amazonaws.com` に `sts:AssumeRole` の許可が設定されていることを確認する
 
 
 ## モニタリング

@@ -158,6 +158,13 @@
 
 [LogConfiguration](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_LogConfiguration.html)
 
+* Fargate
+  * awslogs, splunk, awsfirelens がサポートされている
+* EC2:
+  * awslogs, fluentd, gelf, json-file, journald, logentries,syslog, splunk, awsfirelens がサポートされている
+  * `ECS_AVAILABLE_LOGGING_DRIVERS` にて事前に利用可能ドライバーを定義しておく必要がある
+
+
 **TODO**
 
 

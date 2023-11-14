@@ -308,5 +308,3 @@ sudo yum install -y iptables-services; sudo iptables --insert FORWARD 1 --in-int
 
 
 
-
-

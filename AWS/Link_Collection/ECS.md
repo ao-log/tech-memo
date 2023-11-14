@@ -166,6 +166,24 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * container_image="public.ecr.aws/aws-containers/ecsdemo-nodejs" になっている。よって、イメージは事前に用意しておく必要がある。ECS クラスター、サービス、タスク定義などを作成してくれる
 
 
+[Amazon ECS increases applications resiliency to unpredictable load spikes](https://aws.amazon.com/jp/about-aws/whats-new/2023/10/amazon-ecs-applications-resiliency-unpredictable-load-spikes/)
+
+* ヘルスチェックに失敗した ECS タスクを停止する前にタスクを起動する。その際、新規起動したタスクが healthy となるのを待ってから古い ECS タスクを停止する
+
+
+[A deep dive into Amazon ECS task health and task replacement](https://aws.amazon.com/jp/blogs/containers/a-deep-dive-into-amazon-ecs-task-health-and-task-replacement/)
+
+* unhealthy タスクの置き換え
+  * 2023年10月20日より `maximumPercent` を unhealthy なタスクの置き換えに可能な限り使用する
+  * `maximumPercent` が 200 で、8 個中 4 個のタスクがクラッシュした場合。可能な限り早く 4 個のタスクを起動する
+  * `maximumPercent` が 200 で、8 個中 4 個のタスクが ELB ヘルスチェックに失敗した場合。4 個のタスクを起動する。healthy になった後に unhealthy なタスクを停止する
+  * `maximumPercent` が 150 で、8 個中全てのタスクが ELB ヘルスチェックに失敗した場合。4 個のタスクを起動する。その後、もし 12 個のタスクが healthy になり Auto Scaling により Desired が 10 になった場合は、タスクを 2 個停止する
+  * `maximumPercent` が 100 で、タスクがフリーズした場合。タスクが停止する場合は Stopped になった後に新規タスクを起動する
+  * `maximumPercent` が 150 で、ローリングアップデート実行中の場合。4 タスクを起動する。旧タスクが unhealthy になった場合は新タスクにて置き換える動作となる
+  * `maximumPercent` が 150 で、8 個中全てのタスクが unhealthy になった場合。4 個のタスクを起動するが、これらも unhealthy になる場合。unhealthy なタスクをランダムに 4 個停止する。再び 4 個のタスクを起動する
+* 従来は unhealthy なタスクをまず停止していた。背景として EC2 インスタンス上にタスクが詰め込まれており余裕がなかったことがあるが、最近は Fargate であったりキャパシティープロバイダーが使用されている。そのため、`maximumPercent` を可能な限り使用し、unhealthy なタスクも置き換えタスクが healthy になるまでキープする
+* unhealthy なタスクを停止すると、残っている healthy な ECS タスクに負荷が集中し、unhelathy になることにつながる
+
 
 #### Auto Scaling
 
