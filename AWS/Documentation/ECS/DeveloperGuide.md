@@ -233,7 +233,7 @@ export class HelloEcsStack extends cdk.Stack {
   * DELETE_IN_PROGRESS: 稼働中の ECS リソースがあると削除が完了しない。タスク停止後に、タスク定義削除まで 1 時間まで要する場合がある。また、デプロイ、タスクセットが削除されてからタスク定義削除まで 24 時間まで要する場合がある
 
 
-#### Launch Types
+### Launch Types
 
 [Amazon ECS 起動タイプ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/launch_types.html)
 
@@ -256,7 +256,7 @@ EC2 起動タイプに向いているワークロード
 * オンプレミスサーバ、仮想サーバを使用可能
 
 
-#### Container Image
+### Container Image
 
 [コンテナイメージ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/container-considerations.html)
 
@@ -268,14 +268,14 @@ EC2 起動タイプに向いているワークロード
 * コンテナごとにリソースの共有が必要な場合は、一つのタスク定義内に複数のコンテナを定義する。そうでない場合はタスク定義ごとにコンテナを分けることで、スケーリングなどを独立して行えるメリットを得られる
 
 
-#### Task definition
+### Task definition
 
 [タスク定義](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/architect-task-def.html)
 
 * タスク定義ファミリーごとに異なる IAM ロールの使用を推奨
 
 
-#### Networking Models
+### Networking Models
 
 『ベストプラクティスガイド』の [ネットワークモードの選択](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/bestpracticesguide/networking-networkmode.html) も各ネットワークモードの参考になる。
 
@@ -321,7 +321,7 @@ EC2 起動タイプに向いているワークロード
 * タスク ENI はジャンボフレームをサポート
 
 
-#### Data volumes
+### Data volumes
 
 [タスクでのデータボリュームの使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/using_data_volumes.html)
 
@@ -418,7 +418,7 @@ EC2 起動タイプに向いているワークロード
   * EC2 の場合は `volumesFrom.sourceContainer` を使用して別コンテナからマウントすることも可能。元コンテナが `mountPoints` でマウントしているディレクトリの他 `Dockerfile` の `VOLUME` の内容も含まれる
 
 
-#### swap
+### swap
 
 [コンテナスワップ領域の管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/container-swap.html)
 
@@ -430,7 +430,7 @@ EC2 起動タイプに向いているワークロード
 * インスタンス側で swap を有効化しておく必要がある。ECS Optimized AMI ではデフォルトでは有効化されていない
 
 
-#### Windows
+### Windows
 
 [Amazon EC2 Windows タスク定義の考慮事項](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/windows_task_definitions.html)
 
@@ -455,7 +455,7 @@ EC2 起動タイプに向いているワークロード
   * pidMode
 
 
-#### Use cases
+### Use cases
 
 [タスク定義のユースケース](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/use-cases.html)
 
@@ -507,7 +507,7 @@ EC2 起動タイプに向いているワークロード
 * `runtimePlatform.cpuArchitecture` にて `ARM64` を指定
 
 
-#### Logging
+### Logging
 
 [awslogs ログドライバーを使用する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/using_awslogs.html)
 
@@ -555,7 +555,7 @@ EC2 起動タイプに向いているワークロード
 * `config-file-type` は `s3` or `file`。ただし、Fargate は `file` のみサポート
 
 
-#### Private registory
+### Private registory
 
 [タスクのプライベートレジストリの認証](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/private-auth.html)
 
@@ -563,7 +563,7 @@ EC2 起動タイプに向いているワークロード
 * タスク実行ロールに `secretsmanager:GetSecretValue` の許可が必要。カスタムの KMS キーを使用する場合は更に `kms:Decrypt` の許可が必要
 
 
-#### Environment Variable
+### Environment Variable
 
 [コンテナへの環境変数の受け渡し](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/taskdef-envfiles.html)
 
@@ -576,159 +576,16 @@ EC2 起動タイプに向いているワークロード
 [AWS Systems Manager パラメータストアの使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/secrets-app-ssm-paramstore.html)
 
 
-#### Example
+### Example
 
 [タスク定義の例](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/example_task_definitions.html)
 
-**TODO**
-
-
-
-## Amazon ECS Task definitions
-
-タスクの起動方法を定義。以下のような項目を設定する。
-
-* Docker イメージ
-* CPU、メモリ量（タスク、もしくはタスク内のコンテナ）
-* 起動タイプ
-* Docker ネットワーキングモード
-* ロギング設定
-* コンテナ終了時の動作
-* コンテナ開始時に実行するコマンド
-* データボリューム
-* IAM ロール
-
-一つのタスク内に複数コンテナを設定可能。
-
-タスク定義は更新することはできない。代わりに新しいリビジョンを作成して対応する。
-
-タスク定義のリビジョンは INACTIVE にすることもできる。ただし、そのリビジョンを使用しているサービスからはそのリビジョンを引き続き使用できる。できなくなるのは、そのリビジョンからの新たなタスク生成のみ。
-
-
-[Task definition parameters](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html)
-
-パラメータのリファレンス。
-
-**Family**
-
-* family: タスク定義名。
-
-**Task Role**
-
-* taskRoleArn: タスク内のコンテナが利用可能な権限を設定するロール。(**EC2 のインスタンスプロファイルのようなもの**)
-
-**Task Execution Role**
-
-* executionRoleArn: タスクの実行に使用するロール（**ECR や CloudWatch Logs**）。
-
-**Network Mode**
-
-* networkMode: none, bridge, awsvpc, host がある。
-  * none: 外部接続性を持たない。ポートマッピングも設定できない。
-  * bridge: Docker ビルトインの仮想ネットワークを使用。
-  * host: Docker ビルトインの仮想ネットワークをバイパスし、コンテナポートとホストポートを直接マッピングする。
-  * awsvpc: ENI にタスクが割り当てられる。Fargate の場合はこのモードになる。
-
-**Standard Container Definition Parameters**
-
-* name: コンテナに付ける名前
-* image: イメージの指定
-* memory: メモリ量(MiB)。指定量を超えて使用しようとした場合、コンテナは kill される。
-* memoryReservation: メモリ量のソフトリミット。
-* portMappings: コンテナとホストのポートのマッピング。
-  * containerPort: コンテナのポート。
-  * hostPort: ホストのポート。**無指定でかつコンテナポートが設定されている場合は、エフェメラルポートから割り当てる。**
-  * protocol: tcp or udp。
-
-**Advanced Container Definition Parameters**
-
-* healthCheck: タスクが手動起動された場合は、ヘルスチェック結果に関わらず継続稼働する。サービスから起動された場合は、unhealthy のタスクを終了し、新たなタスクを起動する。
-  * command: ヘルスチェックの判定に使用するコマンド。
-  * interval: 間隔。デフォルト 30 秒。5 〜 300 秒で設定可能。
-  * timeout: 失敗と判定するまで待つ時間。デフォルトは 5 秒。2 〜 60 秒で設定可能。
-  * retries: unhealthy と判定するまでにリトライする回数。デフォルトは 3 秒。1 〜 10 回で設定可能。
-  * startPeriod  コンテナ起動時にヘルスチェックを猶予する時間。
-* cpu: タスクが使用できる CPU。インスタンス上に複数タスクがある場合はこの設定値に基づいた比率となる。
-* gpu: GPU の個数。
-* essential: true に設定されている場合、このコンテナがダウンすると他のコンテナも停止させる。
-* entryPoint: Docker コンテナ起動時の Entrypoint にマップされる。
-* command: Docker コンテナ起動時の Cmd にマップされる。
-* workingDirectory: Docker コンテナ起動時の WorkingDir にマップされる。
-* environmentFiles: docker run オプションの --env-file にマップされる。S3 上のオブジェクトを指定する。Fargate 起動タイプでは使用不可。
-* environment: Docker コンテナ起動時の Env にマップされる。
-* secrets: シークレットマネージャ or SSM パラメータストアの ARN を指定。
-* disableNetworking: Docker コンテナ起動時の NetworkDisabled にマップされる。
-* links: network mode が bridge の場合のみ使用可。ポートマッピング無しでコンテナが相互に通信できるようになる。
-* hostname: hostname を設定できる。
-* dnsServers: DNS サーバを設定できる。
-* dnsSearchDomains: DNS の検索対象ドメインを設定できる。
-* extraHosts: /etc/hosts に追記される。
-* readonlyRootFilesystem: root ファイルシステムを read only に設定できる。
-* mountPoints: データボリュームをマウントできる。
-  * sourceVolume: マウントするボリューム名。
-  * containerPath: コンテナのマウントパス。
-  * readOnly: readonly でマウントするかどうか。
-* volumesFrom: 異なるコンテナからデータボリュームをマウントできる。
-* logConfiguration: ログに関する設定
-  * logDriver: "awslogs","fluentd","gelf","json-file","journald","logentries","splunk","syslog","awsfirelens" から設定可能。
-* privileged: コンテナに特権を与える。
-* user: コンテナ内で使用するユーザ名。
-* dockerSecurityOptions: SELinux, Apparmor 用のカスタムラベルを設定。
-* ulimits: ulimit でを設定。
-* dockerLabels: Docker コンテナ起動時の Labels にマップされる。
-
-**Other Container Definition Parameters**
-
-* linuxParameters: Linux パラメータの設定。
-* dependsOn: コンテナの依存関係を設定。
-* startTimeout: 依存関係の解決を行うまでに待機する時間。依存先のコンテナがタイムアウト秒数内に期待する状態にならない場合、ギブアップしコンテナを起動しない。
-* stopTimeout: コンテナ終了までに待機する時間。
-* systemControls: カーネルパラメータを設定。
-* interactive: true の場合、stdin or tty が割り当てられる。
-* pseudoTerminal: true の場合、TTY が割り当てられる。
-
-**Volumes**
-
-Docker volumes — Docker-managed volume でコンテナインスタンスの /var/lib/docker/volumes に作られるもの。EC2 起動タイプでのみサポートされる。
-
-**Bind mounts** — ホストマシンのファイル、ディレクトリをコンテナにマウントするもの。EC2 or Fargate 起動タイプでサポートされる。
-
-* name: ボリューム名。
-* host: ボリュームマウントを使用する際に設定。
-* dockerVolumeConfiguration: Docker Volumes を使用する際に設定。
-* efsVolumeConfiguration: EFS を使用する際に設定。
-
-**Task placement constraints**
-
-Fargate の場合はサポートされない。**Fargate の場合はデフォルトで spread across Availability Zones となる。**
-
-* expression: 制約に関する記述。Cluster query language で記述。
-* type: 制約のタイプ。
-
-**Launch types**
-
-* requiresCompatibilities: EC2 or FARGATE
-
-**Task size**
-
-* cpu: 1024 = 1 vcpu
-* memory: 1024 = 1 GB
-
-**Proxy configuration**
-
-* proxyConfiguration: App Mesh proxy の設定。
-
-**Other task definition parameters**
-
-* ipcMode: IPC resource namespace を使用。
-* pidMode: process namespace を使用。
-
-
-#### 追加リソースのサポート
-
-* [Working with GPUs on Amazon ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-gpu.html)
-  * エージェント設定ファイルで ECS_ENABLED_GPU_SUPPORT を true に設定する必要がある。
-* [Working with inference workloads on Amazon ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-inference.html)
+* 以下の例が載っている
+  * Web サーバー
+  * 各種ログドライバー
+  * entryPoint, command の指定内容
+  * dependsOn
+  * Windows コンテナ
 
 
 
@@ -738,8 +595,11 @@ Fargate の場合はサポートされない。**Fargate の場合はデフォ�
 
 * サービス、タスクを管理する単位
 * EC2, Fargate の両起動タイプが共存可能
+* サブネットは AZ, Local Zone, Wavelength Zone, AWS Outposts を含められる
 * マネジメントコンソールからクラスターを作成すると、CloudFormation のスタックが作られる
 * クラスターのデフォルトの Service Connect 名前空間を設定可能
+* モニタリングオプション(Container Insights)
+* デフォルトのキャパシティープロバイダー戦略を設定可能
 
 
 [コンソールを使用した Fargate 起動タイプ用のクラスター作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-cluster-console-v2.html)
@@ -753,7 +613,7 @@ Fargate の場合はサポートされない。**Fargate の場合はデフォ�
 * AWS Cloud Map に、クラスターと同じ名前のデフォルトの名前空間を作成
 
 
-#### Capacity Provider
+### Capacity Provider
 
 [Amazon ECS capacity providers](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cluster-capacity-providers.html)
 
@@ -770,42 +630,51 @@ Fargate の場合はサポートされない。**Fargate の場合はデフォ�
 **Capacity Provider Strategy**
 
 * サービス、またはタスクの設定時に、どのキャパシティプロバイダー戦略を使用するかを設定可能
+* 6 個までのキャパシティープロバイダーを設定可能
 * **キャパシティプロバイダー戦略**により、タスクをどのキャパシティプロバイダーに配置するかを設定できる。base, weight の２つの設定値がある
   * base: 最低何個のタスクを起動するか。一つのキャパシティープロバイダーにのみ設定可能
-  * weight: どのキャパシティプロバイダーにタスクを割り当てるかの比率を設定する
+  * weight: どのキャパシティプロバイダーにタスクを割り当てるかの比率を設定する。0 の場合は、当該キャパシティープロバイダーは使用されない
 
 
 [AWS Fargate capacity providers](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-capacity-providers.html)
 
+* キャパシティープロバイダーを作成する必要はない。ただし、クラスターに関連づける必要はある
 * マネジメントコンソールより ECS クラスターを Networking only で作成した場合に FARGATE, FARGATE_SPOT が自動的に設定された状態になっている。
-* FARGATE_SPOT のキャパシティプロバイダーのタスクがスポットの中断により停止する際は、タスク停止の 2 分前に EventBridge よりワーニングが送られる。また、SIGTERM シグナルがタスクに送られる。キャパシティに空きがある場合は新規タスクの起動を試みる
+* FARGATE_SPOT のキャパシティプロバイダーのタスクがスポットの中断により停止する際は、タスク停止の 2 分前に EventBridge よりワーニングが送られる。また、SIGTERM シグナルがタスクに送られる。キャパシティに空きがある場合は新規タスクの起動を試みる。需要が多い場合は起動が遅くなる場合がある
 * FARGATE_SPOT は Windows では未サポート。Linux でも ARM64 の場合は未サポート
 
 
 [Auto Scaling group capacity providers](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/asg-capacity-providers.html)
 
 * 空の Auto Scaling グループの作成を推奨。既存の Auto Scaling グループの場合、起動済みのインスタンスが正常にキャパシティープロバイダーに登録されないことがある
+* インスタンスの重みづけは未サポート
 * managed termination protection
   * 使用する際 managed scaling が有効になっている必要がある。そうしないと managed termination protection は動作しない
-  * 有効にすることでタスクが存在する EC2 インスタンスについてスケールインから保護することができる
-* **managed scaling を有効にすることで、タスク数に応じて ECS インスタンスがスケールする。** スケーリング用のリソースは変更してはならない
+  * 有効にすることでタスクが存在する EC2 インスタンスについてスケールインから保護することができる。Auto Scaling Group 側でもスケールインからのインスタンス保護の設定が有効になっている必要がある
+* **managed scaling を有効にすることで、タスク数に応じて ECS インスタンスがスケールする。**。Auto Scaling Group に自動作成されるスケーリングポリシーを変更、削除してはならない
 * ウォームプールを使用可能
   * ユーザーデータで `ECS_WARM_POOLS_CHECK` を設定する
 
+
+### Cluster Auto Scaling
 
 [Amazon ECS クラスターの Auto Scaling](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/cluster-auto-scaling.html)
 
 * スケーリングの制御に `CapacityProviderReservation` のメトリクスを使用する。
   * 計算式: CapacityProviderReservation = (number of instances needed) / (number of running instances) x 100
   * `CapacityProviderReservation` > `targetCapacity` の場合にスケールアウトする
-  * `CapacityProviderReservation` < `targetCapacity` の場合にスケールインする。
+  * `CapacityProviderReservation` < `targetCapacity` の場合にスケールインする。終了するインスタンスは Auto Scaling Group の終了ポリシーにより決定される
 * 考慮事項
   * スケーリングポリシーを変更、追加してはならない
   * スケーリングにはサービスにリンクされたロール `AWSServiceRoleForECS` を使用する
   * キャパシティプロバイダーを作成、更新する IAM エンティティには `autoscaling:CreateOrUpdateTags` の許可が必要
   * Auto Scaling グループがら AmazonECSManaged タグを削除してはならない
+  * マネージドスケーリングが有効の場合はキャパシティープロバイダーは単一のクラスターにしか関連づけることができない。無効の場合は複数クラスターに関連づけることができる
+  * 既存のキャパシティーから配置戦略、配置制約を使用
 * Managed termination protection
   * タスクが稼働しているインスタンスはスケールインから保護される。しかし DAEMON タイプは例外
+  * Auto Scaling Group にてインスタンスのスケールイン保護が有効になっている必要がある
+  * Auto Scaling Group からデタッチする場合は、ECS クラスターからも登録解除が必要
 * マネージドスケールアウトの動作
   * どのキャパシティープロバイダーを使用するかを決定
   * Auto Scaling グループが複数のインスタンスタイプから構成される場合は vCPU, メモリ, ENI, GPU 数からインスタンスタイプを決定
@@ -818,51 +687,72 @@ Fargate の場合はサポートされない。**Fargate の場合はデフォ�
     * `instanceWarmupPeriod` は EC2 インスタンスが起動し ECS Agent が開始するのに十分な時間とする。さもなければオーバープロビジョニングが発生しうる
 
 
+### Cluster Concepts
 
-## アカウント設定
+[クラスターの管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/clusters-concepts.html)
 
-[アカウント設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-account-settings.html)
+* クラスターの状態には以下のものがある
+  * ACTIVE
+  * PROVISIONING
+  * DEPROVISIONING
+  * FAILED
+  * INACTIVE
+* インスタンスは一つのクラスターにしか登録できない
+* IAM ポリシーで、クラスターごとに権限制御できる
+* デフォルトの Service Connect 名前空間を設定可能
 
-* アカウントレベルもしくは IAM ユーザー、ロールレベルで特定の機能をオプトイン、オプトアウトできる
-* 設定できる項目
-  * Amazon リソースネーム (ARN) と ID
-  * AWS VPC トランキング
-  * CloudWatch Container Insights
-  * デュアルスタック VPC IPv6
-  * Fargate FIPS-140 コンプライアンス
-  * タグリソース認可
+
+### Create Capacity
+
+[キャパシティーの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-capacity.html)
+
+* コンテナインスタンスではコンテナエージェントを稼働させる必要がある。ECS Optimized AMI にはインストール済み
+* コンテナインスタンスには IAM ロールの設定が必要
+* ECS Optimized AMI の 20200430 以降は IMDSv2 がサポートされている
+* 各エンドポイントとの疎通性が必要
+* コンテナインスタンスを登録解除したとに別のクラスターに登録してはならない
+* 同じコンテナインスタンスを停止して、インスタンスタイプを変更することはできない
+* スポットインスタンスを使用する場合は、複数の AZ、混合インスタンスポリシーを使用する
 
 
-## ECS container instances
+#### Linux Instance
 
-[Amazon ECS container instances](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_instances.html)
+[Linux インスタンス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-linux.html)
 
-* ECS エージェントの導入が必須。Amazon ECS-optimized AMI の場合は既に導入済み。
-* 適切な IAM ロールの設定が必要。
-* Linux Amazon ECS-optimized AMI version 20200430 and later の場合、Amazon EC2 Instance Metadata Service Version 2 (IMDSv2) がサポートされている。それ以前の AMI の場合は IMDSv1。
-* コンテナ側で expose するポートに対して、インバウンド通信の許可が必要。
-* Amazon ECS service endpoint との接続性が必要。パブリック IP アドレスもしくはインタフェース VPC エンドポイントを用意する必要あり。
-* コンテナインスタンス内で固有の情報を持っているので、登録解除してから別クラスターに登録することはしないように。
-* インスタンスタイプの変更は不可。
+Bottlerocket も選択肢の一つ
 
-**ライフサイクル**
+* 必須要件
+  * Linux Kernel (バージョン 3.10 以上)
+  * Amazon ECS コンテナエージェント
+  * Docker Daemon (バージョン 1.9.0 以上)
+* 推奨
+  * ecs-init
 
-* ACTIVE 状態の場合 RunTask API によるリクエストを受け入れることができる。
-* FALSE: コンテナインスタンスを停止ししばらく経つと FALSE に遷移する。
-* DRAINING: 新規タスクが配置されなくなる。サービスのタスクは可能であれば削除される。
-* INACTIVE: コンテナインスタンスを登録解除もしくは終了した場合。1 時間以内はコンテナインスタンスの情報を取得可能
 
-コンテナインスタンスを停止した場合 ACTIVE のままだが、エージェント接続ステータスは FALSE となる
+[Amazon ECS に最適化された AMI](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-optimized_AMI.html)
+
+* [AMI の Change Log](https://github.com/aws/amazon-ecs-ami/blob/main/CHANGELOG.md)
+* [AMI のバージョン履歴](https://github.com/aws/amazon-ecs-ami/releases)
+* [Docker Release Note](https://docs.docker.com/engine/release-notes/)
+* [Nvidia Driver Document](https://docs.nvidia.com/datacenter/tesla/index.html)
+* [ECS Agent の Change Log](https://github.com/aws/amazon-ecs-agent/blob/master/CHANGELOG.md)
+
+
+[Amazon ECS に最適化された AMI メタデータを取得する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html)
+
+* AMI ID は SSM パラメータにて取得可能
 
 
 [AMI ストレージ設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-ami-storage-config.html)
 
-* Amazon Linux 2023
-  * 1 つの 30 GiB のルートボリュームが付属
-  * Amazon ECS に最適化された Amazon Linux 2 AMI のデフォルトファイルシステムは xfs を使用しており、Docker は overlay2 ストレージドライバーを使用
-* Amazon Linux 2
-  * 1 つの 30 GiB のルートボリュームが付属
-  * Amazon ECS に最適化された Amazon Linux 2 AMI のデフォルトファイルシステムは xfs を使用しており、Docker は overlay2 ストレージドライバーを使用
+* Amazon Linux 2023 AMI 
+  * 単一の 30 GiB のボリューム
+  * デフォルトファイルシステムは xfs
+  * Docker は overlay2 ストレージドライバー
+* Amazon Linux 2 AMI 
+  * 単一の 30 GiB のボリューム
+  * デフォルトファイルシステムは xfs
+  * Docker は overlay2 ストレージドライバー
 * Amazon Linux AMI
   * オペレーティングシステム用に 8 GiB ボリュームが /dev/xvda にアタッチ。ルートとしてマウント。
   * Docker によるイメージとメタデータの保存用に 22 GiB のボリュームが /dev/xvdcz に追加でアタッチ。
@@ -870,65 +760,281 @@ Fargate の場合はサポートされない。**Fargate の場合はデフォ�
 
 補足: [Use the OverlayFS storage driver](https://docs.docker.com/storage/storagedriver/overlayfs-driver/)
 
-Docker 側では `/etc/docker/daemon.json` を以下のように設定。
-```json
-{
-  "storage-driver": "overlay2"
-}
-```
+Docker ボリュームの拡張方法
+
+* サイズを増加したデータストレージボリュームで新しいインスタンスを起動するのが簡単
+* Amazon Linux の場合はボリュームが分かれているため、別途対応が必要
+
+チューニング箇所
+
+* `ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION` を短くする
 
 
 [Amazon ECS 最適化 Linux AMI のビルドスクリプト](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-ami-build-scripts.html)
 
-* ビルド方法は OSS 化されている。https://github.com/aws/amazon-ecs-ami
+* ビルドスクリプトレポジトリには以下が含まれている
+  * HashiCorp Packer テンプレート
+  * Amazon ECS に最適化された AMI の各 Linux バリアントを生成するためのビルドスクリプト
+  * AMI を構築するための Makefile
 
 
-[Amazon ECS 最適化 Bottlerocket AMI](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-bottlerocket.html)
+[Bottlerocket](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-bottlerocket.html)
 
-* コンテナの実行に必要な最小数のパッケージのみが含まれている
-* パッケージマネージャが含まれていない
-
-
-#### コンテナインスタンスの設定
-
-[Launching an Amazon ECS Container Instance](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_container_instance.html)
-
-コンテナエージェントの設定ファイルにクラスターの設定が必要。
-```bash
-#!/bin/bash
-echo ECS_CLUSTER=your_cluster_name >> /etc/ecs/ecs.config
-```
+* 最小限のパッケージのみが含まれている
+* パッケージマネージャは含まれていない。イミュータブルな設計思想
+* 管理ツールを使用することで、SSH アクセスを獲得できる
+* コントロールコンテナが稼働している
 
 
-[Using Spot Instances](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-spot.html)
+[Linux コンテナ向け gMSAs を使用する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/linux-gmsa.html)
 
-次の設定を行うことで、スポットの中断の通知を受けた場合に(2 分前に発報される) ECS インスタンスを DRAINING 状態にすることができる。
-```bash
-ECS_ENABLE_SPOT_INSTANCE_DRAINING=true
-```
-
-
-[Elastic network interface trunking](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-eni.html)
-
-* c5.large は通常プライマリネットワークインタフェースを含めて 3 つまでの ENI をアタッチ可能。
-* アカウント設定で **awsvpcTrunking** にオプトインすることで、ENI のリミットを増やすことができる。c5.large の場合 12 個だが、プライマリネットワークインタフェースとトランクネットワークインタフェースで 1 個ずつ使うので、タスクで使用可能となるのは 10 個となる。
-* Windows コンテナは未サポート。
-* リソースベースの IPv4 DNS リクエストがオフになっている必要がある。
-* 共有サブネットは未サポート。
-* 一部インスタンスタイプは実サポート。
+* Linux コンテナの Active Directory 認証をサポート。グループ管理サービスアカウント(gMSA)を使用
+* コンテナインスタンス側で credentials-fetcher デーモンが必要。Active Directory ドメインコントローラーから認証情報を取得し、gMSA 認証情報をコンテナインスタンスに転送
+* Fargate ではサポートされていない
 
 
-[Container Instance Memory Management](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/memory-management.html)
+[Amazon ECS コンテナエージェントをインストールする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-agent-install.html)
 
-コンテナに割り当て可能なメモリは Docker の ReadMemInfo() により取得する。また、コンテナエージェント側で ECS_RESERVED_MEMORY に MiB を設定することで、指定量分をタスクの割当対象から除外できる。減じた量が、そのインスタンスに配置できるメモリ量となる。
+* Amazon Linux 2
+  * `amazon-linux-extras` コマンドでインストール可能
+  * systemctl で ecs サービスを起動できる
+  * `curl -s http://localhost:51678/v1/metadata | python -mjson.tool` コマンドにて稼働状況を確認可能
+* 非 Amazon Linux EC2 インスタンス
+  * パッケージのファイルをダウンロードし、パッケージマネージャによりインストールする
+* コンテナエージェント
+  * host ネットワークモードで稼働している
+  * コンテナエージェントから稼働したコンテナは http://169.254.169.254 へのアクセスがブロックされる
 
+
+#### Windows Instance
 
 [Windows インスタンス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-windows.html)
 
 
+[Amazon ECS に最適化された AMI](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-optimized_windows_AMI.html)
+
+* 考慮事項
+  * 配置制約 `memberOf(ecs.os-type=='windows')` を使用するのが手
+  * タスクロールを使用するには、認証情報プロキシを使用する。このプロキシがホストの 80 番ポートを占有するため、ホストポート 80 はタスク側では使用できない
+  * ホストとコンテナで Windows バージョンが一致している必要がある
+
+
+[Windows コンテナでの gMSAs の使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/windows-gmsa.html)
+
+* グループマネージドサービスアカウント (gMSA) と呼ばれる特殊なサービスアカウントを使用して、Windows コンテナの Active Directory 認証をサポート
+
+
+[Amazon ECS に最適化された独自の Windows AMI の作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/windows-custom-ami.html)
+
+* EC2 Image Builder を使用して、Amazon ECS 最適化された独自のカスタム Windows AMI を構築できる
+
+
+#### 外部インスタンス
+
+[外部インスタンス（Amazon ECS Anywhere）](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-anywhere.html)
+
+* EXTERNAL 起動タイプ
+* Fedora 32、Fedora 33 は cgroup v2 を使用するため grub 設定変更が必要
+* IAM ロールが必要
+* `ecs.capability.external` 属性が設定される
+* ECS Exec はサポートされている
+* 以下は未サポート
+  * ELB
+  * サービスディスカバリ
+  * awsvpc
+  * `UpdateContainerAgent` API
+  * キャパシティープロバイダー
+  * SELinux
+  * EFS
+  * App Mesh
+* エンドポイントとの疎通性が必要
+  * ecs-a-*.region.amazonaws.com: タスクを管理
+  * ecs-t-*.region.amazonaws.com: タスクとコンテナのメトリクスを管理
+  * ecs.region.amazonaws.com: ECS のサービスエンドポイント
+  * ssm.region.amazonaws.com: Systems Manager のエンドポイント
+  * ec2messages.region.amazonaws.com: Systems Manager エージェントと Systems Manager サービスの間の通信に使用するエンドポイント
+  * ssmmessages.region.amazonaws.com: ession Manager サービスでセッションチャネルを作成および削除するために必要なサービスエンドポイント
+
+タスクロール用の iptables 設定
+```
+$ sysctl -w net.ipv4.conf.all.route_localnet=1
+$ iptables -t nat -A PREROUTING -p tcp -d 169.254.170.2 --dport 80 -j DNAT --to-destination 127.0.0.1:51679
+$ iptables -t nat -A OUTPUT -d 169.254.170.2 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 51679
+```
+
+
+### Manage Capacity
+
+[キャパシティ管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/manage-capacity.html)
+
+Fargate は AWS 側の管理。EC2 or External は以下項目の管理が必要
+
+* コンテナインスタンスの起動
+* コンテナインスタンスのブートストラップ
+* 起動時のタスク開始
+* ENI トランキングの使用
+* メモリの管理
+* コンテナインスタンスのリモート管理
+* コンテナエージェントと Docker デーモンの両方での HTTP プロキシの使用
+* コンテナエージェントの更新
+* コンテナインスタンスの登録解除
+
+
+#### Container Agent
+
+[Amazon ECS Linux コンテナエージェント](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-agent-versions.html)
+
+* 最新バージョンの使用を常に推奨
+* ライフサイクル
+  * コンテナインスタンスを停止した場合 ACTIVE のままだが、エージェント接続ステータスは FALSE となる
+  * 以下のステータスがある
+    * ACTIVE 状態の場合 RunTask API によるリクエストを受け入れることができる。
+    * DRAINING: 新規タスクが配置されなくなる。サービスのタスクは可能であれば削除される。
+    * INACTIVE: コンテナインスタンスを登録解除もしくは終了した場合。1 時間以内はコンテナインスタンスの情報を取得可能
+
+
+[Amazon ECS コンテナエージェントの設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-agent-config.html)
+
+* 環境変数を `/etc/ecs/ecs.config` に設定する
+* パラメータの一覧は https://github.com/aws/amazon-ecs-agent/blob/master/README.md を参照
+* 機密性の高い情報はインスタンス起動時に S3 から PULL するなどの方法で取得する
+
+旧ドキュメントの内容
+
+* パラメータ例
+  * `ECS_DATADIR`: コンテナの状態を保存するディレクトリパス
+  * `ECS_ENABLE_TASK_IAM_ROLE`: タスクの IAM ロールを有効化するかどうか
+  * `ECS_DISABLE_IMAGE_CLEANUP`: 自動イメージクリーンアップを行うかどうか
+  * `ECS_AWSVPC_BLOCK_IMDS`: awsvpc ネットワークモードを使用して起動されるタスクのインスタンスメタデータへのアクセスをブロックするかどうか
+  * `ECS_AWSVPC_ADDITIONAL_LOCAL_ROUTES`: awsvpc ネットワークモードでは、これらのプレフィックスへのトラフィックは、タスク Elastic Network Interface ではなく、ホストブリッジ経由でルーティングされる
+  * `ECS_TASK_METADATA_RPS_LIMIT`: タスクメタデータエンドポイントのスロットリングに使用する値
+  * `ECS_ENABLE_SPOT_INSTANCE_DRAINING`: スポットインスタンスのドレイニングを有効化するかどうか
+
+
+[コンテナインスタンスのプライベートレジストリの認証](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/private-auth-container-instances.html)
+
+* EC2 起動タイプではプライベートレジストリの認証を行うことができる
+* `ECS_ENGINE_AUTH_TYPE` に認証タイプ、`ECS_ENGINE_AUTH_DATA` に認証情報を設定
+
+
+[コンテナインスタンスのドレイン](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/container-instance-draining.html)
+
+* ドレイニング状態での動作
+  * サービスの一部のタスク
+    * PENDING 状態のサービスタスクは直ちに停止
+    * RUNNING 状態のサービスタスクは `minimumHealthyPercent`、`maximumPercent` に従って置き換え
+    * `minimumHealthyPercent` が 100 の場合は、新規起動したタスクが正常と見なされるまで既存タスクを停止しない。ELB を使用している場合は ELB からも healthy と判定される必要がある
+  * スタンドアローンのタスク
+    * PENDING, RUNNING 状態のタスクは影響を受けない
+    * 全てのタスクが STOPPED になるとドレインは完了する
+  * コンテナインスタンスのステータスは DRAINING になる。再度使用する場合は ACTIVE に設定する必要がある
+
+
+[自動化タスクとイメージのクリーンアップ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/automated_image_cleanup.html)
+
+* `ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION`: 停止されたコンテナを削除するまでの時間。デフォルトは 3 時間
+* `ECS_DISABLE_IMAGE_CLEANUP`: `true` に設定した場合はイメージの削除は実施されない
+* `ECS_IMAGE_CLEANUP_INTERVAL`: イメージをチェックする間隔。デフォルトは 30 分
+* `ECS_IMAGE_MINIMUM_CLEANUP_AGE`: イメージが取得されてから削除対象になるまでの最短の時間。デフォルトは 1 時間
+* `ECS_NUM_IMAGES_DELETE_PER_CYCLE`: 1 回のクリーンアップサイクルで削除するイメージ数。デフォルトは 5 個
+
+
+#### Manage Linux
+
+[Linux コンテナインスタンス管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/manage-linux.html)
+
+
+[Amazon ECS Linux コンテナインスタンスの起動](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/launch_container_instance.html)
+
+* `ECS_CONTAINER_INSTANCE_TAGS`: タグは ECS 用。EC2 API では抽出されないタグ
+* `ECS_CONTAINER_INSTANCE_PROPAGATE_TAGS_FROM`: EC2 インスタンスからタグを伝搬
+* `ECS_ENABLE_SPOT_INSTANCE_DRAINING` を `true` に設定することでスポット中断時に DRAINING へと遷移できる
+* 既存のインスタンス上でパラメータを更新する場合は `ecs.config` を修正した後に ecs サービスを再起動する
+* コンテナエージェントのメタデータの取得は `curl http://localhost:51678/v1/metadata` から可能
+
+
+[Amazon EC2 ユーザーデータを使用してコンテナインスタンスをブートストラップする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/bootstrap_container_instance.html)
+
+* コンテナエージェントの設定は `/etc/ecs/ecs.config` により行う
+* Docker デーモンの設定は `/etc/docker/daemon.json` により行う
+
+
+[コンテナインスタンス起動時のタスクの開始](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/start_task_at_launch.html)
+
+* `StartTask` API により特定のコンテナインスタンス上でタスクを起動できる
+* 起動したインスタンス上でタスクを起動する方法としては、コンテナエージェントから提供されるコンテナインスタンスの ARN を取得して、`StartTask` API を実行する
+
+
+[Elastic Network Interface のトランキング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/container-instance-eni.html)
+
+* `awsvpc` ではタスクごとに ENI がアタッチされる
+* インスタンスタイプごとに ENI 数の上限がある。プライマリネットワークインタフェースは `awsvpc` 用としては使用できない
+* アカウント設定で `awsvpcTrunking` を有効化すると追加の ENI を使用できる
+* 考慮事項
+  * コンテナエージェント 1.28 以降
+  * Windows 未サポート
+  * インスタンスの設定において、リソースベースの IPv4 DNS リクエストがオフになっている必要がある。修正は `aws ec2 modify-private-dns-name-options --instance-id i-xxxxxxx --no-enable-resource-name-dns-a-record --no-dry-run`
+  * 共有サブネットは未サポート
+  * コンテナインスタンスとタスクが同一 VPC である必要がある
+  * コンテナインスタンスの起動時に失敗すると REGISTRATION_FAILED になる。コンテナインスタンスを describe し statusReason の確認が必要
+  * コンテナインスタンスは追加の ENI を受け取り、デフォルトのセキュリティグループが使用される。ECS によって ENI が管理されている
+  * サービスにリンクされたロールが必要
+  * `PutAccountSettingDefault` は AWS アカウント全体に適用される
+  * `PutAccountSetting` は特定の IAM エンティティのみに適用できる。ルートユーザーでないと実行できない
+  * 一部のインスタンスファミリーでは未サポート
+
+
+[コンテナインスタンスメモリ管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/memory-management.html)
+
+* Docker の `ReadMemInfo()` 関数を使用してオペレーティングシステムで使用可能な合計メモリのクエリを実行
+* `ECS_RESERVED_MEMORY` によりシステム用に予約するメモリ量を設定可能
+
+
+[AWS Systems Manager を使用してコンテナインスタンスをリモート管理する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ec2-run-command.html)
+
+* SSM の RunCommand を使用する場合、ecsInstanceRole にて許可が必要
+
+
+[Linux コンテナインスタンス用の HTTP プロキシ設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/http_proxy_config.html)
+
+* `/etc/ecs/ecs.config`
+  * `HTTP_PROXY=10.0.0.131:3128`
+  * `NO_PROXY=169.254.169.254,169.254.170.2,/var/run/docker.sock`
+* `/etc/systemd/system/ecs.service.d/http-proxy.conf`
+  * `Environment="HTTP_PROXY=10.0.0.131:3128/"`
+  * `Environment="NO_PROXY=169.254.169.254,169.254.170.2,/var/run/docker.sock"`
+* `/etc/systemd/system/docker.service.d/http-proxy.conf`
+  * `Environment="HTTP_PROXY=http://10.0.0.131:3128"`
+  * `Environment="NO_PROXY=169.254.169.254"`
+* `/etc/sysconfig/docker`
+  * `export HTTP_PROXY=http://10.0.0.131:3128`
+  * `export NO_PROXY=169.254.169.254,169.254.170.2`
+
+
+[Amazon ECS コンテナエージェントをアップデートする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-agent-update.html)
+
+
+[Amazon ECS 対応 AMI での Amazon ECS コンテナエージェントのアップデート](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/agent-update-ecs-ami.html)
+
+* 推奨される順
+  * 最新の AMI から起動する
+  * `ecs-init` を最新にする。yum update にて更新できる。更新後は `docker` サービスの再起動が必要
+  * `UpdateContainerAgent` API を実行する。PENDING → STAGING → STAGED → UPDATING → UPDATED へと遷移。失敗時は FAILED となる
+
+
+[Amazon ECS コンテナエージェントの手動更新（Amazon ECS 最適化以外の AMI の場合）](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/manually_update_agent.html)
+
+* ecs-agent サービスを停止してからコンテナイメージをプルする。`docker pull public.ecr.aws/ecs/amazon-ecs-agent:latest`。`docker run` コマンドにより ecs-agent を起動する
+
+
+#### Manage Windows
+
+[Windows コンテナインスタンス管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/manage-windows.html)
+
+
 [Amazon ECS Windows コンテナインスタンスの起動](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/launch_window-container_instance.html)
 
-ユーザーデータの例
+ユーザーデータの内容
 ```powershell
 <powershell>
 Import-Module ECSTools
@@ -936,161 +1042,150 @@ Initialize-ECSAgent -Cluster your_cluster_name -EnableTaskIAMRole -EnableTaskENI
 </powershell>
 ```
 
-
-[外部インスタンス(Amazon ECS Anywhere)](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-anywhere.html)
-
-* EXTERNAL 起動タイプ
-* ELB、サービスディスカバリ未サポート
-* awsvpc 未サポート
-* インスタンスには `ecs.capability.external` 属性が設定される
-* `ecs-a-*`、`ecs-t-*` などのエンドポイントとの疎通性が必要
+* `EnableTaskENI`: トランク ENI の使用
+* `AwsvpcBlockIMDS`: タスクコンテナの IMDS へのアクセスをブロック
+* `AwsvpcAdditionalLocalRoutes`: タスクの名前空間に追加のルートを設定
+* `[Environment]::SetEnvironmentVariable("ECS_ENABLE_SPOT_INSTANCE_DRAINING", "true", "Machine")` によりスポット中断時に DRAINING へと遷移
 
 
-[モニタリング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/using_cloudwatch_logs.html)
+[Amazon EC2 ユーザーデータを使用して Windows コンテナインスタンスをブートストラップする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/bootstrap_windows_container_instance.html)
 
-* コンテナインスタンスのログを CloudWatch Logs に送信可能。
-* CLoudWatch Agent を導入し設定する必要がある。
-
-
-[Container instance draining](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-draining.html)
-
-* **DRAINING 状態になったインスタンスには新規タスクは割り当てられない。**
-* サービスから起動したタスクの場合
-  * Pending のタスクは即座に停止させられる。
-  * 利用可能なコンテナインスタンス容量がある場合は置き換えタスクが実行される。
-  * 最小ヘルス率が 100 % 未満の場合は希望数を無視してタスクを最小ヘルス率の割合まで停止する。100 % の場合はタスクの停止は発生しない。
-  * 最大率が 100 % よりも大きい場合は draining する前にタスクを起動する。100 % の場合は、draining タスクの停止までは新規タスクを起動できない。
-* スタンドアローンのタスクの場合
-  * タスクは停止しないので手動停止が必要
+* `[Environment]::SetEnvironmentVariable("ECS_ENABLE_AWSLOGS_EXECUTIONROLE_OVERRIDE", $TRUE, "Machine")` により awslogs が使用可能になる
 
 
+[Windows インスタンスに接続する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/instance-windows-connect.html)
 
-## Amazon ECS Container Agent
-
-* ECS Agent。ソースコードは GitHub 上にある。[aws/amazon-ecs-agent](https://github.com/aws/amazon-ecs-agent)
-* Fargate PV 1.4.0 は Fargate Agent が使われる。
+* RDP により接続
 
 
-[Installing the Amazon ECS Container Agent](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-install.html)
+[Windows コンテナインスタンス用の HTTP プロキシ設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/http_proxy_config-windows.html)
 
-Amazon Linux 2、Amazon Linux の場合はパッケージとして提供されている。
+ユーザーデータにて以下のように設定
 ```
-sudo amazon-linux-extras install -y ecs; sudo systemctl enable --now ecs
+$proxy = "http://proxy.mydomain:port"
+[Environment]::SetEnvironmentVariable("HTTP_PROXY", $proxy, "Machine")
+[Environment]::SetEnvironmentVariable("NO_PROXY", "169.254.169.254,169.254.170.2,\\.\pipe\docker_engine", "Machine")
 ```
 
-インストール後はメタデータにアクセスできるか確認する。
-```
-curl -s http://localhost:51678/v1/metadata | python -mjson.tool
-```
 
-* ecs-init はホストネットワークモードでコンテナエージェントのコンテナを起動する
+[Amazon EC2 でバックアップされたコンテナインスタンスの登録解除](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deregister_container_instance.html)
 
-
-[Updating the Amazon ECS Container Agent on an Amazon ECS-optimized AMI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/agent-update-ecs-ami.html)
-
-アップデート方法はいくつかある。
-
-* **インスタンスを Terminate し、最新の  Amazon ECS-optimized Amazon Linux 2 AMI を使用。**
-* ecs-init パッケージを最新にする。
-* UpdateContainerAgent API を使用する。
+* タスク実行中でも登録解除可能。当該タスクは ECS による情報収集の対象外になる
+* サービスタスクの場合は、代わりの新規タスクを起動しようとする。ALB から登録解除され awsvpc の場合は ENI が解除される
 
 
-[Amazon ECS Container Agent Configuration](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html)
+#### Manage External
 
-* パラメータは `/etc/ecs/ecs.config` ファイルで設定可能。
-* パラメータのリファレンスは [GitHub リポジトリ](https://github.com/aws/amazon-ecs-agent/blob/master/README.md) を参照のこと
-* パラメータ例
-  * ECS_DATADIR: コンテナの状態を保存するディレクトリパス
-  * ECS_ENABLE_TASK_IAM_ROLE: タスクの IAM ロールを有効化するかどうか
-  * ECS_DISABLE_IMAGE_CLEANUP: 自動イメージクリーンアップを行うかどうか
-  * ECS_AWSVPC_BLOCK_IMDS: awsvpc ネットワークモードを使用して起動されるタスクのインスタンスメタデータへのアクセスをブロックするかどうか
-  * ECS_AWSVPC_ADDITIONAL_LOCAL_ROUTES: awsvpc ネットワークモードでは、これらのプレフィックスへのトラフィックは、タスク Elastic Network Interface ではなく、ホストブリッジ経由でルーティングされる
-  * ECS_TASK_METADATA_RPS_LIMIT: タスクメタデータエンドポイントのスロットリングに使用する値
-  * ECS_ENABLE_SPOT_INSTANCE_DRAINING: スポットインスタンスのドレイニングを有効化するかどうか
+[外部コンテナインスタンス管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/manage-external.html)
 
 
-[Private Registry Authentication for Container Instances](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth-container-instances.html)
+[クラスターへの外部インスタンスの登録](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-anywhere-registration.html)
 
-* プライベートレジストリの認証を設定可能。
-* コンテナエージェント側での設定が必要のため、Fargate では対応不可
-
-
-[Automated Task and Image Cleanup](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/automated_image_cleanup.html)
-
-* 停止したタスクのイメージ、ログやデータボリュームなどは所定の期間が経過したあとに削除される
-* 動作はパラメータで調整可能。
-
-
-[Amazon ECS Container Metadata File](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-metadata.html)
-
-* コンテナメタデータを有効化。(ECS_ENABLE_CONTAINER_METADATA=true)することで、所定のファイルパスから参照できるようになる。
-* Linux の場合は `/var/lib/ecs/data/metadata/cluster_name/task_id/container_name/ecs-container-metadata.json`
+* AWS Systems Manager マネージドインスタンスとしての登録が必要
+* CLI で対応する場合は以下の流れ
+  * IAM ロールに対応する Systems Manager のアクティベーションペアを作成
+  * ECS Anywhere のインストールスクリプトをダウンロードし実行
+* 別の ECS クラスターに登録する際の流れ
+  * ecs サービスを停止
+  * `/var/lib/ecs/data/agent.db` を削除
+  * ecs サービスを起動
 
 
-[Amazon ECS タスク メタデータ エンドポイント](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-metadata-endpoint.html)
+[外部インスタンスの登録を解除する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-anywhere-deregistration.html)
 
-* 例えばタスクメタデータバージョン 4 の場合は以下のようなエンドポイントパスが用意されている
-  * `${ECS_CONTAINER_METADATA_URI_V4}`
-  * `${ECS_CONTAINER_METADATA_URI_V4}/task`
-  * `${ECS_CONTAINER_METADATA_URI_V4}/taskWithTags`
-  * `${ECS_CONTAINER_METADATA_URI_V4}/stats`
-  * `${ECS_CONTAINER_METADATA_URI_V4}/task/stats`
-
-
-[タスクスケールインプロテクションのエンドポイント](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-scale-in-protection-endpoint.html)
-
-* URI `$ECS_AGENT_URI/task-protection/v1/state` への PUT によりスケールインプロテクションを設定可能
-* 有効化する際に保護する期間も設定できる
+* 次の流れで対応する
+  * コンテナインスタンスをドレイン
+  * コンテナインスタンスを登録解除
+  * SSM のマネージドインスタンスを登録解除
+  * ecs サービスを停止
+  * 各ディレクトリ、ファイルを削除
 
 
-[Amazon ECS Container Agent Introspection](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-introspection.html)
+[外部インスタンス上のAWS Systems Managerエージェントと Amazon ECS コンテナエージェントを更新しています](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-anywhere-updates.html)
 
-* コンテナインスタンスのメタデータは port 51678 に対して HTTP リクエストを行うことにより取得可能。様々なクエリをかけられる
-```
-curl -s http://localhost:51678/v1/metadata | python -mjson.tool
-```
-* Docker 統計は ```${ECS_CONTAINER_METADATA_URI_V4}/stats```。[Docker Stats](https://docs.docker.com/engine/api/v1.30/#operation/ContainerStats) 参照のこと
-
-
-[HTTP Proxy Configuration](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/http_proxy_config.html)
-
-* HTTP プロキシを設定することが可能
-* 以下ファイルにプロキシの指定を行う
-  * `/etc/ecs/ecs.config`
-  * `/etc/systemd/system/ecs.service.d/http-proxy.conf`
-  * `/etc/systemd/system/docker.service.d/http-proxy.conf`
+* 次の流れで対応する
+  * `ecs-init` パッケージのダウンロード
+  * パッケージインストール
+  * ecs サービスの再起動
 
 
 
-## Scheduling tasks
+## Account Settings
+
+[アカウント設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-account-settings.html)
+
+* アカウントレベルもしくは IAM ユーザー、ロールレベルで特定の機能をオプトイン、オプトアウトできる
+* 設定できる項目
+  * Amazon リソースネーム (ARN) と ID: 新しい ARN フォーマットになる
+  * AWS VPC トランキング
+  * CloudWatch Container Insights: クラスターのデフォルト設定で Container Insights が有効になる。クラスターごとに無効に設定することも可能
+  * デュアルスタック VPC IPv6: awsvpc のタスクでプライマリプライベート IPv4 アドレスに加えて IPv6 アドレスを備えたタスクの提供をサポート
+  * Fargate FIPS-140 コンプライアンス: [AWS Fargate 連邦情報処理標準 (FIPS-140)](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-fips-compliance.html)
+  * タグリソース認可: タグ付け時に `ecs:TagResource` の許可が必要
+  * AWS Fargate タスク廃止の待機時間: リタイアするまでの期間(0, 7, 14 日)を設定できる。重要なセキュリティパッチの場合は直ちにリタイアされる場合がある
+
+
+[アカウント設定の変更](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-modifying-longer-id-settings.html)
+
+コンソール上の操作で変更可能
+
+
+[デフォルトの Amazon ECS アカウント設定の復元](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-reverting-account.html)
+
+デフォルトのアカウント設定を復元可能
+
+
+[AWS CLI を使用したアカウント設定管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/account-setting-management-cli.html)
+
+* put-account-setting-default
+  * アカウント全体に適用される
+* put-account-setting
+  * 自分の IAM エンティティの設定を変更
+  * ルートユーザーの場合は対象を指定しなければアカウント全体が対象になる。特定の IAM エンティティのみに設定することも可能
+
+
+## Scheduling Tasks
 
 [Amazon ECS タスクのスケジューリング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/scheduling_tasks.html)
 
 * サービススケジューラ
+  * タスクが異常となると置き換えタスクが起動する。置き換えタスクが HEALTHY となった後に異常タスクを停止する。ただし、`maximumPercent` が 100 以下の場合は異常タスクをランダムに停止してから置き換えタスクを起動する
   * サービススケジューラ戦略
     * レプリカ: デフォルトでは AZ 間で分散される
-    * デーモン: タスク配置制約を満たすインスタンス上に配置される
+    * デーモン: タスク配置制約を満たすインスタンス上に配置される。Fargate は未サポート
 * 手動でタスク実行: RunTask の API によりタスクを起動する
 * cron ライクなスケジューラ: EventBridge Scheduler を使用してスケジュールを作成できる
 * カスタムスケジューラ: Blox のような OSS がある。StartTask ではコンテナインスタンスを指定してタスクを起動する
 
 
-#### タスクの配置
-
 [Amazon ECS コンソールを使用したスタンドアロンタスクの実行](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs_run_task-v2.html)
 
+* キャパシティープロバイダー戦略もしくは起動タイプを設定
+* パブリック IP アドレスの有効化/無効化を設定
 * タスク配置戦略は以下から選ぶことができる。
   * AZ Balanced Spread
   * AZ Balanced BinPack
   * BinPack
   * One Task Per Instance
   * Custom
+    * タスク配置戦略の設定
+    * タスク配置制約は 10 個まで指定可能
+* タスクロール、タスク実行ロールを上書き可能
+* コンテナコマンド、環境変数を上書き可能
+* タグ付けの指定。クラスター、タスク定義のタグ名で自動タグ付けすることも可能
 
+
+[コンソールを使用してタスクを停止](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/stop-task-console-v2.html)
+
+コンソールの操作からタスクを停止可能
+
+
+### タスクの配置
 
 [Amazon ECS タスクの配置](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-placement.html)
 
 * サービスから起動されている場合はデフォルトのタスク配置戦略は `attribute:ecs.availability-zone` を使用した `spread`
-* Fargate はタスク配置戦略、タスク配置制約をサポートしない。AZ にまたがって分散される
+* Fargate はタスク配置戦略、タスク配置制約をサポートしない。AZ にまたがって分散される。Fargate, Fargate Spot とでスプレッドの動作は別々の管理
 * タスク配置戦略
   * タスク開始、終了時にインスタンスを選択するためのアルゴリズム
   * ベストエフォートなので、最適なオプションが利用できない場合でもタスク配置を試みる
@@ -1108,15 +1203,18 @@ curl -s http://localhost:51678/v1/metadata | python -mjson.tool
 [タスクグループ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-groups.html)
 
 * タスク配置戦略、タスク配置制約でタスクグループを元にした配置ができる
-* デフォルトでは、スタンドアロンタスクはタスク定義ファミリ名、サービスの一部として起動されたタスクはサービス名をタスクグループ名として使用
+* 次の情報をタスクグループ名として使用
+  * スタンドアロンタスク: タスク定義ファミリ名。もしくは、カスタムタスクグループ名を指定可能
+  * サービスの一部として起動されたタスク: サービス名
 
 
 [タスク配置戦略](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-placement-strategies.html)
 
-以下のタスク配置戦略がある。
-* binpack: 一台に詰め込むような動作。field には memory などを指定可能。スケールイン時は利用可能リソースが一番多いインスタンスのタスクを停止する
-* random: ランダムに配置
-* spread: InstanceId もしくは attribute:ecs.availability-zone を設定する。スケールイン時は AZ 間のバランスを保つようにタスクを停止する
+* 以下のタスク配置戦略がある。
+  * binpack: 一台に詰め込むような動作。field には memory などを指定可能。スケールイン時は利用可能リソースが一番多いインスタンスのタスクを停止する
+  * random: ランダムに配置
+  * spread: InstanceId もしくは attribute:ecs.availability-zone を設定する。スケールイン時は AZ 間のバランスを保つようにタスクを停止する
+* `CreateService`, `UpdateService`, `RunTask` で指定可能
 
 
 [Amazon ECS タスク配置の制約事項](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-placement-constraints.html)
@@ -1144,38 +1242,89 @@ curl -s http://localhost:51678/v1/metadata | python -mjson.tool
     * AWS CLI だと `aws ecs put-attributes` によって設定できる
     * ECS Agent だと `ECS_INSTANCE_ATTRIBUTES` で設定
 
+以下の例の場合、タスクグループ「service:daemon-service」が存在するコンテナインスタンス上が配置対象になる
+```json
+"placementConstraints": [
+    {
+        "expression": "task:group == service:daemon-service",
+        "type": "memberOf"
+    }
+]
+```
 
-#### タスクのスケジューリング
 
-[タスクのスケジューリング (cron)](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/scheduled_tasks.html)
+[クラスタークエリ言語](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/cluster-query-language.html)
+
+タスク配置制約の構文
+
+* 式の構文 `subject operator [argument]`
+* subject
+  * agentConnected
+  * agentVersion
+  * attribute:attribute-name
+  * ec2InstanceId
+  * registeredAt: コンテナインスタンスの登録日
+  * runningTasksCount
+  * task:group
+* 複合した制約も設定可能 `(expression1 or expression2) and expression3`
+* 例
+  * 引数リスト: `attribute:ecs.availability-zone in [us-east-1a, us-east-1b]`
+  * 複合式: `attribute:ecs.instance-type =~ g2.* and attribute:ecs.availability-zone != us-east-1d`
+  * アフィニティ: `task:group == service:production`
+  * アンチアフィニティ: `not(task:group == database)`
+
+
+### スケジューリングされたタスク
+
+[スケジュールされたタスク](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/scheduled_tasks.html)
 
 EventBridge スケジューラのスケジュールによってタスクを起動することが可能。
+
+
+[EventBridge スケジューラのスケジュールされたタスク](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/scheduled_tasks-eventbridge-scheduler.html)
+
 以下のパラメータを設定可能。
-* タスク定義
-* タスク数
-* キャパシティープロバイダー戦略もしくは起動タイプ
-* サブネットなどのネットワーク設定
-* タスク配置戦略、タスク配置制約
-* タグ
-* リトライポリシーとデッドレターキュー
+* スケジュール
+* ターゲット(RunTask)
+  * ECS クラスター
+  * タスク定義
+  * キャパシティープロバイダー戦略もしくは起動タイプ
+  * サブネットなどのネットワーク設定
+  * タスク配置戦略、タスク配置制約
+  * タグ
+  * リトライポリシーとデッドレターキュー
+    * イベントの最大保持時間
+    * 最大再試行回数
+  * 暗号化
+  * スケジューラ用の IAM ロール
 
 
-#### タスクのライフサイクル
+[EventBridge ルールを使用してスケジュールされたタスク](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/scheduled_tasks-event-bridge.html)
+
+* こちらよりも EventBridge スケジューラがおすすめ
+* タスクロール、コンテナコマンド、環境変数の上書きが可能
+
+
+### タスクのライフサイクル
 
 [タスクのライフサイクル](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-lifecycle.html)
 
+* `lastStatus`, `desiredStatus` がある
+* 以下のライスサイクルの状態がある
+  * PROVISIONING: awsvpc の ENI プロビジョニング
+  * PENDING: リソースに空きがない場合はこの状態のままとなる
+  * ACTIVATING: サービスディスカバリの設定、複数ターゲットグループへの登録設定
+  * RUNNING: 実行中
+  * DEACTIVATING: 複数ターゲットグループからの登録解除
+  * STOPPING: SIGTERM を送信。StopTimeout 経過後に SIGKILL を送信
+  * DEPROVISIONING: ENI のデタッチ、削除
+  * STOPPED: タスク停止済み
+  * DELETED: `describe-tasks` で表示される
 * 複数のターゲットグループを使用している場合は Activationg, Deactivating を経由する
 
 
-#### リタイア、リサイクル
 
-[タスクのリタイア](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-retirement.html)
-
-[Fargate タスクリサイクル](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-recycle.html)
-
-
-
-## サービス
+## Services
 
 [Amazon ECS サービス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs_services.html)
 
@@ -1183,6 +1332,11 @@ EventBridge スケジューラのスケジュールによってタスクを起�
 * タスク数の維持
 * ELB の背後に配置
 * タスク起動に連続して失敗した場合はサービス起動の調整ロジックが働く
+* サービスディスカバリ
+* サービスのステータス
+  * ACTIVE
+  * DRAINING: サービスを削除したが、まだ実行中のタスクがある場合
+  * INACTIVE: サービスを削除し、全てのタスクが STOPPING, STOPPED となっている場合
 
 サービススケジューラ戦略は次の２つ。
 * レプリカ: タスク数を維持
@@ -1190,40 +1344,24 @@ EventBridge スケジューラのスケジュールによってタスクを起�
 
 **デーモン**
 * タスク配置制約を満たすコンテナインスタンス上にタスクを配置する
-* 複数のタスクが同一コンテナインスタンス上で稼働する場合、まずデーモンのリソースから確保される
+* 複数のタスクが同一コンテナインスタンス上で稼働する場合、まず DAEMON のリソースから確保される
+* DRAINING ステータスのインスタンス上には配置されない。また、DRANING 状態に遷移した場合は DAEMON タスクも停止する
+* DRAINING 時は最後に停止するように動作する
 
 
-[サービス定義パラメータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service_definition_parameters.html)
+[コンソールを使用したサービスの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-service-console-v2.html)
 
-**TODO**
+* 設定項目
+  * キャパシティープロバイダー戦略もしくは起動タイプ
+  * awsvpc の場合はサブネット、セキュリティグループ設定
+  * デプロイ失敗時の動作（サーキットブレイカー、ロールバック）
+  * Blue/Green デプロイの場合は、デプロイ設定（トラフィックの移行方法の指定）
+  * タスク定義
+  * タスク数
+  * タグ（マネージドタグの有効化、タグの追加・削除）
+  * ... など
 
-設定可能項目。
-
-* 起動タイプ
-* キャパシティープロバイダー戦略
-* タスク定義
-* プラットフォームのバージョン
-* クラスター
-* サービス名
-* スケジュール戦略（レプリカ or デーモン）
-* 必要数
-* デプロイ設定（最大率、最小ヘルス率）
-* デプロイメントコントローラー（ECS(ローリングアップデート), CODE_DEPLOY, EXTERNAL）
-* タスクの配置（配置成約、配置戦略）
-* タグ
-* ネットワーク構成（サブネット、セキュリティグループ、パブリックIP付与）
-* ヘルスチェック猶予時間
-* ロードバランサ（ターゲットグループ ARN、ロードバランサ名、コンテナ名、コンテナポート）
-* IAM ロール(ELB ありの構成で awsvpc を使用していない場合に指定。サービスにリンクされたロールがある場合は、そちらが使われる)
-* サービス検出
-
-
-[サービスの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-service.html)
-
-作成方法のチュートリアルのページ。
-いくつかの項目の仕様についても書かれている。
-
-タスク配置戦略。
+タスク配置戦略
 
 * [AZ Balanced Spread (AZ バランススプレッド)] - アベイラビリティーゾーン間およびアベイラビリティーゾーン内のコンテナインスタンス間でタスクを分散します
 * [AZ Balanced BinPack (AZ バランスビンパック)] - 利用可能な最小メモリでアベイラビリティーゾーン間およびコンテナインスタンス間でタスクを分散します
@@ -1231,7 +1369,7 @@ EventBridge スケジューラのスケジュールによってタスクを起�
 * [One Task Per Host (ホストごとに 1 つのタスク)] - 各コンテナインスタンスのサービスから最大 1 タスクを配置します
 * [カスタム] - 独自のタスク配置戦略を定義します。設定ドキュメントの例については、「Amazon ECS タスクの配置」を参照してください
 
-ネットワークモード。
+ネットワークモード
 * **EC2 起動タイプの場合、awsvpc ネットワークモードはパブリック IP アドレスを使用する ENI を提供しない**。よって、NAT ゲートウェイなどを用意する必要あり。
 
 ELB
@@ -1244,17 +1382,30 @@ ELB
   * ALBRequestCountPerTarget—Application Load Balancer ターゲットグループ内のターゲットごとに完了したリクエストの数
 
 
-[サービスの更新](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/update-service.html)
+[コンソールを使用したサービスの更新](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/update-service-console-v2.html)
 
-タスク定義の変更やプラットフォームバージョンなどを変更できる。サービスの更新時の旧タスクの停止、新タスクの起動の動作は、デプロイタイプと最大率、最小ヘルス率によって変わる。
+* [新しいデプロイの強制] により、サービス設定を維持したままタスクを置き換えられる
+* maximum percent パラメータは  PENDING, RUNNING, STOPPING ステータスのタスク数をカウント
+* 置き換えるときは、ELB から登録解除し drain 完了を待つ。その後、 SIGTERM が送信され SIGKILL が送信される
+* 置き換えの動作
+  * 置き換えタスクが HEALTHY となった後に異常のあるタスクを停止する
+  * 置き換えタスクが UNHEALTHY の場合は、置き換えタスクもしくは既存の異常タスクのいずれかを停止する
+  * `maximumPercent` が 100 以下の場合は、異常タスクをランダムに 1 個停止してから置き換えタスクを開始
+  * ローリングアップデート中はまず異常なタスクを停止する動作
 
-タスクの停止時は**最小ヘルス率**の割合を下回らないように制御される。
-また、タスクの起動時は**最大率**で設定した割合まで起動可能。最大率が 100 の場合はもうタスクを起動できないので、まず旧タスクを停止してから新タスクを起動する動作となる。
 
-**タスクの置き換えの際は、ELB からタスクを登録解除し (使用されている場合は) draining が完了するのを待つ。その後、タスクが実行されているコンテナに docker stop と同等のコマンドを発行する。つまり SIGTERM を送る。30 秒経過しても停止していなかった場合は、SIGKILL を送る。**
+[コンソールを使用してブルー/グリーンデプロイ設定を更新します。](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/update-blue-green-deployment-v2.html)
 
-**新しいデプロイの強制**を行うことでタスク定義等の変更を行うことなく、タスクの入れ替えを発生させることができる。
+* CodeDeploy のアプリケーション名、デプロイグループ名、デプロイ設定を変更可能
+* CodeDeploy のライフサイクルフックを設定可能
 
+
+[コンソールでサービスの削除](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/delete-service-v2.html)
+
+* サービスを削除すると、タスク数も自動的に 0 までスケールダウンする
+
+
+### Deployment Types
 
 [デプロイタイプ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deployment-types.html)
 
@@ -1267,61 +1418,125 @@ ELB
 
 [ローリング更新](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deployment-type-ecs.html)
 
-サーキットブレーカーを設定できる。デプロイが失敗した場合にロールバックできる。
-* CLB を使用している場合はサポートされない
-* 少なくとも 1 つのタスクが起動成功すると発動しない
-* DescribeServices で状態を確認できる。rolloutState、rolloutStateReason が該当。ロールアウトの状態は IN_PROGRESS 状態から始まり、成功すると COMPLETED に状態移行、定常状態にならない場合は FAILED 状態に移行。FAILED 状態のデプロイでは、新しいタスクは起動されない
-* RUNNING に到達しなかった場合に故障数のカウントを 1 増やす。閾値に達した場合に FAILED に移行
-* RUNNING に達した場合はヘルスチェックを行い、失敗した場合は故障数のカウントを 1 増やす
-* 閾値は (タスク数 / 2) で計算されるが 10 〜 200 の間に収まらない場合は 10, 200 にセットされる
 
-CloudWatch アラーム
+[デプロイサーキットブレーカー](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deployment-circuit-breaker.html)
+
+* ロールバックの動作
+  * デプロイ失敗時は COMPLETED 状態のデプロイを探す。ロールバック開始すると当該デプロイのステータスが COMPLETED から IN_PROGRESS へと遷移する。つまり、このデプロイは COMPLETED ではない状態になったので、以降のロールバック対象にはならない
+  * DescribeServices で状態を確認できる。rolloutState、rolloutStateReason が該当
+  * 定常状態にならない場合は FAILED 状態に移行。FAILED 状態のデプロイでは、新しいタスクは起動されない
+* `SERVICE_DEPLOYMENT_FAILED` のイベントによりデプロイ失敗を通知できる
+* ローリングアップデートのみサポート
+* CLB を使用している場合はサポートされない
+* 失敗の閾値
+  * 閾値は (タスク数 / 2) で計算される。ただし、最小の閾値は 10, 最大は 200
+  * 2 段階ある
+    * RUNNING 状態の場合は次の段階に遷移。RUNNING にならなかった場合は障害カウントを +1
+    * ヘルスチェックを実行。失敗した場合は障害カウントを +1
+
+
+[CloudWatch アラーム](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deployment-alarm-failure.html)
+
 * 指定した CloudWatch アラームが ALARM 状態になった場合にロールバックする。以下のようにサービスを作成する
 ```shell
 aws ecs create-service \
      ...
      --deployment-configuration "alarms={alarmNames=[alarm1Name,alarm2Name],enable=true,rollback=true}" \
 ```
+* ALARM 状態になった場合は、デプロイは FAILED になり、新規タスクは起動しなくなる
+* アラームを使用するデプロイが失敗した場合にもイベントが送信される。reason フィールドにはロールバックのためのデプロイが開始されたことが示される
+* サーキットブレーカー、CloudWatch アラームのどちらかで基準が満たされるとデプロイの失敗となる。その場合は基準を満たした側のロールバック設定を参照し、ロールバックするかどうかを決定する
+* ローリングアップデートのみサポート
+* ECS 側から `DescribeAlarms` を実行しアラームのステータスを取得する動作となっている。よってスロットリング時に見逃す可能性がある点に注意
+* `HTTPCode_ELB_5XX_Count` などのメトリクスを使用するのが手
 
 
 [CodeDeploy を使用した Blue/Green デプロイ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deployment-type-bluegreen.html)
 
-CodeDeply の Blue/Green Deployment の考慮事項
-* デプロイ時に Green のタスクセットを作成する。テストトラフィックを Green のタスクセットに ModifyLister したあと、本番用トラフィックを Blue のタスクセットから Green のタスクセットに ModifyListener する
-* トラフィックの移行は一括、線形、Canaly から選択可能。ただし、NLB では `CodeDeployDefault.ECSAllAtOnce` のみ設定可能
-* CLB はサポートされていない
-* サービスの Auto Scaling と併用でき、デプロイ中もスケーリングできる。しかし、デプロイが失敗する場合がある
+* CodeDeply の Blue/Green Deployment の考慮事項
+  * デプロイ時に Green のタスクセットを作成する。テストトラフィックを Green のタスクセットに ModifyListener したあと、本番用トラフィックを Blue のタスクセットから Green のタスクセットに ModifyListener する
+  * トラフィックの移行は一括、線形、Canaly から選択可能。ただし、NLB では `CodeDeployDefault.ECSAllAtOnce` のみ設定可能
+  * CLB はサポートされていない
+  * サービスの Auto Scaling と併用でき、デプロイ中もスケーリングできる。しかし、デプロイが失敗する場合がある
+  * ECS サービスのサービスロールには CodeDeploy 関連のアクション許可が必要
 
 
 [外部デプロイ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deployment-type-external.html)
 
+* 以下の API によって管理される
+  * サービス管理（CreateService, UpdateService, DeleteService）
+  * タスク設定管理（CreateTaskSet, UpdateTaskSet, UpdateServicePrimaryTaskSet, DeleteTaskSet）
+* サポート
+  * ALB, NLB をサポート
+  * Fargate, DAEMON タイプは未サポート
+* サービス定義パラメータ
+  * おおむね通常のサービスと同様。scale というパラメータがあり、タスクセットに配置して実行し続けるために必要なタスク数の浮動小数点パーセンテージを指定する。これにより、タスクセットごとに希望タスク数に対して何 % 分を起動するかを指定できる。例えばデプロイ完了時に旧タスクセットに対し 0 を設定するような使い方になる
+
+
+### Load Balancing
 
 [サービスの負荷分散](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-load-balancing.html)
 
-付加機能
-* 一つのサービスを複数のロードバランサのターゲットグループに登録可能
-* 動的ポートマッピングが可能
+* 特徴
+  * 一つのサービスを複数のロードバランサのターゲットグループに登録可能
+  * 動的ポートマッピングが可能
+  * ALB ではパスベースのルーティングと優先ルールをサポート
+
+
+[ロードバランサーの種類](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/load-balancer-types.html)
 
 考慮事項
+* ターゲットグループは 5 個まで
 * Fargate の場合は、ターゲットタイプとして ip を指定する必要がある。
+* ELB のサブネットはコンテナインスタンスが存在する全ての AZ を含む必要がある
+* サービスの ELB 設定はローリング更新の場合のみ変更可能
 * **タスクがヘルスチェックの条件を満たさない場合は、タスクは停止され、再度起動される。**
-* NLB と Fargate の組み合わせの場合、送信元 IP アドレスは NLB のプライベートアドレスとなる。よって、タスク側で NLB のプライベートアドレスを許可するしかないが、その場合は世界中からのアクセス可能な状態になる（NLB 側でセキュリティグループを設定できずフィルタリングできないため）。
+* NLB と awsvpc の組み合わせの場合、送信元 IP アドレスは NLB のプライベートアドレスとなる。よって、タスク側で NLB のプライベートアドレスを許可するしかないが、その場合は世界中からのアクセス可能な状態になる（NLB 側でセキュリティグループを設定できずフィルタリングできないため）
+* NLB の UDP は Linux プラットフォーム 1.4.0、もしくは Windows プラットフォーム 1.0.0 が対応
 * 登録解除の遅延よりもタスク定義の stopTimeout を長くすると良い
 
 
+[ロードバランサーの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-load-balancer.html)
+
+
+[サービスに複数のターゲットグループを登録する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/register-multiple-targetgroups.html)
+
+* 考慮事項
+  * ターゲットグループは 5 個まで
+  * ALB, NLB をサポート
+  * ローリング更新のみサポート
+
+
+### Service Auto Scaling
+
 [サービスの Auto Scaling](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-auto-scaling.html)
 
+* 次の 3 つがサポートされている。
+  * ターゲット追跡スケーリングポリシー
+  * ステップスケーリングポリシー
+  * スケジュールに基づくスケーリング
+* サービスにリンクされたロール `AWSServiceRoleForApplicationAutoScaling_ECSService` が Application Auto Scaling 側で作成され使用される
 * 考慮事項
   * デプロイ中はスケールインしないようになっている。スケールアウトはされる
   * スケールアウトを中断する場合は ```register-scalable-target``` を使用する。デプロイ後に ```register-scalable-target``` を実行し再開されるのを忘れないように
-  * クールダウン期間をサポート
-  * 
+  * クールダウン期間をサポート。この期間が過ぎるまでは必要な容量を再度増加しない
+  * 容量を超えた状態でスケールインすると Max の値まで一気にスケールインされる。容量の最小値よりも少ない状態ですケースアウトすると Mix の値まで一気にスケールアウトされる
 
-次の 3 つがサポートされている。
-* ターゲット追跡スケーリングポリシー
-* ステップスケーリングポリシー
-* スケジュールに基づくスケーリング
 
+[ターゲット追跡スケーリングポリシー](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-autoscaling-targettracking.html)
+
+* 考慮事項
+  * メトリクスデータが不十分な場合はスケールインしない
+  * 複数のスケーリングポリシーがある場合、スケールアウトはどれか 1 つでも条件を満たすと行われるが、スケールインは全てが条件を満たす必要がある
+  * 自動的に作成された CloudWatch アラームは編集、削除をしてはならない
+  * Blue/Green デプロイでは `ALBRequestCountPerTarget` はサポートされない
+
+
+[ステップスケーリングポリシー](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-autoscaling-stepscaling.html)
+
+
+
+### Interconnecting
 
 [Service Connect](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-connect.html)
 
@@ -1446,17 +1661,43 @@ CodeDeply の Blue/Green Deployment の考慮事項
   * インスタンス: 実リソース。ECS タスクなど
 * awsvpc の場合は A レコードまたは SRV レコード。bridge, host の場合は SRV レコードのみに対応
 * 全てのレコードに問題がある場合は、異常なレコードを最大 8 個返却する
-* コンテナレベルのヘルスチェック結果が CloudMap のカスタムヘルスチェック API に送信される
+* `HealthCheckCustomConfig` を設定することで、コンテナレベルのヘルスチェック結果が CloudMap のカスタムヘルスチェック API に送信される
 * ECS サービスを新規作成する場合にのみ設定可能
 
+
+### Task Scale-In Protection
+
+[タスクスケールイン保護](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-scale-in-protection.html)
+
+* タスクをスケールインから保護するよう設定できる
+* `$ECS_AGENT_URI/task-protection/v1/state` にて `ProtectionEnabled` 属性を設定できる。保護期間は `expiresInMinutes` で設定できデフォルトは 2 時間。最短 1 分、最長で 48 時間
+* 考慮事項
+  * ローリングアップデート時に `protectionEnabled` がクリアされるか有効期限が失効するまで当該タスクは停止しない
+  * Blue/Green デプロイでは `protectionEnabled` が設定されたタスクがある場合はクリアされるか有効期限が失効するまで Blue 側のタスクが残る
+* IAM
+  * タスクロールにて設定が必要
+    * ecs:GetTaskProtection: 設定内容の取得
+    * ecs:UpdateTaskProtection: 設定内容の更新
+
+[タスクスケールインプロテクションのエンドポイント](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-scale-in-protection-endpoint.html)
+
+* `${ECS_AGENT_URI}/task-protection/v1/state` に対する PUT リクエストによりスケールインからの保護を設定できる
+* 60 分間保護する例
+```
+curl --request PUT --header 'Content-Type: application/json' ${ECS_AGENT_URI}/task-protection/v1/state --data '{"ProtectionEnabled":true}'      
+
+curl --request PUT --header 'Content-Type: application/json' ${ECS_AGENT_URI}/task-protection/v1/state --data '{"ProtectionEnabled":true,"ExpiresInMinutes":60}'
+```
+
+
+### Service Throttle Logic
 
 [サービスの調整ロジック](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-throttle-logic.html)
 
 サービスタスクが繰り返し起動に失敗した場合にタスクを起動する頻度を調整するロジックがある。繰り返しタスクの起動が失敗する場合、その後の再起動の試行間隔は最大 15 分まで段階的に増加する。
 
 
-
-## タグ
+## Resource tagging
 
 [Amazon ECS リソースのタグ付け](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-using-tags.html)
 
@@ -1477,109 +1718,662 @@ CodeDeply の Blue/Green Deployment の考慮事項
 * `ecs:TagResource` の許可が必要
 
 
-
-## クォータ
-
 [Amazon ECS のサービスクォータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-quotas.html)
 
+* リソース作成数の上限のほか、1 分あたりに起動できるタスク数も定められている
+* リファレンス
+  * [AWS Fargate スロットリングのクォータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/userguide/throttling.html)
+  * [Request throttling for the Amazon ECS API](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/request-throttling.html)
 
 
-## モニタリング
+[AWS Fargate で使用する Amazon ECS でサポートされているリージョン](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/AWS_Fargate-Regions.html)
 
-[CloudWatch のメトリクス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/cloudwatch-metrics.html)
 
+[Amazon ECS 使用状況レポート](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/usage-reports.html)
+
+* Cost Explorer によりコスト、使用状況のグラフを表示できる
+
+
+
+## Monitoring
+
+[Amazon ECS のモニタリング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs_monitoring.html)
+
+* モニタリング計画を立てる必要がある
+
+
+[モニタリングツール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/monitoring-automated-manual.html)
+
+* 自動モニタリングツール
+  * CloudWatch Alarm
+  * CloudWatch Logs
+  * EventBridge
+  * CloudTrail
+* 手動モニタリングツール
+  * Trusted Advisor
+  * Compute Optimizer
+
+
+### CloudWatch Metrics
+
+[Amazon ECS CloudWatch メトリクス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/cloudwatch-metrics.html)
+
+* EC2 の場合、インスタンスロールに `ecs:StartTelemetrySession` が必要`
+* コンテナエージェント設定で `ECS_DISABLE_METRICS` を `true` にしている場合はメトリクスは収集されない
 * 名前空間: AWS/ECS
-* ディメンション: ClusterName, ServiceName
+* クラスター使用率には ACTIVE, DRAINIG 状態のコンテナインスタンス分が集計される。Fargate 起動タイプを含む場合は集計されない
+
+
+### Events
+
+[Amazon ECS イベントおよびEventBridge](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/cloudwatch_event_stream.html)
 
 
 [ECS のイベント](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs_cwe_events.html)
 
-EventBridge に送信されるイベントは次の 3 種類。
-
 * コンテナインスタンスの状態変更イベント
+  * イベントの契機
+    * RunTask などの API によりタスクを起動した時
+    * ECS サービススケジューラがタスクを起動、停止した時
+    * コンテナエージェントにより `SubmitTaskStateChange` が実行された時
+    * `DeregisterContainerInstance` によるコンテナインスタンスの登録解除
+    * EC2 インスタンス停止によるタスクの停止時
+    * コンテナインスタンスとして登録される時
+    * コンテナエージェントが接続、切断するとき
+    * コンテナエージェントのバージョンを更新するとき
 * タスク状態変更イベント
+  * イベントの契機
+    * RunTask などの API によりタスクを起動した時
+    * ECS サービススケジューラがタスクを起動、停止した時
+    * コンテナエージェントにより `SubmitTaskStateChange` が実行された時
+    * `DeregisterContainerInstance` によるコンテナインスタンスの登録解除
+    * 基盤となるコンテナインスタンスの停止時
+    * タスク内のコンテナのステータスが変わった時
+    * Fargate Spot の中断通知を受け取った時
 * サービスアクションイベント
+  * INFO
+    * SERVICE_STEADY_STATE
+    * TASKSET_STEADY_STATE
+    * CAPACITY_PROVIDER_STEADY_STATE
+    * SERVICE_DESIRED_COUNT_UPDATED
+  * WARN
+    * SERVICE_TASK_START_IMPAIRED
+    * SERVICE_DISCOVERY_INSTANCE_UNHEALTHY
+  * ERROR
+    * SERVICE_DAEMON_PLACEMENT_CONSTRAINT_VIOLATED
+    * ECS_OPERATION_THROTTLED
+    * SERVICE_DISCOVERY_OPERATION_THROTTLED
+    * SERVICE_TASK_PLACEMENT_FAILURE
+    * SERVICE_TASK_CONFIGURATION_FAILURE
+* サービス展開状態変更イベント
+  * INFO
+    * SERVICE_DEPLOYMENT_IN_PROGRESS
+    * SERVICE_DEPLOYMENT_COMPLETED
+  * ERROR
+    * SERVICE_DEPLOYMENT_FAILED
+* コンテナインスタンス状態イベント、タスク状態変更イベントでは detail オブジェクトの version フィールドにてイベントを識別可能。リソースの状態が変わるたびにインクリメントされる
 
+
+[イベントの処理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs_cwet_handling.html)
+
+* イベントは少なくとも 1 回は送信される。つまり複数回送信される可能性がある
+* Lambda をトリガーして DynamoDB に保存するサンプルスクリプトがある
+
+
+### Container Insights
 
 [Container Insights](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/cloudwatch-container-insights.html)
 
-containerInsights アカウント設定をオプトインして作成されたすべての新しいクラスターに対して有効化されている。
-運用データは、パフォーマンスログイベントとして収集される。JSON スキーマのエントリとなっている。CloudWatch はこのデータから CloudWatch メトリクスを作成する。
-ネットワークメトリクスは EC2 の場合はネットワークモード none, host では採取されない。
+* containerInsights アカウント設定をオプトインして作成されたすべての新しいクラスターに対してデフォルトで有効化されている
+* 運用データは、パフォーマンスログイベントとして収集される。JSON スキーマのエントリとなっている。CloudWatch はこのデータから CloudWatch メトリクスを作成する
+* ネットワークメトリクスは EC2 の場合はネットワークモード none, host では採取されない
 
-* [Container Insights のメトリクス](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/Container-Insights-metrics-ECS.html)
-* [パフォーマンスログイベントの例](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/Container-Insights-reference-performance-logs-ECS.html)
+* リファレンス
+  * [Container Insights のメトリクス](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/Container-Insights-metrics-ECS.html)
+  * [パフォーマンスログイベントの例](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/Container-Insights-reference-performance-logs-ECS.html)
 
+
+[CloudWatch Container Insights を使用して、Amazon ECS ライフサイクルイベントを表示するには](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/lifecycle-metrics.html)
+
+
+### Container Instance Health
 
 [コンテナインスタンスのヘルス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/container-instance-health.html)
 
-コンテナインスタンスのヘルスステータスは ```DescribeContainerInstances``` によって取得可能。
+* コンテナインスタンスのヘルスステータスはコンテナエージェントによって実施される
+* 1 分間に 2 回実施
+* チェックが失敗すると IMPAIRED になる
 
+コンテナインスタンスのヘルスステータスは `DescribeContainerInstances` によって取得可能。
+
+
+### Trace Data
 
 [アプリケーショントレースデータの収集](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/trace-data.html)
 
-OpenTelemetry 用 AWS Distro と統合して、アプリケーションからトレースデータを収集可能。
+* OpenTelemetry サイドカーコンテナ用の AWS Distroを使用してトレースデータを収集し、AWS X-Ray にルーティングできる
 
+* リファレンス
+  * [Setting up AWS Distro for OpenTelemetry Collector in Amazon Elastic Container Service](https://aws-otel.github.io/docs/setup/ecs)
+
+
+### Application Metrics
 
 [アプリケーションメトリクスを収集する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/metrics-data.html)
 
 アプリケーションのメトリクスを OpenTelemetry サイドカーコンテナ用 AWS Distro を使用して CloudWatch または Amazon Managed Service for Prometheus へルーティングすることが可能。
 
 
+[アプリケーションメトリクスを Amazon CloudWatch にエクスポートする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/application-metrics-cloudwatch.html)
+
+* カスタムメトリクスをエクスポートできる
+* OpenTelemetry のコンテナをサイドカーで動作させることで実現できる
+* ロググループ `/aws/ecs/application/metrics` にエクスポートされ、メトリクスは名前空間 `ECS/AWSOTel/Application` で表示できる
+* OpenTelemetry SDK を使用して計測する必要がある
+
+
+[アプリケーションメトリクスを Amazon Managed Service for Prometheus にエクスポートする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/application-metrics-prometheus.html)
+
+* カスタムアプリケーションメトリクスを Amazon Managed Service for Prometheus へエクスポートすることをサポート
+* Amazon Managed Grafana ダッシュボードを使用して閲覧可
+* OpenTelemetry のコンテナをサイドカーで動作させることで実現できる
+
+
+### CloudTrail
+
 [AWS CloudTrail を使用した Amazon ECS API コールのログ記録](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/logging-using-cloudtrail.html)
 
 公開 API は CloufTrail に記録される。
 
 
+### Container Agent
 
-## セキュリティ
+[Amazon ECS コンテナエージェントの詳細分析](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-agent-introspection.html)
+
+* メタデータを表示
+```
+curl -s http://localhost:51678/v1/metadata | python -mjson.tool
+```
+
+
+### Compute Optimizer
+
+[AWS Compute Optimizer 推奨事項](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-recommendations.html)
+
+* タスクの CPU とメモリサイズおよびコンテナの CPU、コンテナメモリ、およびその予約サイズに関する推奨事項が得られる
+* リファレンス
+  * [Viewing recommendations for Amazon ECS services on Fargate](https://docs.aws.amazon.com/ja_jp/compute-optimizer/latest/ug/view-ecs-recommendations.html)
+
+
+
+## Security
+
+[Amazon Elastic Container Service のセキュリティ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security.html)
+
+
+### IAM
+
+[Amazon Elastic コンテナサービスのアイデンティティ とアクセス管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-iam.html)
+
+
+[IAM を使用するAmazon Elastic Container Service](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security_iam_service-with-iam.html)
+
+* Condition 要素で使用できる条件キー
+  * aws:RequestTag/${TagKey} - リクエストで渡すことができるタグのキーバリューのペアを制御
+  * aws:ResourceTag/${TagKey} - リソースにアタッチされたタグに基づいてアクセス制御
+  * aws:TagKeys
+  * ecs:ResourceTag/${TagKey}
+  * ecs:cluster
+  * ecs:container-instances
+  * ecs:container-name
+  * ecs:enable-execute-command
+  * ecs:enable-service-connect
+  * ecs:namespace
+  * ecs:service
+  * ecs:task-definition
+  * ecs:account-setting
+
+
+[Amazon Elastic Container Service のアイデンティティベースのポリシーの例](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security_iam_id-based-policy-examples.html)
+
+* ベストプラクティス
+  * 最小権限
+  * ポリシーに条件を追加し、更に制限する
+  * IAM Access Analyzer を使用して IAM ポリシーを検証
+  * MFA を使用
+
+
+[Amazon Elastic Container Service に関する AWS 管理ポリシー](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-iam-awsmanpol.html)
+
+* AmazonECS_FullAccess
+* AmazonEC2ContainerServiceforEC2Role: コンテナインスタンス用。bridge の場合はコンテナからアクセスできないようにするには iptables の設定が必要。ただし、iptables では host ネットワークモードだと遮断できない
+* AmazonEC2ContainerServiceEventsRole: EventBridge 用
+* AmazonECSTaskExecutionRolePolicy: タスク実行ロール用
+* AmazonECSServiceRolePolicy: サービスロール用
+* AWSApplicationAutoscalingECSServicePolicy: Application Auto Scaling のサービスにリンクされたロールにアタッチされる
+* AWSCodeDeployRoleForECS: CodeDeploy のサービスにリンクされたロールにアタッチされる
+* AWSCodeDeployRoleForECSLimited: CodeDeploy のサービスにリンクされたロールにアタッチされる
+
 
 [サービスにリンクされたロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/using-service-linked-roles.html)
 
-AWSServiceRoleForECS という名前。Amazon ECS がユーザーに代わって AWS API を呼び出すために標準的に使用するロール。
+* `AWSServiceRoleForECS` という名前
+* Amazon ECS がユーザーに代わって AWS API を呼び出すために標準的に使用するロール。
+* 以下のような用途
+  * ENI のライフサイクル管理
+  * ELB への登録、登録解除
+  * Service Discovery への登録、登録解除
+  * Auto Scaling
+* 手動で作成する必要はなく、ECS クラスターを作成したタイミングなどで自動的に作成される
+* 当該ロールを使用するリソースがある場合は、当該ロールを削除できない
+
+
+[Amazon ECS コンソールに必要なアクセス許可](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/console-permissions.html)
 
 
 [タスク実行ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task_execution_IAM_role.html)
 
-コンテナエージェント用のロール。
-ECR からのイメージのプル、CloudWatch Logs へのログ送信などで使用。
-
-
-[コンテナインスタンスの IAM ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/instance_IAM_role.html)
-
-ecsInstanceRole。[AmazonEC2ContainerServiceforEC2Role](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonEC2ContainerServiceforEC2Role) の管理ポリシーをアタッチして使用。
+* コンテナエージェント用のロール
+* ECR からのイメージのプル、CloudWatch Logs へのログ送信などで使用
+* シークレットを使用する場合は、SSM, Secrets Manager などへの許可が必要。カスタマーマネージドキーで暗号化されている場合は KMS の権限も必要
+* インターフェイスエンドポイントへのアクセスを制限する場合は `aws:SourceVpc` を使用
 
 
 [タスクロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-iam-roles.html)
 
-EC２ インスタンスのインスタンスプロファイルのようなもの。タスク内で使用できる権限を設定したロール。
+* EC２ インスタンスのインスタンスプロファイルのようなもの。タスク内で使用できる権限を設定したロール。
+* タスク定義で設定するか、RunTask API で上書き可能
+* コンテナエージェントにより `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` 環境変数が各コンテナに設定される
+* 認証情報プロバイダーを使用するたびに `/var/log/ecs/audit.log` に記録される
+* インスタンスプロファイルへのアクセスを禁止するには以下の対応が必要
+  * awsvpc: `ECS_AWSVPC_BLOCK_IMDS` を `true` に設定
+  * bridge: iptables により drop。```sudo yum install -y iptables-services; sudo iptables --insert DOCKER-USER 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP```
+* EC2, 外部インスタンスで必要な対応
+  * コンテナエージェントは host ネットワークモードで稼働
+  * bridge, default の場合は `ECS_ENABLE_TASK_IAM_ROLE=true`
+  * host の場合は `ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true`
+  * コンテナエージェントに転送する設定
+   ```
+   sudo sysctl -w net.ipv4.conf.all.route_localnet=1
+   sudo iptables -t nat -A PREROUTING -p tcp -d 169.254.170.2 --dport 80 -j DNAT --to-destination 127.0.0.1:51679
+   sudo iptables -t nat -A OUTPUT -d 169.254.170.2 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 51679
+   ```
 
-タスク内のコンテナからはインスタンスメタデータを通じてコンテナインスタンスの IAM ロールにアクセス可能。
-bridge の場合は、以下のような iptables 設定により遮断することが可能。
 
+[タスク用の Windows IAM ロールの追加設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/windows_task_IAM_roles.html)
+
+* コンテナエージェント起動時に `-EnableTaskIAMRole` オプションが必要
+* タスク認証情報プロバイダーの IAM ロールは、コンテナインスタンスのポート 80 を使用。よって、コンテナはポート 80 を使用できなくなる
+* Powershell の場合は以下の例のようなスクリプトでセットアップが必要
 ```
-sudo yum install -y iptables-services; sudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP
-
-// 再起動後も有効化。
-sudo iptables-save | sudo tee /etc/sysconfig/iptables && sudo systemctl enable --now iptables
+$gateway = (Get-NetRoute | Where { $_.DestinationPrefix -eq '0.0.0.0/0' } | Sort-Object RouteMetric | Select NextHop).NextHop
+$ifIndex = (Get-NetAdapter -InterfaceDescription "Hyper-V Virtual Ethernet*" | Sort-Object | Select ifIndex).ifIndex
+New-NetRoute -DestinationPrefix 169.254.170.2/32 -InterfaceIndex $ifIndex -NextHop $gateway -PolicyStore ActiveStore # credentials API
+New-NetRoute -DestinationPrefix 169.254.169.254/32 -InterfaceIndex $ifIndex -NextHop $gateway -PolicyStore ActiveStore # metadata API
 ```
 
-awsvpc の場合は、コンテナエージェントの設定ファイルで ECS_AWSVPC_BLOCK_IMDS を true に設定する。
+
+[コンテナインスタンスの IAM ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/instance_IAM_role.html)
+
+* コンテナインスタンスの登録などの用途
+* 管理ポリシーとして mazonEC2ContainerServiceforEC2Role が提供されている
+
+
+[ECS Anywhere IAM ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/iam-role-ecsanywhere.html)
+
+* 以下のポリシーがあるとよい
+  * AmazonEC2ContainerServiceforEC2Role
+  * AmazonSSMManagedInstanceCore
+
+
+[Amazon ECS CodeDeploy IAM ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/codedeploy_IAM_role.html)
+
+* 以下の管理ポリシーが用意されている
+  * AWSCodeDeployRoleForECS
+  * AWSCodeDeployRoleForECSLimited: より制限されたポリシー
+* タスクロール、タスク実行ロールの上書きを行う場合は `iam:PassRole` の許可が必要
+
+
+[Amazon ECS CloudWatch Events IAM ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/CWE_IAM_role.html)
+
+* 以下の管理ポリシーが用意されている
+  * AmazonEC2ContainerServiceEventsRole
+* タスクロール、タスク実行ロールの上書きを行う場合は `iam:PassRole` の許可が必要
+
+
+[リソース作成時にタグ付けするための許可を付与する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/supported-iam-actions-tagging.html)
+
+* タグづけには `ecs:TagResource` の許可が必要
+
+
+[リソースタグを使用して Amazon ECS リソースへのアクセスを制御する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/control-access-with-tags.html)
+
+* 以下の例のようなポリシーにより、当該タグが付与されたリソースに対してのみアクションが許可もしくは拒否される
+```
+"StringEquals": { "aws:ResourceTag/environment": "production" }
+```
+
+
+[ポリシーの例](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/iam-policies-ecs-console.html)
+
+
+[Amazon Elastic Container Service のアイデンティティとアクセスのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security_iam_troubleshoot.html)
+
+* 既存のロールをサービスに渡す場合は `iam:PassRole` が必要
+
+
+### Logging, Monitoring
+
+[Amazon Elastic Container Service でのログとモニタリング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-logging-monitoring.html)
+
+* 以下のサービスが提供されている
+  * CloudWatch Alarm
+  * CloudWatch Logs
+  * EventBridge
+  * CloudTrail
+  * Trusted Advisor
+  * Compute Optimizer
+
+
+### Compliance
+
+[Amazon Elastic Container Service でのコンプライアンス検証](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-compliance.html)
+
+* AWS Artifact を使用して、サードパーティーの監査レポートをダウンロードできる
+* コンプライアンスに役立つドキュメント、AWS サービスが提供されている
+  * AWS Config
+  * AWS Security Hub
+  * AWS Audit Manager
+
+
+[AWS Fargate 連邦情報処理標準 (FIPS-140)](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-fips-compliance.html)
+
+* FIPS-140 は、機密情報を保護する暗号モジュールのセキュリティ要件を規定する米国およびカナダ政府の標準
+* 転送中のデータと保管中のデータの暗号化に使用できる、一連の検証済みの暗号化関数を定めている
+* FIPS-140 コンプライアンスをオンにすると、FIPS-140 に準拠した態様で Fargate でワークロードを実行できる
+* AWS GovCloud (US) リージョンでのみ利用可能
+* 制約
+  * operatingSystemFamily は LINUX のみ
+  * cpuArchitecture は X86_64 のみ
+  * プラットフォームバージョンは 1.4.0 以降
+* コンテナ内で `cat /proc/sys/crypto/fips_enabled` で「1」になっている場合は FIPS が使用されている
+
+
+### Infrastructure Security
+
+[Amazon Elastic Container Service におけるインフラストラクチャセキュリティ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/infrastructure-security.html)
 
 
 [Amazon ECS インターフェイス VPC エンドポイント (AWS PrivateLink)](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/vpc-endpoints.html)
 
-必要となるエンドポイントについて書かれている。
+* 必要なエンドポイント
+  * Fargate
+    * com.amazonaws.region.ecr.dkr
+    * com.amazonaws.region.ecr.api (プラットフォームバージョン 1.4.0 では不要)
+    * S3 のエンドポイント
+    * 場合によって必要なエンドポイント
+      * Secrets Manager
+      * logs
+      * ecs-agent (Service Connect 使用時。VPC エンドポイント未使用時は ecs-sc エンドポイントが使用される)
+  * コンテナインスタンス用
+    * com.amazonaws.region.ecs-agent
+    * com.amazonaws.region.ecs-telemetry
+    * com.amazonaws.region.ecs
 
-ECS については以下が必要だが、既にコンテナインスタンスが存在する場合は上から順に作成する必要がある。
 
-* com.amazonaws.region.ecs-agent
-* com.amazonaws.region.ecs-telemetry
-* com.amazonaws.region.ecs
+### Best Practices
+
+[セキュリティのベストプラクティス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-bestpractices.html)
+
+
+[AWS Identity and Access Management](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-iam-bestpractices.html)
+
+* 最小権限アクセスのポリシーに従う
+* クラスターリソースを管理上の境界として使用
+* 自動パイプラインを作成し、手動での変更、アクセスを制限する
+* ポリシー条件を使用
+* Amazon ECS API へのアクセスを定期的に監査
+
+
+[Amazon ECS タスクで IAM ロールを使用する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-iam-roles.html)
+
+* タスクロールの使用を推奨
+  * コンテナエージェントはコンテナ内の環境変数 `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` に認証情報 ID の URI を設定する仕組み
+  * 有効期限は 6 時間で、コンテナエージェントによって自動的にローテーションされる
+* タスク実行ロール
+  * イメージの取得先は ECR にしたほうがレート制限にかかりにくい
+  * Fargate　の場合はプライベートリポジトリはタスク定義のコンテナ定義内で `repositoryCredentials` により認証が必要
+* 推奨事項
+  * Amazon EC2 メタデータへのアクセスをブロックする
+    * awsvpc: `ECS_AWSVPC_BLOCK_IMDS` を `true` に設定
+    * bridge: iptables
+    * host: `ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST` を `true` に設定
+  * awsvpc ネットワークモードを使用: タスクレベルでネットワークを分離し、セキュリティグループも設定できるため
+  * IAM アクセスアドバイザーを使用してロールを絞り込む
+  * AWS CloudTrail に不審なアクティビティがないか監視
+
+
+[ネットワークセキュリティ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-network.html)
+
+* 転送中の暗号化
+  * App Mesh だと Envoy プロキシ間は TLS で接続される
+  * Nitro インスタンス間の通信は暗号化される
+  * ALB で SNI を使用する
+  * TLS で End-to-end を暗号化
+* タスクネットワーク
+  * awsvpc を推奨。セキュリティグループをアタッチできるため
+* AWS PrivateLink
+  * エンドポイントポリシーを設定できる
+* Amazon ECS コンテナエージェントの設定
+  * ECS_AWSVPC_BLOCK_IMDS
+  * ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST
+* 推奨事項
+  * ネットワークの伝送路を暗号化
+  * awsvpc でセキュリティグループの使用
+  * ネットワークの分離が必要な場合は、クラスターごとに VPC を分ける
+  * AWS PrivateLink エンドポイントを使用
+  * VPC フローログの取得と分析
+
+
+[シークレットの管理](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-secrets-management.html)
+
+* 以下の箇所でシークレットを使用できる
+  * コンテナの環境変数
+  * ログ設定
+  * コンテナレジストリの認証
+* 推奨事項
+  * シークレット情報は SSM Parameter Store, Secrets Manager の使用を検討する。タスク実行ロールに権限が必要権限が必要
+  * 環境変数は docker inspect で読み取られるリスクがある。S3 からシークレット情報の記載されたオブジェクトをダウンロードするのも手
+  * サイドカーコンテナにてボリュームにシークレット情報を書き出し、アプリケーションコンテナにてボリュームをマウントする
+
+
+[API オペレーションで一時的なセキュリティ認証情報を使用する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/temp-credientials.html)
+
+* sts から取得した一時的な認証情報で API 実行できる
+
+
+[コンプライアンスとセキュリティについて](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-compliance.html)
+
+* 決済カード業界のデータセキュリティ基準 (PCI DSS)
+  * [Architecting on Amazon ECS for PCI DSS Compliance](https://d1.awsstatic.com/whitepapers/compliance/architecting-on-amazon-ecs-for-pci-dss-compliance.pdf)
+* HIPAA (米国の医療保険の相互運用性と説明責任に関する法令)
+* 推奨事項
+  * 早めに社内のコンプライアンスプログラムの所有者に働きかけ、AWS 責任共有モデルを使用してコンプライアンス統制の所有権を特定する必要がある
+
+
+[ログ記録とモニタリング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-logging-and-monitoring.html)
+
+* bridge ネットワークモードの場合、アプリケーションコンテナの前に FireLens 設定のコンテナが起動する必要がある
+
+
+[AWS Fargate のセキュリティ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-fargate.html)
+
+* 2020年5月28日以降に起動されるタスクでは、エフェメラルストレージは AWS Fargate 管理の暗号化キーを使用して AES-256 暗号化アルゴリズムで暗号化されている
+* Fargate では SYS_PTRACE の capability のみ追加可能 
+
+
+[AWS Fargate のセキュリティに関する考慮事項](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/fargate-security-considerations.html)
+
+* 個々の Fargate タスクの環境は独立している
+* 特権コンテナは使用不可
+* capability の多くが制限されている
+* 基盤となるホストにはアクセスできない
+
+
+[EC2 コンテナインスタンスのセキュリティに関する考慮事項](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ec2-security-considerations.html)
+
+* タスクロールは最小権限にする
+* awsvpc の場合は `ECS_AWSVPC_BLOCK_IMDS` を有効化
+
+
+[タスクとコンテナのセキュリティ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-tasks-containers.html)
+
+* 推奨事項
+  * イメージの最小化、distroless イメージの使用
+  * イメージのスキャン
+  * 特別な権限の削除。setuid, setgid など
+  * キュレーションされたイメージのセットを用意しておく
+  * アプリケーションとライブラリをスキャンする
+  * 静的コード分析
+  * 非 root ユーザーで実行
+  * 読み取り専用のルートファイルシステムを使用
+  * CPU とメモリの使用量を制限
+  * ECR でイミュータブルタグの使用
+  * 特権コンテナを使用しない。`ECS_DISABLE_PRIVILEGED` を `true` にすることで対応可能
+  * capability を drop する
+  * ECR に格納されるイメージの暗号化にカスタマーマネージドキーを使用
+
+
+[ランタイムセキュリティ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-runtime.html)
+
+* Windows コンテナの場合
+  * [Secure Windows containers](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/container-security)
+* Linux コンテナの場合
+  * `linuxParameters` により不要な capability を drop する
+  * SELinux labels もしくは AppArmor profile を `dockerSecurityOptions` により適用
+    * AppArmor は enforcement または complain モードで実行
+* 推奨事項
+  * ランタイムの防御にサードパーティーソリューションを使用する
+
+
+[AWS パートナー](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-partners.html)
+
+
+
+## ECS メタデータ
+
+[Amazon ECS メタデータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-metadata-endpoint.html)
+
+* 以下のメタデータエンドポイントがある
+  * コンテナメタデータファイル: コンテナに関する情報
+  * タスクメタデータエンドポイント: タスクのメタデータ、Docker の統計情報
+
+
+[Amazon ECS コンテナメタデータファイル](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/container-metadata.html)
+
+* メタデータファイルはホストインスタンスで作成され、Docker ボリュームとしてコンテナにマウントされる
+* コンテナメタデータファイルは、コンテナがクリーンアップされるときにホストインスタンスでクリーンアップされる
+* `ECS_ENABLE_CONTAINER_METADATA` を `true` にすることで有効化できる
+* 所定のファイルパスから参照できるようになる
+  * Linux
+    * ホスト: /var/lib/ecs/data/metadata/cluster_name/task_id/container_name/ecs-container-metadata.json
+    * コンテナ: /opt/ecs/metadata/random_ID/ecs-container-metadata.json
+  * Windows
+    * ホスト: C:\ProgramData\Amazon\ECS\data\metadata\task_id\container_name\ecs-container-metadata.json
+    * コンテナ: C:\ProgramData\Amazon\ECS\metadata\random_ID\ecs-container-metadata.json
+  * コンテナでは環境変数 `ECS_CONTAINER_METADATA_FILE` にパスが設定される
+* タスク ARN、ImageID、IPv4Addresses などの情報が JSON 形式で保存されている
+* コンテナ開始後 1 秒くらいで作成される。それまでの間は READY ステータスではなくファイルの内容は不完全な状態となっている
+
+
+[EC2 のタスクで使用できるタスクメタデータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ec2-metadata.html)
+
+* メタデータエンドポイントのバージョンは 2 〜 4 まで。新しいバージョンは ECS Agent のバージョンが新しくないと使用できない
+* バージョン 3 から Docker 統計も提供される
+
+
+[タスクメタデータエンドポイントバージョン 4](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-metadata-endpoint-v4.html)
+
+* タスクメタデータとネットワークレートの統計は CloudWatch に送信され、 AWS Management Console で表示できる
+* コンテナには環境変数 `ECS_CONTAINER_METADATA_URI_V4` がセットされる
+* 以下のようなエンドポイントパスが用意されている
+  * `${ECS_CONTAINER_METADATA_URI_V4}`
+  * `${ECS_CONTAINER_METADATA_URI_V4}/task`
+  * `${ECS_CONTAINER_METADATA_URI_V4}/taskWithTags`
+  * `${ECS_CONTAINER_METADATA_URI_V4}/stats`: awsvpc, bridge の場合は追加のネットワーク統計が含まれる
+  * `${ECS_CONTAINER_METADATA_URI_V4}/task/stats`
+* Docker 統計は ```${ECS_CONTAINER_METADATA_URI_V4}/stats```。[Docker Stats](https://docs.docker.com/engine/api/v1.30/#operation/ContainerStats) 参照のこと
+
+
+[タスクメタデータエンドポイントバージョン 3](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-metadata-endpoint-v3.html)
+
+* 現在アクティブにメンテナンスされていない
+
+
+[タスクメタデータエンドポイントバージョン 2](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-metadata-endpoint-v2.html)
+
+* 現在アクティブにメンテナンスされていない
+
+
+[Fargate のタスクで使用できるタスクメタデータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/fargate-metadata.html)
+
+* タスクメタデータエンドポイントバージョン 4: プラットフォームバージョン 1.4.0 以降を使用するタスクで利用可能
+* タスクメタデータエンドポイントバージョン 3: プラットフォームバージョン 1.1.0 以降を使用するタスクで利用可能
+
+
+[Fargate のタスク用のタスクメタデータエンドポイントバージョン 4](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-metadata-endpoint-v4-fargate.html)
+
+* コンテナには環境変数 `ECS_CONTAINER_METADATA_URI_V4` がセットされる
+* 以下のようなエンドポイントパスが用意されている
+  * `${ECS_CONTAINER_METADATA_URI_V4}`
+  * `${ECS_CONTAINER_METADATA_URI_V4}/task`
+  * `${ECS_CONTAINER_METADATA_URI_V4}/stats`: awsvpc, bridge の場合は追加のネットワーク統計が含まれる
+  * `${ECS_CONTAINER_METADATA_URI_V4}/task/stats`
+
+
+[Fargate のタスク用のタスクメタデータエンドポイントバージョン 3](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-metadata-endpoint-v3-fargate.html)
+
+
+
+## ECS Integrations
+
+[Amazon ECS と統合された AWS のサービス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-integrations.html)
+
+
+[Amazon ECR を Amazon ECS で使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecr-repositories.html)
+
+
+[Amazon ECS クラスターのLocal Zones、Wavelength Zone、およびAWS Outposts](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/cluster-regions-zones.html)
+
+
+[AWS OutpostsのAmazon Elastic Container Service](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-on-outposts.html)
+
+
+[AWSAmazon ECS のDeep Learning Containers](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deep-learning-containers.html)
+
+* Deep Learning Containersは、TensorFlow、NVIDIA CUDA(GPUインスタンス用)、Intel MKL(CPUインスタンス用)のライブラリを使用し、最適化された環境を実現
+* Amazon Elastic Inference を併用することで、推論コストを削減できる
+
+
+[Amazon ECS での AWS ユーザー通知の使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/using-user-notifications.html)
+
+* EventBridge にて各イベントのトリガーをもとにターゲットの処理を実行できる
 
 
 
 ## チュートリアル
+
+[チュートリアル: AWS CLI を使用して Fargate Linux タスクでクラスターの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ECS_AWSCLI_Fargate.html)
+
+
+[チュートリアル: AWS CLI を使用して Fargate Windows タスクでクラスターを作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ECS_AWSCLI_Fargate_windows.html)
+
+
+[チュートリアル: AWS CLI を使用して EC2 タスクのクラスターを作成する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ECS_AWSCLI_EC2.html)
+
+
+[チュートリアル: AWS Management Console と Amazon ECS コンソールによるクラスターの自動スケーリングの使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/tutorial-cluster-auto-scaling-console.html)
+
 
 [チュートリアル: Secrets Manager のシークレットを使用して機密データを指定する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/specifying-sensitive-data-tutorial.html)
 
@@ -1590,14 +2384,14 @@ ECS については以下が必要だが、既にコンテナインスタンス�
 [チュートリアル:サービスディスカバリを使用して、サービスの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-service-discovery.html)
 
 * サービスディスカバリリソースの作成
-  * [名前空間] - [サービス] の構造。ECS 側でサービスディスカバリを有効化することで、タスク起動時にサービス内にサービスディスカバリインスタンスとして登録される。
-  * Route 53 にホストゾーンが作成され、サービスディスカバリインスタンスに対応した A レコードが登録される仕組み。 
+  * [名前空間] - [サービス] の構造。ECS 側でサービスディスカバリを有効化することで、タスク起動時にサービス内にサービスディスカバリインスタンスとして登録される
+  * Route 53 にホストゾーンが作成され、サービスディスカバリインスタンスに対応した A レコードが登録される仕組み
 
 
 [チュートリアル: Blue/Green デプロイを使用するサービスの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-blue-green.html)
 
-* ALB もしくは NLB に対応。
-* サービス作成時に deploymentController を CODE_DEPLOY にする。
+* ALB もしくは NLB に対応
+* サービス作成時に deploymentController を CODE_DEPLOY にする
 * appspec.yaml は以下のような内容。
 ```yaml
 version: 0.0
@@ -1629,7 +2423,7 @@ def lambda_handler(event, context):
 ```
 
 
-[チュートリアル:タスク停止イベントに Amazon シンプル 通知サービス アラートを送信](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs_cwet2.html)
+[チュートリアル:タスク停止イベントを Amazon SNS に送信](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs_cwet2.html)
 
 タスク状態変更イベントのうち、"Essential container in task exited" で停止したイベントを扱うルールを作成する。
 以下のようなカスタムイベントパターンとなる。
@@ -1654,11 +2448,39 @@ def lambda_handler(event, context):
 ```
 
 
+[チュートリアル: コンソールを使用した Amazon ECS での Amazon EFS ファイルシステムの使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/tutorial-efs-volumes.html)
+
+タスク定義にて volumes により EFS を指定し、コンテナ定義の mountPoints によりマウントポイントを指定
+```json
+            "mountPoints": [
+                {
+                    "containerPath": "/usr/share/nginx/html",
+                    "sourceVolume": "efs-html"
+                }
+            ],
+            "name": "nginx",
+            "image": "nginx"
+        }
+    ],
+    "volumes": [
+        {
+            "name": "efs-html",
+            "efsVolumeConfiguration": {
+                "fileSystemId": "fs-1324abcd",
+                "transitEncryption": "ENABLED"
+            }
+        }
+    ],
+```
+
+
+
 [チュートリアル: Amazon ECS で FSx for Windows File Server ファイルシステムを使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/tutorial-wfsx-volumes.html)
 
-* Windows Active Directory (AD) を作成する手順となっている。
-* FSx for Windows File Server を作成する際に AD を指定している。
-* タスク定義にてマウントの設定が可能。
+* Windows Active Directory (AD) を作成する手順となっている
+* インスタンスロールに `AmazonSSMDirectoryServiceAccess` が必要
+* FSx for Windows File Server を作成する際に AD を指定している
+* タスク定義にてマウントの設定が可能
 ```json
 {
   "containerDefinitions": [
@@ -1687,15 +2509,63 @@ def lambda_handler(event, context):
 ```
 
 
+[チュートリアル: Windows コンテナ用に Amazon ECS に Fluent Bit をデプロイする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/tutorial-deploy-fluentbit-on-windows.html)
+
+* ユーザーデータにて以下のような指定を行う
+```
+<powershell>
+Import-Module ECSTools
+Initialize-ECSAgent -Cluster cluster-name -EnableTaskENI -EnableTaskIAMRole -LoggingDrivers '["awslogs","fluentd"]'
+</powershell>
+```
+* DAEMON スケジューリング戦略で起動する
+
+
+[Fargate AWS CLI キャパシティープロバイダーの例](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/fargate-cli-examples.html)
+
+* クラスター作成時にキャパシティープロバイダーを関連づけることができる
+```
+aws ecs create-cluster \
+     --cluster-name FargateCluster \
+     --capacity-providers FARGATE FARGATE_SPOT \
+     --region us-west-2
+```
+* `PutClusterCapacityProviders` API により既存のクラスターのキャパシティープロバイダーの関連づけを更新できる
+  * 追加する新しいキャパシティープロバイダーに加えて、既存のキャパシティープロバイダーをすべて指定する必要がある
+  * 関連づけを解除する場合、既存のタスクが使用していない状況である必要がある
+```
+aws ecs put-cluster-capacity-providers \
+     --cluster FargateCluster \
+     --capacity-providers FARGATE FARGATE_SPOT existing_capacity_provider1 existing_capacity_provider2 \
+     --default-capacity-provider-strategy existing_default_capacity_provider_strategy \
+     --region us-west-2
+```
+
+
+[チュートリアル: AWS CLI を使用するドメインレス gMSA で Windows コンテナを使用する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/tutorial-gmsa-windows.html)
+
+* タスク定義にて credentialSpecs にて S3 オブジェクトのパスを指定する
+* タスク実行ロールにて S3 への読み取り権限が必要
+* コンテナエージェント起動前に環境変数 `ECS_GMSA_SUPPORTED` の設定が必要
+
 
 ## トラブルシューティング
 
 [デバッグ用にAmazon ECS Exec を使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-exec.html)
 
-* readonlyRootFilesystem が有効化されていると使用できない。
-* ゾンビプロセスをクリーンアップするにはタスク定義に ```initProcessEnabled``` フラグ設定を推奨。
-* タスクロールに SSM の権限が必要（タスク実行ロールではない）。
-* ログ記録を有効化できる。ECS クラスターで設定する。
+* readonlyRootFilesystem が有効化されていると使用できない
+* ゾンビプロセスをクリーンアップするにはタスク定義に `initProcessEnabled` フラグ設定を推奨
+* タスクロールに SSM の権限が必要（タスク実行ロールではない）
+* ログ記録を有効化できる。ECS クラスターで設定する
+* アイドルタイムアウトは 20 分
+* ECS Exec は一部の CPU, メモリを使用する
+* サービス作成時に `--enable-execute-command` フラグが必要
+* トラブルシューティングには Amazon ECS Execチェッカーが便利
+
+
+[ECS Anywhere の問題のトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-anywhere-troubleshooting.html)
+
+**TODO**
 
 
 [停止されたタスクでのエラーの確認](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/stopped-task-errors.html)
@@ -1741,6 +2611,15 @@ An error occurred (ClientException) when calling the RegisterTaskDefinition oper
 EC2, Fargate それぞれの場合について設定可能な値がまとめられている。
 
 
+[CannotCreateContainerError: API error (500): devmapper](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/CannotCreateContainerError.html)
+
+
+[サービスロードバランサーのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/troubleshoot-service-load-balancers.html)
+
+
+[サービスの自動スケーリングのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/troubleshoot-service-auto-scaling.html)
+
+
 [Docker デバッグ出力の有効化](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/docker-debug-mode.html)
 
 ```/etc/sysconfig/docker``` にて ```OPTIONS``` に ```-D``` フラグを追加する。Docker デーモン、ECS Agent をリスタートし反映する。
@@ -1751,9 +2630,12 @@ EC2, Fargate それぞれの場合について設定可能な値がまとめら�
 ログファイルの場所がまとめられている。
 
 
-[ログコレクター](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-logs-collector.html)
+[Amazon ECS ログコレクター](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-logs-collector.html)
 
 インスタンス上のログを収集できるツール。サポートへ送付する際などに使用。
+
+
+[エージェントのイントロスペクション診断](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/introspection-diag.html)
 
 
 [Docker 診断](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/docker-diags.html)
@@ -1767,6 +2649,167 @@ $ docker inspect コンテナID
 
 
 [AWS Fargate スロットリングのクォータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/throttling.html)
+
+
+[API の失敗の理由](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/api_failures_messages.html)
+
+
+[タスク用の IAM ロールのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/troubleshoot-task-iam-roles.html)
+
+
+## References
+
+[Task definition parameters](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html)
+
+パラメータのリファレンス。
+
+**Family**
+
+* family: タスク定義名。
+
+**Task Role**
+
+* taskRoleArn: タスク内のコンテナが利用可能な権限を設定するロール。(**EC2 のインスタンスプロファイルのようなもの**)
+
+**Task Execution Role**
+
+* executionRoleArn: タスクの実行に使用するロール（**ECR や CloudWatch Logs**）。
+
+**Network Mode**
+
+* networkMode: none, bridge, awsvpc, host がある。
+  * none: 外部接続性を持たない。ポートマッピングも設定できない。
+  * bridge: Docker ビルトインの仮想ネットワークを使用。
+  * host: Docker ビルトインの仮想ネットワークをバイパスし、コンテナポートとホストポートを直接マッピングする。
+  * awsvpc: ENI にタスクが割り当てられる。Fargate の場合はこのモードになる。
+
+**Standard Container Definition Parameters**
+
+* name: コンテナに付ける名前
+* image: イメージの指定
+* memory: メモリ量(MiB)。指定量を超えて使用しようとした場合、コンテナは kill される。
+* memoryReservation: メモリ量のソフトリミット。
+* portMappings: コンテナとホストのポートのマッピング。
+  * containerPort: コンテナのポート。
+  * hostPort: ホストのポート。**無指定でかつコンテナポートが設定されている場合は、エフェメラルポートから割り当てる。**
+  * protocol: tcp or udp。
+
+**Advanced Container Definition Parameters**
+
+* healthCheck: タスクが手動起動された場合は、ヘルスチェック結果に関わらず継続稼働する。サービスから起動された場合は、unhealthy のタスクを終了し、新たなタスクを起動する。
+  * command: ヘルスチェックの判定に使用するコマンド。
+  * interval: 間隔。デフォルト 30 秒。5 〜 300 秒で設定可能。
+  * timeout: 失敗と判定するまで待つ時間。デフォルトは 5 秒。2 〜 60 秒で設定可能。
+  * retries: unhealthy と判定するまでにリトライする回数。デフォルトは 3 秒。1 〜 10 回で設定可能。
+  * startPeriod  コンテナ起動時にヘルスチェックを猶予する時間。
+* cpu: タスクが使用できる CPU。インスタンス上に複数タスクがある場合はこの設定値に基づいた比率となる。
+* gpu: GPU の個数。
+* essential: true に設定されている場合、このコンテナがダウンすると他のコンテナも停止させる。
+* entryPoint: Docker コンテナ起動時の Entrypoint にマップされる。
+* command: Docker コンテナ起動時の Cmd にマップされる。
+* workingDirectory: Docker コンテナ起動時の WorkingDir にマップされる。
+* environmentFiles: docker run オプションの --env-file にマップされる。S3 上のオブジェクトを指定する。Fargate 起動タイプでは使用不可。
+* environment: Docker コンテナ起動時の Env にマップされる。
+* secrets: シークレットマネージャ or SSM パラメータストアの ARN を指定。
+* disableNetworking: Docker コンテナ起動時の NetworkDisabled にマップされる。
+* links: network mode が bridge の場合のみ使用可。ポートマッピング無しでコンテナが相互に通信できるようになる。
+* hostname: hostname を設定できる。
+* dnsServers: DNS サーバを設定できる。
+* dnsSearchDomains: DNS の検索対象ドメインを設定できる。
+* extraHosts: /etc/hosts に追記される。
+* readonlyRootFilesystem: root ファイルシステムを read only に設定できる。
+* mountPoints: データボリュームをマウントできる。
+  * sourceVolume: マウントするボリューム名。
+  * containerPath: コンテナのマウントパス。
+  * readOnly: readonly でマウントするかどうか。
+* volumesFrom: 異なるコンテナからデータボリュームをマウントできる。
+* logConfiguration: ログに関する設定
+  * logDriver: "awslogs","fluentd","gelf","json-file","journald","logentries","splunk","syslog","awsfirelens" から設定可能。
+* privileged: コンテナに特権を与える。
+* user: コンテナ内で使用するユーザ名。
+* dockerSecurityOptions: SELinux, Apparmor 用のカスタムラベルを設定。
+* ulimits: ulimit でを設定。
+* dockerLabels: Docker コンテナ起動時の Labels にマップされる。
+
+**Other Container Definition Parameters**
+
+* linuxParameters: Linux パラメータの設定。
+* dependsOn: コンテナの依存関係を設定。
+* startTimeout: 依存関係の解決を行うまでに待機する時間。依存先のコンテナがタイムアウト秒数内に期待する状態にならない場合、ギブアップしコンテナを起動しない。
+* stopTimeout: コンテナ終了までに待機する時間。
+* systemControls: カーネルパラメータを設定。
+* interactive: true の場合、stdin or tty が割り当てられる。
+* pseudoTerminal: true の場合、TTY が割り当てられる。
+
+**Volumes**
+
+Docker volumes — Docker-managed volume でコンテナインスタンスの /var/lib/docker/volumes に作られるもの。EC2 起動タイプでのみサポートされる。
+
+**Bind mounts** — ホストマシンのファイル、ディレクトリをコンテナにマウントするもの。EC2 or Fargate 起動タイプでサポートされる。
+
+* name: ボリューム名。
+* host: ボリュームマウントを使用する際に設定。
+* dockerVolumeConfiguration: Docker Volumes を使用する際に設定。
+* efsVolumeConfiguration: EFS を使用する際に設定。
+
+**Task placement constraints**
+
+Fargate の場合はサポートされない。**Fargate の場合はデフォルトで spread across Availability Zones となる。**
+
+* expression: 制約に関する記述。Cluster query language で記述。
+* type: 制約のタイプ。
+
+**Launch types**
+
+* requiresCompatibilities: EC2 or FARGATE
+
+**Task size**
+
+* cpu: 1024 = 1 vcpu
+* memory: 1024 = 1 GB
+
+**Proxy configuration**
+
+* proxyConfiguration: App Mesh proxy の設定。
+
+**Other task definition parameters**
+
+* ipcMode: IPC resource namespace を使用。
+* pidMode: process namespace を使用。
+
+
+
+[サービス定義パラメータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service_definition_parameters.html)
+
+**TODO**
+
+設定可能項目。
+
+* 起動タイプ
+* キャパシティープロバイダー戦略
+* タスク定義
+* プラットフォームのバージョン
+* クラスター
+* サービス名
+* スケジュール戦略（レプリカ or デーモン）
+* 必要数
+* デプロイ設定（最大率、最小ヘルス率）
+* デプロイメントコントローラー（ECS(ローリングアップデート), CODE_DEPLOY, EXTERNAL）
+* タスクの配置（配置成約、配置戦略）
+* タグ
+* ネットワーク構成（サブネット、セキュリティグループ、パブリックIP付与）
+* ヘルスチェック猶予時間
+* ロードバランサ（ターゲットグループ ARN、ロードバランサ名、コンテナ名、コンテナポート）
+* IAM ロール(ELB ありの構成で awsvpc を使用していない場合に指定。サービスにリンクされたロールがある場合は、そちらが使われる)
+* サービス検出
+
+
+
+#### 追加リソースのサポート
+
+* [Working with GPUs on Amazon ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-gpu.html)
+  * エージェント設定ファイルで ECS_ENABLED_GPU_SUPPORT を true に設定する必要がある。
+* [Working with inference workloads on Amazon ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-inference.html)
 
 
 

@@ -145,6 +145,14 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * コンテナ内プロセスを非 root ユーザで動作
 
 
+[BuildKit クライアント用の Amazon ECR でのリモートキャッシュサポートの発表](https://aws.amazon.com/jp/blogs/news/announcing-remote-cache-support-in-amazon-ecr-for-buildkit-clients/)
+
+* キャッシュは一時的なビルド環境では使用できないのが欠点
+* ECR は OCI 準拠のレジストリだが、BuildKit のリモートキャッシュエクスポートは OCI 形式ではないためプッシュできなかった
+* BuildKit 0.12 にてリモートビルドキャッシュを OCI 互換の方法で生成および保存できるソリューションを提供
+* `docker build` 時に `--cache-to`, `--cache-from` オプションにより指定
+
+
 #### Deploy
 
 [AWS CodeDeploy による AWS Fargate と Amazon ECS でのBlue/Greenデプロイメントの実装](https://aws.amazon.com/jp/blogs/news/use-aws-codedeploy-to-implement-blue-green-deployments-for-aws-fargate-and-amazon-ecs/)
