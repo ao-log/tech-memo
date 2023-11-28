@@ -24,6 +24,6 @@
 [Amazon ECSタスクメタデータエンドポイント](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/userguide/task-metadata-endpoint-fargate.html)
 
 * タスクメタデータエンドポイントバージョン 4 はプラットフォームバージョン 1.4.0 以降を使用するタスクで利用可能。
-* ```${ECS_CONTAINER_METADATA_URI_V4}/stats``` のようなパスに対してクエリできる。
+* `${ECS_CONTAINER_METADATA_URI_V4}/stats` のようなパスに対してクエリできる。
 
 

@@ -52,11 +52,11 @@ $ sudo rm /var/lib/ecs/data/agent.db
 
 * さまざまな原因が考えられる
   * ECS エンドポイントがインスタンスのドメインネームシステム (DNS) ホスト名にパブリックアクセスできない。
-  * 公開サブネットの設定が正しくない
+  * パブリックサブネットの設定が正しくない
   * プライベートサブネットの設定が正しくない
   * VPC エンドポイントが正しく設定されていない
   * セキュリティグループがネットワークトラフィックを許可していない
-  * EC2 インスタンスに必要な AWS Identity and Access Management (IAM) アクセス許可がない。または、ecs:RegisterContainerInstance 呼び出しが拒否されている。
+  * EC2 インスタンスに必要な AWS Identity and Access Management (IAM) アクセス許可がない。または、`ecs:RegisterContainerInstance` 呼び出しが拒否されている。
   * ECS コンテナのインスタンスユーザーデータが正しく設定されていない
   * ECS エージェントが停止しているか、インスタンスで実行されていない
   * Auto Scaling グループの起動設定が正しくない (インスタンスが Auto Scaling グループの一部である場合)。

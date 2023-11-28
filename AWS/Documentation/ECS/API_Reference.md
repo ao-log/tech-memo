@@ -135,7 +135,7 @@
 
 * HEALTHY: 全ての essential コンテナはヘルスチェクにパス
 * UNHEALTHY: 一つもしくは複数の essential コンテナのヘルスチェックが失敗
-* UNKNOWN: essentiak コンテナはヘルスチェックの評価中もしくは non-essenntial コンテナのみにヘルスチェックが設定されているもしくはヘルスチェックが設定されているコンテナがない
+* UNKNOWN: essential コンテナはヘルスチェックの評価中もしくは non-essenntial コンテナのみにヘルスチェックが設定されているもしくはヘルスチェックが設定されているコンテナがない
 
 その他の考慮事項
 

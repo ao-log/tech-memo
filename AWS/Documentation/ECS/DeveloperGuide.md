@@ -1518,7 +1518,7 @@ aws ecs create-service \
 * サービスにリンクされたロール `AWSServiceRoleForApplicationAutoScaling_ECSService` が Application Auto Scaling 側で作成され使用される
 * 考慮事項
   * デプロイ中はスケールインしないようになっている。スケールアウトはされる
-  * スケールアウトを中断する場合は ```register-scalable-target``` を使用する。デプロイ後に ```register-scalable-target``` を実行し再開されるのを忘れないように
+  * スケールアウトを中断する場合は `register-scalable-target` を使用する。デプロイ後に `register-scalable-target` を実行し再開されるのを忘れないように
   * クールダウン期間をサポート。この期間が過ぎるまでは必要な容量を再度増加しない
   * 容量を超えた状態でスケールインすると Max の値まで一気にスケールインされる。容量の最小値よりも少ない状態ですケースアウトすると Mix の値まで一気にスケールアウトされる
 
@@ -1883,7 +1883,7 @@ curl --request PUT --header 'Content-Type: application/json' ${ECS_AGENT_URI}/ta
 
 [AWS CloudTrail を使用した Amazon ECS API コールのログ記録](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/logging-using-cloudtrail.html)
 
-公開 API は CloufTrail に記録される。
+公開 API は CloufTrail に記録される
 
 
 ### Container Agent
@@ -2109,7 +2109,7 @@ New-NetRoute -DestinationPrefix 169.254.169.254/32 -InterfaceIndex $ifIndex -Nex
 * 必要なエンドポイント
   * Fargate
     * com.amazonaws.region.ecr.dkr
-    * com.amazonaws.region.ecr.api (プラットフォームバージョン 1.4.0 では不要)
+    * com.amazonaws.region.ecr.api (プラットフォームバージョン 1.3.0 では不要)
     * S3 のエンドポイント
     * 場合によって必要なエンドポイント
       * Secrets Manager
@@ -2565,13 +2565,20 @@ aws ecs put-cluster-capacity-providers \
 
 [ECS Anywhere の問題のトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-anywhere-troubleshooting.html)
 
-**TODO**
+* うまくいかなかった場合は登録解除してから再度インストールスクリプトを実行すること
+* 最もよくある原因はネットワークもしくは IAM
 
 
 [停止されたタスクでのエラーの確認](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/stopped-task-errors.html)
 
-マネジメントコンソールからタスクを表示することでエラーを確認できる。ただし 1 時間以内に停止したタスクしか分からないので、それ以前を確認するにはタスク状態変更イベントを CloudWatch Logs に送信するような設定を事前にしておく必要がある。
-
+* 停止理由の確認には以下の情報を使用するとよい
+  * タスク停止理由
+    * マネジメントコンソールからタスクを表示することでエラーを確認できる
+    * 1 時間以内に停止したタスクしか確認できない
+    * それ以前を確認するにはタスク状態変更イベントを CloudWatch Logs に送信するような設定を事前にしておく必要がある
+  * ECS サービスのイベント
+  * コンテナログ
+  * (EC2 の場合) コンテナインスタンスのログ
 * [停止理由] を確認することでタスクの停止理由が分かる。例えば以下のような停止理由がある。
   * Task failed ELB health checks in (elb elb-name)
   * Scaling activity initiated by (deployment deployment-id)
@@ -2583,51 +2590,100 @@ aws ecs put-cluster-capacity-providers \
 
 [CannotPullContainer task errors](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task_cannot_pull_image.html)
 
-コンテナイメージのプルに失敗したエラー。以下のようなエラー原因が考えられる。
-* コンテナレジストリとの疎通性がない。
-* イメージが格納されていない。
-* ディスク容量不足。
-* コンテナレジストリ側のレートリミット。
+コンテナイメージのプルに失敗したエラー。以下のようなエラー原因が考えられる
+* コンテナレジストリとの疎通性がない
+  * パブリックサブネットでは自動割り当てパブリック IP を有効にする必要がある。プライベートサブネットの場合は無効にする
+  * インターネットへのアウトバウンド疎通性がない場合、S3 や各エンドポイントとの疎通性が必要
+* エンドポイントポリシーにて許可されていない
+* イメージが格納されていない
+* ディスク容量不足
+  * `json-file` ログドライバーを使用している場合は容量を圧迫しているかもしれない。当該ログドライバーのオプションとして `max-size` を設定できる
+* コンテナレジストリ側のレートリミット
 
 
 [サービスイベントメッセージ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-event-messages.html)
 
-サービスイベントログには最新 100 件のイベントが表示される。
-
-定常状態になった場合は、次のイベントが記録される。
-```
-service service-name) has reached a steady state. 
-```
-エラーになった場合もエラーに対応したメッセージが記録されるため、診断の有用な情報となる。
+* サービスイベントログ
+  * 最新 100 件のイベントが表示される
+  * 重複したイベントメッセージは原因が解決されるか 6 時間が経過すると省略される。6 時間以内に解消されなかった場合は、別のサービスイベントメッセージが表示される
+  * Auto Scaling イベントには Message のプレフィックスが付与される
+* イベントメッセージ例:
+  * 定常状態になった場合: `service service-name) has reached a steady state.`
+  * リソース不足によりタスクを配置できない
+    * CPU, Memory, GPU, ENI
+    * ポート番号が埋まっている
+    * コンテナインスタンスの属性不足
+      * awslogs 使用時にコンテナエージェント設定で有効化していない場合など
+  * ECS Agent が接続されていない: 対策は ecs サービスの再起動
+  * ELB ヘルスチェックの失敗
+  * 一貫してタスクを正常に起動できない: サービスの調整ロジックにより起動間隔が長くなっていく
+  * API レート制限
+  * `minimumHealthyPercent`, `maximumPercent` の設定不備によりタスクの起動、停止ができない
+  * Quota に抵触
+    * タスク数、合計 vCPU 数、Memory
+  * サポートされていない構成
+    * サポートされていないリージョン、AZ
+    * Fargate Spot で ARM アーキテクチャを選択
+  * Desired Count よりも多くのタスクがスケールインから保護されており、タスクを停止できない
+  * 容量不足
 
 
 [指定された CPU またはメモリの値が無効](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-cpu-memory-error.html)
 
-以下のような値が表示される場合は、CPU、メモリの設定ミス。
-```
-An error occurred (ClientException) when calling the RegisterTaskDefinition operation: Invalid 'cpu' setting for task. For more information, see the Troubleshooting section of the Amazon ECS Developer Guide.
-```
-
-EC2, Fargate それぞれの場合について設定可能な値がまとめられている。
+* `requiresCompatibilities` が EC2 の場合、CPU ユニットは 128 〜 10240 の間で設定可能（0.125 vCPU ～ 192 vCPU で設定できる）
+* `requiresCompatibilities` が Fargate の場合、CPU, Memory に指定できる値のペアが固定されている
 
 
 [CannotCreateContainerError: API error (500): devmapper](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/CannotCreateContainerError.html)
 
+* Amazon Linux の場合は `/dev/xvdcz` の 22 GiB のボリュームが Docker 用となる
+  * サイズを増加したデータボリュームでインスタンスを起動するのが楽
+  * Docker が使用するボリュームグループにストレージを追加し、その論理ボリュームを拡張することも可能
+* `ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION` でタスク停止後に、コンテナがクリーンアップされるまでの時間を設定可能。デフォルトは 3 時間
+* コンテナ内で使用されていないデータブロックを削除するには `fstrim` コマンドを実行
+
 
 [サービスロードバランサーのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/troubleshoot-service-load-balancers.html)
+
+* タスクが停止する場合の原因の候補
+  * サービスにリンクされたロールが作成されていない
+  * セキュリティグループの設定不備
+  * ELB で設定されていない AZ 上にコンテナインスタンスが作成されている
+  * ELB のヘルスチェック設定不備
+  * タスク定義のコンテナ名、ポート番号を変更した場合
 
 
 [サービスの自動スケーリングのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/troubleshoot-service-auto-scaling.html)
 
+* デプロイの進行中
+  * スケールインプロセスは自動的にオフにされる
+  * スケールアウトプロセスはオフにならないので、必要に応じて中断しておく必要がある
+
 
 [Docker デバッグ出力の有効化](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/docker-debug-mode.html)
 
-```/etc/sysconfig/docker``` にて ```OPTIONS``` に ```-D``` フラグを追加する。Docker デーモン、ECS Agent をリスタートし反映する。
+* デバッグ出力の有効化方法
+  * `/etc/sysconfig/docker` にて `OPTIONS` に `-D` フラグを追加
+  * Docker デーモン、ECS Agent をリスタートし反映
 
 
 [Amazon ECS ログファイルの場所](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/logs.html)
 
-ログファイルの場所がまとめられている。
+* /var/log/ecs/ecs-agent.log.timestamp
+  * 1 時間ごとにローテーションされ、24 世代分(1 日分)保持される
+  * 環境変数
+    * `ECS_LOGFILE`: パス変更可能
+    * `ECS_LOGLEVEL`: ログレベル。デフォルトは info
+    * `ECS_LOGLEVEL_ON_INSTANCE`: インスタンスのログファイルに記録されるログの詳細レベル
+    * `ECS_LOG_DRIVER`: ログドライバー。デフォルトは `json-file`
+    * `ECS_LOG_ROLLOVER_TYPE`: ローテーション方法の指定。`size` or `hourly`
+    * `ECS_LOG_OUTPUT_FORMAT`: ログ出力形式。デフォルトは `logfmt`
+    * `ECS_LOG_MAX_FILE_SIZE_MB`: ログファイルの最大サイズ。`hourly` の場合は無視される
+    * `ECS_LOG_MAX_ROLL_COUNT`: ログファイルを保存する世代数。デフォルトは 24
+* /var/log/ecs/ecs-init.log
+  * `ecs-init` プロセスのログ
+* /var/log/ecs/audit.log
+  * `GetCredentials` API によりクレデンシャルの要求を行ったログ
 
 
 [Amazon ECS ログコレクター](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-logs-collector.html)
@@ -2637,10 +2693,15 @@ EC2, Fargate それぞれの場合について設定可能な値がまとめら�
 
 [エージェントのイントロスペクション診断](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/introspection-diag.html)
 
+* 以下コマンドによりタスクの状態を取得できる
+```
+curl http://localhost:51678/v1/tasks | python -mjson.tool
+```
+
 
 [Docker 診断](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/docker-diags.html)
 
-診断用の Docker コマンド。
+診断用の Docker コマンド
 ```
 $ docker ps -a
 $ docker logs コンテナID
@@ -2650,22 +2711,46 @@ $ docker inspect コンテナID
 
 [AWS Fargate スロットリングのクォータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/throttling.html)
 
+* トークンバケットアルゴリズムが使用される
+  * バケットサイズは 100。よって、100 個までのタスクを同時起動できる
+  * リフィルレートは毎秒 20。よって持続的な起動レードは毎秒 20 個まで
+* ECS Fargate, EKS Fargate 分が合算される
+
 
 [API の失敗の理由](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/api_failures_messages.html)
 
+* 失敗理由
+  * Describe*
+    * MISSING: 当該リソースが存在していない
+  * DescribeTasks
+    * TaskFailedToStart: AGENT: エージェントが接続されていない
+    * TaskFailedToStart: ATTRIBUTE: 例えば awsvpc ネットワークモードを使用するタスクであるものの、指定したサブネット内に `ecs.capability.task-eni` 属性を持つインスタンスがない
+    * TaskFailedToStart: EMPTY CAPACITY PROVIDER: キャパシティープロバイダーが空もしくはキャパシティープロバイダーのインスタンスがクラスターに登録されていない
+  * RunTask, StartTask
+    * LOCATION: 指定したサブネットがコンテナインスタンスのサブネットと異なる AZ にある
+  * UpdateTaskProtection
+    * DEPLOYMENT_BLOCKED: 1 つ以上の保護されたタスクが原因でサービスのデプロイが安定した状態にならないため、タスク保護を設定できない
+    * TASK_NOT_VALID: 指定されたタスクは ECS サービスの一部ではない
+
 
 [タスク用の IAM ロールのトラブルシューティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/troubleshoot-task-iam-roles.html)
+
+* `Unable to locate credentials` エラーが表示された場合の理由
+  * コンテナインスタンスでタスクロールが有効になっていない
+  * `ECS_TASK_METADATA_RPS_LIMIT` による流量制限にかかっている
 
 
 ## References
 
 [Task definition parameters](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html)
 
-パラメータのリファレンス。
-
 **Family**
 
-* family: タスク定義名。
+* family: タスク定義名
+
+**requiresCompatibilities**
+
+* EC2 | FARGATE | EXTERNAL
 
 **Task Role**
 
@@ -2673,15 +2758,20 @@ $ docker inspect コンテナID
 
 **Task Execution Role**
 
-* executionRoleArn: タスクの実行に使用するロール（**ECR や CloudWatch Logs**）。
+* executionRoleArn:
+  * タスクの実行に使用するロール（**ECR や CloudWatch Logs**）
+  * Windows ではコンテナエージェントの起動時に `-EnableTaskIAMRole` が必要
 
 **Network Mode**
 
-* networkMode: none, bridge, awsvpc, host がある。
-  * none: 外部接続性を持たない。ポートマッピングも設定できない。
-  * bridge: Docker ビルトインの仮想ネットワークを使用。
-  * host: Docker ビルトインの仮想ネットワークをバイパスし、コンテナポートとホストポートを直接マッピングする。
-  * awsvpc: ENI にタスクが割り当てられる。Fargate の場合はこのモードになる。
+* networkMode: none, bridge, awsvpc, host がある
+  * none: 外部接続性を持たない。ポートマッピングも設定できない
+  * bridge: Docker ビルトインの仮想ネットワークを使用
+  * host: Docker ビルトインの仮想ネットワークをバイパスし、コンテナポートとホストポートを直接マッピングする
+    * ダイナミックポートマッピングは使用不可
+    * ルートユーザーを使用してコンテナを実行してはならない
+  * awsvpc: ENI にタスクが割り当てられる。Fargate の場合はこのモードになる
+  * default: 
 
 **Standard Container Definition Parameters**
 
@@ -2781,27 +2871,80 @@ Fargate の場合はサポートされない。**Fargate の場合はデフォ�
 
 [サービス定義パラメータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service_definition_parameters.html)
 
-**TODO**
-
 設定可能項目。
 
-* 起動タイプ
-* キャパシティープロバイダー戦略
-* タスク定義
-* プラットフォームのバージョン
-* クラスター
-* サービス名
-* スケジュール戦略（レプリカ or デーモン）
-* 必要数
-* デプロイ設定（最大率、最小ヘルス率）
-* デプロイメントコントローラー（ECS(ローリングアップデート), CODE_DEPLOY, EXTERNAL）
-* タスクの配置（配置成約、配置戦略）
-* タグ
-* ネットワーク構成（サブネット、セキュリティグループ、パブリックIP付与）
-* ヘルスチェック猶予時間
-* ロードバランサ（ターゲットグループ ARN、ロードバランサ名、コンテナ名、コンテナポート）
-* IAM ロール(ELB ありの構成で awsvpc を使用していない場合に指定。サービスにリンクされたロールがある場合は、そちらが使われる)
-* サービス検出
+* launchType
+* capacityProviderStrategy
+  * capacityProvider
+  * weight
+  * base: base を設定できるのは 1 つのキャパシティプロバイダー
+* taskDefinition: ローリングアップデート時は指定が必要
+* platformFamily
+* platformVersion: 未指定時は LATEST
+* cluster: 未指定時は default
+* serviceName
+* schedulingStrategy: REPLICA or DAEMON
+* desiredCount
+* deploymentConfiguration
+  * maximumPercent
+    * DAEMON の場合: 100 にする必要がある
+    * CODE_DEPLOY, EXTERNAL かつ EC2 の場合: DRAINING 状態の場合は RUNNING のままとできるタスク数の上限
+    * Fargate の場合: 使用されない
+  * minimumHealthyPercent
+    * ELB 無しの構成の場合
+      * RUNNING 状態に達した後 40 秒間待ってから、正常性の最小割合の合計にカウント
+      * タスク内のすべての必須コンテナがヘルスチェックに合格すると、タスクは正常と見なされる
+    * ELB ありの場合
+      * ヘルスチェックが定義されている必須コンテナがない場合: ELB ヘルスチェックが正常ステータスを返すのを待ってからカウント
+      * ヘルスチェックが定義されている必須コンテナがある場合: タスクが正常な状態となりELB ヘルスチェックが正常ステータスを返すのを待ってからカウント
+    * CODE_DEPLOY, EXTERNAL かつ EC2 の場合: DRAINING 状態の場合は RUNNING のままとできるタスク数の下限
+    * Fargate の場合: 使用されない
+* deploymentController: ECS | CODE_DEPLOY | EXTERNAL
+* placementConstraints
+  * type
+  * expression
+* placementStrategy
+  * type: random | spread | binpack
+  * field
+    * random の場合: このフィールドは使用されない
+    * spread の場合: instanceId または attribute:ecs.availability-zone などのコンテナインスタンスに適用される任意のプラットフォームまたはカスタム属性
+    * binpack: cpu | memory
+* tags
+  * key
+  * value
+* enableECSManagedTags: デフォルトは `false`
+* propagateTags: TASK_DEFINITION | SERVICE
+* networkConfiguration: awsvpc の場合に必要
+  * awsvpcConfiguration
+    * subnets
+    * securityGroups
+    * assignPublicIP
+* healthCheckGracePeriodSeconds
+* loadBalancers: `deploymentController` が `ECS` の場合のみ変更可能
+  * targetGroupArn
+  * loadBalancerName
+  * containerName
+  * containerPort
+* role: サービスロール
+  * このパラメーターは、サービスの単一のターゲットグループで ELB を使用していて、タスク定義が awsvpc を使用していない場合にのみ許可される
+  * 未指定時はサービスにリンクされたロールが使用される。awsvpc ではサービスにリンクされたロールが必須
+* serviceConnectConfiguration
+  * enabled
+  * namespace
+  * services
+    * portName
+    * discoveryName
+    * clientAliases
+      * port
+      * dnsName
+    * ingressPortOverride
+    * logConfiguration
+* serviceRegistries
+  * registryArn
+  * port
+  * containerName
+  * containerPort
+* clientToken: 冪等性確保のために使用される
 
 
 
