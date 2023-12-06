@@ -73,7 +73,7 @@ $ sudo rm /var/lib/ecs/data/agent.db
 * ホストネットワーキングモード:
   * 防ぐことができない
 * awsvpc ネットワーキングモード:
-  * `/etc/ecs/ecs.config ` に `ECS_AWSVPC_BLOCK_IMDS=true` を設定
+  * `/etc/ecs/ecs.config` に `ECS_AWSVPC_BLOCK_IMDS=true` を設定
 * ブリッジネットワーキングモード
   * iptables により DROP する
   ```
@@ -507,21 +507,49 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 ## ストレージ
 
-**TODO**
-
 [Auto Scaling グループを使用してクラスターを手動で起動した場合、Amazon ECS コンテナインスタンスで使用可能なディスク容量を増やすにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-container-storage-increase-autoscale)
+
+* 起動テンプレートを更新する
+* 新しい Auto Scaling グループを作成
+* 元の Auto Scaling グループのコンテナインスタンスを Draining
+
 
 [コンテナインスタンスをスタンドアロン Amazon EC2 インスタンスとして起動した場合、Amazon ECS コンテナインスタンスで使用可能なディスク容量を増やすにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-container-storage-increase-ec2)
 
+* 置換用のインスタンスを用意する
+
+
 [AWS マネジメントコンソールから ECS クラスターを起動した場合、Amazon ECS コンテナインスタンスで利用可能なディスクスペースを増やすにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-container-storage-increase-console)
+
+* CloudFormation スタックのパラメータを更新する
+
 
 [AWS Fargate 上の Amazon ECS コンテナのディスク容量を増やす方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-fargate-increase-disk-space)
 
+* エフェメラルストレージは最大 200 GiB まで指定可能
+* EFS を使用するてもある
+
+
 [EC2 で実行されている ECS コンテナまたはタスクに EFS ファイルシステムをマウントする方法を教えてください。](https://repost.aws/ja/knowledge-center/efs-mount-on-ecs-container-or-task)
+
+* タスク定義にて指定
+
 
 [Fargate で実行されている Amazon ECS コンテナまたはタスクに Amazon EFS ファイルシステムをマウントする方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-fargate-mount-efs-containers-tasks)
 
+* タスク定義にて指定
+
+
 [AWS Fargate タスクで Amazon EFS ボリュームをマウントできないのはなぜですか?](https://repost.aws/ja/knowledge-center/fargate-unable-to-mount-efs)
+
+* EFS 間のネットワーク疎通性の確保が必要
+* EFS のマウントターゲットが Fargate と同じ AZ にある必要がある
+* VPC のデフォルトの DNS サーバを使用する必要がある。カスタム DNS サーバの場合、DNS フォワーダーの設定が必要
+* 権限に関する問題
+  * ファイルシステムポリシー
+  * タスクロール
+  * POSIX ファイルシステムレベルの権限
+
 
 
 ## 認証、認可
@@ -552,9 +580,20 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [ECS タスクとコンテナのデプロイをモニタリングするように CloudWatch Container Insights を設定するにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/cloudwatch-container-insights-ecs)
 
+* アカウント設定で Container Insights を有効化。以降作成されたクラスターではデフォルト設定の Container Insights 設定が有効化された状態になる
+* クラスター設定で Container Insigthts を有効化する
+
+
 [Fargate で Amazon ECS タスクの高いメモリ使用率をモニタリングする方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-tasks-fargate-memory-utilization)
 
+* Container Insights でクエリによりメモリ使用率の高いタスクを特定する
+* MemoryUtilization のメトリクスに対してアラームを設定する
+
+
 [Fargate での Amazon ECS タスクの高い CPU 使用率をトラブルシューティングするにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-fargate-high-cpu-utilization)
+
+* アプリケーションログを確認
+* 受信トラフィックが増加していないかを確認
 
 
 ## ECR、コンテナイメージ
@@ -579,6 +618,12 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [Fargate での Amazon ECS タスクの「cannotpullcontainererror」エラーはどのように解決すればよいですか?](https://repost.aws/ja/knowledge-center/ecs-fargate-pull-container-error)
 
+* ネットワーク疎通性を確認
+* DHCP オプションセットの確認
+* タスク実行ロールの確認
+* イメージが存在することを確認
+
+
 [Amazon ECR でエラー「CannotPullContainerError: API エラー」を解決する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-pull-container-api-error-ecr)
 
 * ECR エンドポイントへの疎通性がない
@@ -590,9 +635,21 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [エラー "CannotPullContainerError を解決するには： Amazon ECS の「プルレート上限」に達しましたか?](https://repost.aws/ja/knowledge-center/ecs-pull-container-error-rate-limit)
 
+* ECR の方がクォータはより高いのでレート制限にかかりにくい
+* Docker Hub の認証を行うことでレート制限がより高い値になる
+* Docker Pro、Team Subscription へのアップグレード
+
+
 [Amazon ECR から Docker イメージを取り出す際に、Amazon ECS の「error pulling image configuration: error parsing HTTP 403 response body」を解決する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-ecr-docker-image-error)
 
+* ゲートウェイエンドポイントポリシーで許可されていない
+
+
 [Amazon ECS で「unable to pull secrets or registry auth」(シークレットまたはレジストリ認証をプルできません) というエラーのトラブルシューティング方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-unable-to-pull-secrets)
+
+* タスク実行ロール
+* VPC エンドポイント
+* タスク定義での指定
 
 
 ## ログ関連
