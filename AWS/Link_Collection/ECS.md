@@ -309,6 +309,10 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 ```
 
 
+[Effective use: Amazon ECS lifecycle events with Amazon CloudWatch logs insights](https://aws.amazon.com/jp/blogs/containers/effective-use-amazon-ecs-lifecycle-events-with-amazon-cloudwatch-logs-insights/)
+
+
+
 #### Others
 
 [お誕生日おめでとう！AWS Fargate 5 周年](https://aws.amazon.com/jp/blogs/news/happy-5th-birthday-aws-fargate/)

@@ -4,6 +4,77 @@
 
 ## Actions
 
+[CreateCapacityProvider](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_CreateCapacityProvider.html)
+
+```json
+{
+   "autoScalingGroupProvider": { 
+      "autoScalingGroupArn": "string",
+      "managedScaling": { 
+         "instanceWarmupPeriod": number,
+         "maximumScalingStepSize": number, # スケールアウトする台数の最大数
+         "minimumScalingStepSize": number, # スケールアウトする台数の最小数
+         "status": "string",
+         "targetCapacity": number
+      },
+      "managedTerminationProtection": "string"
+   },
+   "name": "string",
+   "tags": [ 
+      { 
+         "key": "string",
+         "value": "string"
+      }
+   ]
+}
+```
+
+
+[CreateCluster](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_CreateCluster.html)
+
+```json
+{
+   "capacityProviders": [ "string" ],
+   "clusterName": "string",
+   "configuration": { 
+      "executeCommandConfiguration": { 
+         "kmsKeyId": "string",
+         "logConfiguration": { 
+            "cloudWatchEncryptionEnabled": boolean,
+            "cloudWatchLogGroupName": "string",
+            "s3BucketName": "string",
+            "s3EncryptionEnabled": boolean,
+            "s3KeyPrefix": "string"
+         },
+         "logging": "string"
+      }
+   },
+   "defaultCapacityProviderStrategy": [ 
+      { 
+         "base": number,
+         "capacityProvider": "string",
+         "weight": number
+      }
+   ],
+   "serviceConnectDefaults": { 
+      "namespace": "string"
+   },
+   "settings": [ 
+      { 
+         "name": "string", # containerInsights
+         "value": "string"
+      }
+   ],
+   "tags": [ 
+      { 
+         "key": "string",
+         "value": "string"
+      }
+   ]
+}
+```
+
+
 [CreateService](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_CreateService.html)
 
 * サービスの特徴
@@ -15,27 +86,646 @@
   * `maximum percent` の値は RUNNING, PENDING 状態で起動できるタスクの上限数(デプロイコントローラが ecs の場合)
   * デプロイコントローラが CODE_DEPLOY or EXTERNAL の場合、`minimum healthy percent`、`maximum percent` は DRAINNNG 状態の際に RUNNING 状態となれるタスク数の下限、上限を示す
   * Fargate 起動タイプでは `minimum healthy percent`、`maximum percent` は使用されない
-* Request Parameters
-  * capacityProviderStrategy
-    * 指定された場合は `launchType` は省略される
-    * `capacityProviderStrategy`、`launchType` が無指定の場合はクラスターの `defaultCapacityProviderStrategy` が使用される
-  * healthCheckGracePeriodSeconds
-    * サービススケジューラが ECS タスク起動後に ELB ヘルスチェックの unhealthy を無視する秒数
-    * ELB を使用しない構成では `startPeriod` の使用を推奨
-  * loadBalancers
-    * デプロイコントローラが ECS の場合
-      * ELB ターゲットグループの ARN を指定する。複数指定可能
-      * 複数のターゲットグループを指定する場合は、サービスにリンクされたロールが必要
-    * デプロイコントローラが CODE_DEPLOY の場合
-      * 二つのターゲットグループを指定する
-      * デプロイ中タスクセットの状態を PRIMARY のセットしターゲットグループと関連づける。置き換え用タスクセットを別のターゲットグループと関連づける。
-    * awsvpc の場合はターゲットタイプは instance にできず ip にする必要がある。awsvpc では EC2 ではなく ENI に関連づけられるため
-  * networkConfiguration
-    * awsvpc の場合のみ必要
-  * role
-    * ELB を使用し awsvpc ではない場合のみ指定が許可される
-    * サービスにリンクされたロールが存在する場合は、role で指定したロールは使用されずサービスにリンクされたロールが使用される
-    * パスを「/」以外にしている場合、ロールの ARN もしくはパス付きでロール名を指定(ロール名が bar でパスが /bar/ の場合は、/foo/bar) が必要
+
+```json
+{
+   "capacityProviderStrategy": [ # 指定された場合は launchType は省略される。capacityProviderStrategy、launchType が無指定の場合はクラスターの defaultCapacityProviderStrategy が使用される
+      { 
+         "base": number,
+         "capacityProvider": "string",
+         "weight": number
+      }
+   ],
+   "clientToken": "string",
+   "cluster": "string",
+   "deploymentConfiguration": { 
+      "alarms": { 
+         "alarmNames": [ "string" ],
+         "enable": boolean,
+         "rollback": boolean
+      },
+      "deploymentCircuitBreaker": { 
+         "enable": boolean,
+         "rollback": boolean
+      },
+      "maximumPercent": number,
+      "minimumHealthyPercent": number
+   },
+   "deploymentController": { 
+      "type": "string"
+   },
+   "desiredCount": number,
+   "enableECSManagedTags": boolean,
+   "enableExecuteCommand": boolean,
+   "healthCheckGracePeriodSeconds": number, # サービススケジューラが ECS タスク起動後に ELB ヘルスチェックの unhealthy を無視する秒数。ELB を使用しない構成では startPeriod の使用を推奨
+   "launchType": "string",
+    # * デプロイコントローラが ECS の場合
+    #   * ELB ターゲットグループの ARN を指定する。複数指定可能
+    #   * 複数のターゲットグループを指定する場合は、サービスにリンクされたロールが必要
+    # * デプロイコントローラが CODE_DEPLOY の場合
+    #   * 二つのターゲットグループを指定する
+    #   * デプロイ中タスクセットの状態を PRIMARY のセットしターゲットグループと関連づける。置き換え用タスクセットを別のターゲットグループと関連づける。
+    # * awsvpc の場合はターゲットタイプは instance にできず ip にする必要がある。awsvpc では EC2 ではなく ENI に関連づけられるため
+   "loadBalancers": [
+      { 
+         "containerName": "string",
+         "containerPort": number,
+         "loadBalancerName": "string",
+         "targetGroupArn": "string"
+      }
+   ],
+   "networkConfiguration": { # awsvpc の場合のみ必要
+      "awsvpcConfiguration": { 
+         "assignPublicIp": "string",
+         "securityGroups": [ "string" ],
+         "subnets": [ "string" ]
+      }
+   },
+   "placementConstraints": [ 
+      { 
+         "expression": "string",
+         "type": "string"
+      }
+   ],
+   "placementStrategy": [ 
+      { 
+         "field": "string",
+         "type": "string"
+      }
+   ],
+   "platformVersion": "string",
+   "propagateTags": "string",
+   # * role
+   #   * ELB を使用し awsvpc ではない場合のみ指定が許可される
+   #   * サービスにリンクされたロールが存在する場合は、role で指定したロールは使用されずサービスにリンクされたロールが使用される
+   #   * パスを「/」以外にしている場合、ロールの ARN もしくはパス付きでロール名を指定(ロール名が bar でパスが /bar/ の場合は、/foo/bar) が必要
+   "role": "string",
+   "schedulingStrategy": "string",
+   "serviceConnectConfiguration": { 
+      "enabled": boolean,
+      "logConfiguration": { 
+         "logDriver": "string",
+         "options": { 
+            "string" : "string" 
+         },
+         "secretOptions": [ 
+            { 
+               "name": "string",
+               "valueFrom": "string"
+            }
+         ]
+      },
+      "namespace": "string",
+      "services": [ 
+         { 
+            "clientAliases": [ 
+               { 
+                  "dnsName": "string",
+                  "port": number
+               }
+            ],
+            "discoveryName": "string",
+            "ingressPortOverride": number,
+            "portName": "string"
+         }
+      ]
+   },
+   "serviceName": "string",
+   "serviceRegistries": [ 
+      { 
+         "containerName": "string",
+         "containerPort": number,
+         "port": number,
+         "registryArn": "string"
+      }
+   ],
+   "tags": [ 
+      { 
+         "key": "string",
+         "value": "string"
+      }
+   ],
+   "taskDefinition": "string"
+}
+```
+
+
+[DiscoverPollEndpoint](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_DiscoverPollEndpoint.html)
+
+```json
+{
+   "cluster": "string",
+   "containerInstance": "string"
+}
+```
+
+Response
+```json
+{
+   "endpoint": "string", # ECS Agent 用のエンドポイント
+   "serviceConnectEndpoint": "string", # Service Connect 設定を取得するためのエンドポイント
+   "telemetryEndpoint": "string" # ECS Agent 用の telemetry エンドポイント
+}
+```
+
+
+[PutAttributes](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_PutAttributes.html)
+
+```json
+{
+   "attributes": [ 
+      { 
+         "name": "string", # 属性名
+         "targetId": "string", # 対象の ARN
+         "targetType": "string", # container-instance
+         "value": "string" # 属性値
+      }
+   ],
+   "cluster": "string"
+}
+```
+
+
+[RegisterContainerInstance](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_RegisterContainerInstance.html)
+
+```json
+{
+   "attributes": [ 
+      { 
+         "name": "string",
+         "targetId": "string",
+         "targetType": "string",
+         "value": "string"
+      }
+   ],
+   "cluster": "string",
+   "containerInstanceArn": "string",
+   "instanceIdentityDocument": "string", # curl http://169.254.169.254/latest/dynamic/instance-identity/document/ から取得できる情報
+   "instanceIdentityDocumentSignature": "string", # http://169.254.169.254/latest/dynamic/instance-identity/signature/ から取得できる情報
+   "platformDevices": [ 
+      { 
+         "id": "string",
+         "type": "string" # GPU
+      }
+   ],
+   "tags": [ 
+      { 
+         "key": "string",
+         "value": "string"
+      }
+   ],
+   "totalResources": [ 
+      { 
+         "doubleValue": number,
+         "integerValue": number,
+         "longValue": number,
+         "name": "string", # CPU, MEMORY, PORTS, PORTS_UDP, or a user-defined resource.
+         "stringSetValue": [ "string" ],
+         "type": "string" #  INTEGER, DOUBLE, LONG, or STRINGSET
+      }
+   ],
+   "versionInfo": { 
+      "agentHash": "string", # The Git commit hash for the Amazon ECS container agent build on the amazon-ecs-agent  GitHub repository.
+      "agentVersion": "string",
+      "dockerVersion": "string"
+   }
+}
+```
+
+
+[RegisterTaskDefinition](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_RegisterTaskDefinition.html)
+
+**TODO**
+
+```json
+{
+   "containerDefinitions": [ 
+      { 
+         "command": [ "string" ],
+         "cpu": number,
+         "credentialSpecs": [ "string" ],
+         "dependsOn": [ 
+            { 
+               "condition": "string",
+               "containerName": "string"
+            }
+         ],
+         "disableNetworking": boolean,
+         "dnsSearchDomains": [ "string" ],
+         "dnsServers": [ "string" ],
+         "dockerLabels": { 
+            "string" : "string" 
+         },
+         "dockerSecurityOptions": [ "string" ],
+         "entryPoint": [ "string" ],
+         "environment": [ 
+            { 
+               "name": "string",
+               "value": "string"
+            }
+         ],
+         "environmentFiles": [ 
+            { 
+               "type": "string",
+               "value": "string"
+            }
+         ],
+         "essential": boolean,
+         "extraHosts": [ 
+            { 
+               "hostname": "string",
+               "ipAddress": "string"
+            }
+         ],
+         "firelensConfiguration": { 
+            "options": { 
+               "string" : "string" 
+            },
+            "type": "string"
+         },
+         "healthCheck": { 
+            "command": [ "string" ],
+            "interval": number,
+            "retries": number,
+            "startPeriod": number,
+            "timeout": number
+         },
+         "hostname": "string",
+         "image": "string",
+         "interactive": boolean,
+         "links": [ "string" ],
+         "linuxParameters": { 
+            "capabilities": { 
+               "add": [ "string" ],
+               "drop": [ "string" ]
+            },
+            "devices": [ 
+               { 
+                  "containerPath": "string",
+                  "hostPath": "string",
+                  "permissions": [ "string" ]
+               }
+            ],
+            "initProcessEnabled": boolean,
+            "maxSwap": number,
+            "sharedMemorySize": number,
+            "swappiness": number,
+            "tmpfs": [ 
+               { 
+                  "containerPath": "string",
+                  "mountOptions": [ "string" ],
+                  "size": number
+               }
+            ]
+         },
+         "logConfiguration": { 
+            "logDriver": "string",
+            "options": { 
+               "string" : "string" 
+            },
+            "secretOptions": [ 
+               { 
+                  "name": "string",
+                  "valueFrom": "string"
+               }
+            ]
+         },
+         "memory": number,
+         "memoryReservation": number,
+         "mountPoints": [ 
+            { 
+               "containerPath": "string",
+               "readOnly": boolean,
+               "sourceVolume": "string"
+            }
+         ],
+         "name": "string",
+         "portMappings": [ 
+            { 
+               "appProtocol": "string",
+               "containerPort": number,
+               "containerPortRange": "string",
+               "hostPort": number,
+               "name": "string",
+               "protocol": "string"
+            }
+         ],
+         "privileged": boolean,
+         "pseudoTerminal": boolean,
+         "readonlyRootFilesystem": boolean,
+         "repositoryCredentials": { 
+            "credentialsParameter": "string"
+         },
+         "resourceRequirements": [ 
+            { 
+               "type": "string",
+               "value": "string"
+            }
+         ],
+         "secrets": [ 
+            { 
+               "name": "string",
+               "valueFrom": "string"
+            }
+         ],
+         "startTimeout": number,
+         "stopTimeout": number,
+         "systemControls": [ 
+            { 
+               "namespace": "string",
+               "value": "string"
+            }
+         ],
+         "ulimits": [ 
+            { 
+               "hardLimit": number,
+               "name": "string",
+               "softLimit": number
+            }
+         ],
+         "user": "string",
+         "volumesFrom": [ 
+            { 
+               "readOnly": boolean,
+               "sourceContainer": "string"
+            }
+         ],
+         "workingDirectory": "string"
+      }
+   ],
+   "cpu": "string",
+   "ephemeralStorage": { 
+      "sizeInGiB": number
+   },
+   "executionRoleArn": "string",
+   "family": "string",
+   "inferenceAccelerators": [ 
+      { 
+         "deviceName": "string",
+         "deviceType": "string"
+      }
+   ],
+   "ipcMode": "string",
+   "memory": "string",
+   "networkMode": "string",
+   "pidMode": "string",
+   "placementConstraints": [ 
+      { 
+         "expression": "string",
+         "type": "string"
+      }
+   ],
+   "proxyConfiguration": { 
+      "containerName": "string",
+      "properties": [ 
+         { 
+            "name": "string",
+            "value": "string"
+         }
+      ],
+      "type": "string"
+   },
+   "requiresCompatibilities": [ "string" ],
+   "runtimePlatform": { 
+      "cpuArchitecture": "string",
+      "operatingSystemFamily": "string"
+   },
+   "tags": [ 
+      { 
+         "key": "string",
+         "value": "string"
+      }
+   ],
+   "taskRoleArn": "string",
+   "volumes": [ 
+      { 
+         "dockerVolumeConfiguration": { 
+            "autoprovision": boolean,
+            "driver": "string",
+            "driverOpts": { 
+               "string" : "string" 
+            },
+            "labels": { 
+               "string" : "string" 
+            },
+            "scope": "string"
+         },
+         "efsVolumeConfiguration": { 
+            "authorizationConfig": { 
+               "accessPointId": "string",
+               "iam": "string"
+            },
+            "fileSystemId": "string",
+            "rootDirectory": "string",
+            "transitEncryption": "string",
+            "transitEncryptionPort": number
+         },
+         "fsxWindowsFileServerVolumeConfiguration": { 
+            "authorizationConfig": { 
+               "credentialsParameter": "string",
+               "domain": "string"
+            },
+            "fileSystemId": "string",
+            "rootDirectory": "string"
+         },
+         "host": { 
+            "sourcePath": "string"
+         },
+         "name": "string"
+      }
+   ]
+}
+```
+
+
+[RunTask](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_RunTask.html)
+
+**TODO**
+
+```json
+{
+   "capacityProviderStrategy": [ 
+      { 
+         "base": number,
+         "capacityProvider": "string",
+         "weight": number
+      }
+   ],
+   "clientToken": "string",
+   "cluster": "string",
+   "count": number,
+   "enableECSManagedTags": boolean,
+   "enableExecuteCommand": boolean,
+   "group": "string",
+   "launchType": "string",
+   "networkConfiguration": { 
+      "awsvpcConfiguration": { 
+         "assignPublicIp": "string",
+         "securityGroups": [ "string" ],
+         "subnets": [ "string" ]
+      }
+   },
+   "overrides": { 
+      "containerOverrides": [ 
+         { 
+            "command": [ "string" ],
+            "cpu": number,
+            "environment": [ 
+               { 
+                  "name": "string",
+                  "value": "string"
+               }
+            ],
+            "environmentFiles": [ 
+               { 
+                  "type": "string",
+                  "value": "string"
+               }
+            ],
+            "memory": number,
+            "memoryReservation": number,
+            "name": "string",
+            "resourceRequirements": [ 
+               { 
+                  "type": "string",
+                  "value": "string"
+               }
+            ]
+         }
+      ],
+      "cpu": "string",
+      "ephemeralStorage": { 
+         "sizeInGiB": number
+      },
+      "executionRoleArn": "string",
+      "inferenceAcceleratorOverrides": [ 
+         { 
+            "deviceName": "string",
+            "deviceType": "string"
+         }
+      ],
+      "memory": "string",
+      "taskRoleArn": "string"
+   },
+   "placementConstraints": [ 
+      { 
+         "expression": "string",
+         "type": "string"
+      }
+   ],
+   "placementStrategy": [ 
+      { 
+         "field": "string",
+         "type": "string"
+      }
+   ],
+   "platformVersion": "string",
+   "propagateTags": "string",
+   "referenceId": "string",
+   "startedBy": "string",
+   "tags": [ 
+      { 
+         "key": "string",
+         "value": "string"
+      }
+   ],
+   "taskDefinition": "string"
+}
+```
+
+
+[SubmitAttachmentStateChanges](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_SubmitAttachmentStateChanges.html)
+
+ECS Agent によってのみ使用される API。
+
+```json
+{
+   "attachments": [ 
+      { 
+         "attachmentArn": "string",
+         "status": "string"
+      }
+   ],
+   "cluster": "string"
+}
+```
+
+
+[SubmitContainerStateChange](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_SubmitContainerStateChange.html)
+
+コンテナの状態変更を送信する API。
+
+```json
+{
+   "cluster": "string",
+   "containerName": "string",
+   "exitCode": number,
+   "networkBindings": [ 
+      { 
+         "bindIP": "string",
+         "containerPort": number,
+         "containerPortRange": "string",
+         "hostPort": number,
+         "hostPortRange": "string",
+         "protocol": "string"
+      }
+   ],
+   "reason": "string",
+   "runtimeId": "string",
+   "status": "string",
+   "task": "string"
+}
+```
+
+
+[SubmitTaskStateChange](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/API_SubmitTaskStateChange.html)
+
+```json
+{
+   "attachments": [ 
+      { 
+         "attachmentArn": "string",
+         "status": "string"
+      }
+   ],
+   "cluster": "string",
+   "containers": [ 
+      { 
+         "containerName": "string",
+         "exitCode": number,
+         "imageDigest": "string",
+         "networkBindings": [ 
+            { 
+               "bindIP": "string",
+               "containerPort": number,
+               "containerPortRange": "string",
+               "hostPort": number,
+               "hostPortRange": "string",
+               "protocol": "string"
+            }
+         ],
+         "reason": "string",
+         "runtimeId": "string",
+         "status": "string"
+      }
+   ],
+   "executionStoppedAt": number,
+   "managedAgents": [ 
+      { 
+         "containerName": "string",
+         "managedAgentName": "string",
+         "reason": "string",
+         "status": "string"
+      }
+   ],
+   "pullStartedAt": number,
+   "pullStoppedAt": number,
+   "reason": "string",
+   "status": "string",
+   "task": "string"
+}
+```
+
 
 
 ## Data Types

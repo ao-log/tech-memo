@@ -277,6 +277,15 @@ EC2 起動タイプに向いているワークロード
 
 ### Networking Models
 
+[Amazon EC2 インスタンスでホストされているタスクのタスクネットワーキング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-networking.html)
+
+* awsvpc を推奨
+* EC2 Windows は default, awsvpc のみサポート
+* default モードは Windows のみ
+  * Windows 上の Docker の組み込み仮想ネットワークを使用
+  * Windows の組み込み仮想ネットワークは nat Docker ネットワークドライバーを使用
+
+
 『ベストプラクティスガイド』の [ネットワークモードの選択](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/bestpracticesguide/networking-networkmode.html) も各ネットワークモードの参考になる。
 
 [awsvpc](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking-awsvpc.html)
@@ -651,7 +660,7 @@ EC2 起動タイプに向いているワークロード
 * managed termination protection
   * 使用する際 managed scaling が有効になっている必要がある。そうしないと managed termination protection は動作しない
   * 有効にすることでタスクが存在する EC2 インスタンスについてスケールインから保護することができる。Auto Scaling Group 側でもスケールインからのインスタンス保護の設定が有効になっている必要がある
-* **managed scaling を有効にすることで、タスク数に応じて ECS インスタンスがスケールする。**。Auto Scaling Group に自動作成されるスケーリングポリシーを変更、削除してはならない
+* **managed scaling を有効にすることで、タスク数に応じて ECS インスタンスがスケールする。**Auto Scaling Group に自動作成されるスケーリングポリシーを変更、削除してはならない
 * ウォームプールを使用可能
   * ユーザーデータで `ECS_WARM_POOLS_CHECK` を設定する
 
@@ -710,7 +719,7 @@ EC2 起動タイプに向いているワークロード
 * コンテナインスタンスには IAM ロールの設定が必要
 * ECS Optimized AMI の 20200430 以降は IMDSv2 がサポートされている
 * 各エンドポイントとの疎通性が必要
-* コンテナインスタンスを登録解除したとに別のクラスターに登録してはならない
+* コンテナインスタンスを登録解除したあとに別のクラスターに登録してはならない
 * 同じコンテナインスタンスを停止して、インスタンスタイプを変更することはできない
 * スポットインスタンスを使用する場合は、複数の AZ、混合インスタンスポリシーを使用する
 
@@ -1494,6 +1503,7 @@ aws ecs create-service \
 * NLB と awsvpc の組み合わせの場合、送信元 IP アドレスは NLB のプライベートアドレスとなる。よって、タスク側で NLB のプライベートアドレスを許可するしかないが、その場合は世界中からのアクセス可能な状態になる（NLB 側でセキュリティグループを設定できずフィルタリングできないため）
 * NLB の UDP は Linux プラットフォーム 1.4.0、もしくは Windows プラットフォーム 1.0.0 が対応
 * 登録解除の遅延よりもタスク定義の stopTimeout を長くすると良い
+* ホストポートは一時ポート範囲から動的に選択される
 
 
 [ロードバランサーの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-load-balancer.html)
@@ -1761,7 +1771,23 @@ curl --request PUT --header 'Content-Type: application/json' ${ECS_AGENT_URI}/ta
 * EC2 の場合、インスタンスロールに `ecs:StartTelemetrySession` が必要`
 * コンテナエージェント設定で `ECS_DISABLE_METRICS` を `true` にしている場合はメトリクスは収集されない
 * 名前空間: AWS/ECS
-* クラスター使用率には ACTIVE, DRAINIG 状態のコンテナインスタンス分が集計される。Fargate 起動タイプを含む場合は集計されない
+  * CPUReservation:
+    * ディメンション: `ClusterName` のみ。(CPU 予約量 ÷ コンテナインスタンスのリソース量)。EC2 起動タイプのみ
+  * CPUUtilization:
+    * ディメンション: `ClusterName`。(CPU 使用量 ÷ コンテナインスタンスのリソース量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される。EC2 起動タイプのみ
+    * ディメンション: `ClusterName`、`ServiceName`。(サービスに属している CPU ユニット数の使用量 ÷ サービスの CPU 予約量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される。EC2、Fargate 両方に対応
+  * MemoryReservation: CPUReservation の Memory 版
+  * MemoryUtilization: CPUUtilization の Memory 版
+* クラスター予約
+  * コンテナ定義の CPU, Memory, GPU の各コンテナの合計量が予約され、クラスターに登録されているリソース量の割合として計算される
+  * タスク定義で `memoryReservation` が指定されている場合はそちらを計算に使用する。ない場合は `memory` を使用
+  * メモリの合計サイズには tmpfs, sharedMemorySize のボリュームサイズも含まれている
+* クラスター使用率
+  * コンテナインスタンスのリソース量に対する、リソース使用量の割合として計算される
+* サービス使用率
+  * タスク定義で `memoryReservation` が指定されている場合はそちらを計算に使用する。ない場合は `memory` を使用
+  * 例えば 512 CPU ユニットを指定している場合、インスタンス上で 1 タスクのみ稼働している場合は 512 CPU ユニットを超えて実行できる。そのため CPUUtilization のメトリクスは 100 % を超えることがある
+  * メモリは `memory` を超えて使用することはできない。しかし、`memoryReservation` を超えた使用は可能
 
 
 ### Events
@@ -2121,6 +2147,28 @@ New-NetRoute -DestinationPrefix 169.254.169.254/32 -InterfaceIndex $ifIndex -Nex
     * com.amazonaws.region.ecs
 
 
+[Amazon ECR エンドポイントとクォータ](https://docs.aws.amazon.com/ja_jp/general/latest/gr/ecr.html)
+
+* ecr, api.ecr
+  * `CreateRepository`, `DescribeImages` などに使用される
+* Docker および OCI クライアントエンドポイント
+  * Docker の pull, push などに使用されるエンドポイント
+
+
+[Amazon ECR Public エンドポイントとクォータ](https://docs.aws.amazon.com/ja_jp/general/latest/gr/ecr-public.html)
+
+* ecr-public, api.ecr-public
+  * `CreateRepository`, `DescribeImages` などに使用される
+
+
+[Amazon ECS エンドポイントとクォータ](https://docs.aws.amazon.com/ja_jp/general/latest/gr/ecs-service.html)
+
+* ecs
+* ecs-sc
+  * Service Connect 用のエンドポイント
+
+
+
 ### Best Practices
 
 [セキュリティのベストプラクティス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-bestpractices.html)
@@ -2142,7 +2190,7 @@ New-NetRoute -DestinationPrefix 169.254.169.254/32 -InterfaceIndex $ifIndex -Nex
   * 有効期限は 6 時間で、コンテナエージェントによって自動的にローテーションされる
 * タスク実行ロール
   * イメージの取得先は ECR にしたほうがレート制限にかかりにくい
-  * Fargate　の場合はプライベートリポジトリはタスク定義のコンテナ定義内で `repositoryCredentials` により認証が必要
+  * Fargate の場合はプライベートリポジトリはタスク定義のコンテナ定義内で `repositoryCredentials` により認証が必要
 * 推奨事項
   * Amazon EC2 メタデータへのアクセスをブロックする
     * awsvpc: `ECS_AWSVPC_BLOCK_IMDS` を `true` に設定
@@ -2742,130 +2790,362 @@ $ docker inspect コンテナID
 
 ## References
 
-[Task definition parameters](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html)
+[Task definition parameters](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task_definition_parameters.html)
 
-**Family**
-
-* family: タスク定義名
-
-**requiresCompatibilities**
-
-* EC2 | FARGATE | EXTERNAL
-
-**Task Role**
-
-* taskRoleArn: タスク内のコンテナが利用可能な権限を設定するロール。(**EC2 のインスタンスプロファイルのようなもの**)
-
-**Task Execution Role**
-
-* executionRoleArn:
-  * タスクの実行に使用するロール（**ECR や CloudWatch Logs**）
-  * Windows ではコンテナエージェントの起動時に `-EnableTaskIAMRole` が必要
-
-**Network Mode**
-
-* networkMode: none, bridge, awsvpc, host がある
-  * none: 外部接続性を持たない。ポートマッピングも設定できない
-  * bridge: Docker ビルトインの仮想ネットワークを使用
-  * host: Docker ビルトインの仮想ネットワークをバイパスし、コンテナポートとホストポートを直接マッピングする
-    * ダイナミックポートマッピングは使用不可
-    * ルートユーザーを使用してコンテナを実行してはならない
-  * awsvpc: ENI にタスクが割り当てられる。Fargate の場合はこのモードになる
-  * default: 
-
-**Standard Container Definition Parameters**
-
-* name: コンテナに付ける名前
-* image: イメージの指定
-* memory: メモリ量(MiB)。指定量を超えて使用しようとした場合、コンテナは kill される。
-* memoryReservation: メモリ量のソフトリミット。
-* portMappings: コンテナとホストのポートのマッピング。
-  * containerPort: コンテナのポート。
-  * hostPort: ホストのポート。**無指定でかつコンテナポートが設定されている場合は、エフェメラルポートから割り当てる。**
-  * protocol: tcp or udp。
-
-**Advanced Container Definition Parameters**
-
-* healthCheck: タスクが手動起動された場合は、ヘルスチェック結果に関わらず継続稼働する。サービスから起動された場合は、unhealthy のタスクを終了し、新たなタスクを起動する。
-  * command: ヘルスチェックの判定に使用するコマンド。
-  * interval: 間隔。デフォルト 30 秒。5 〜 300 秒で設定可能。
-  * timeout: 失敗と判定するまで待つ時間。デフォルトは 5 秒。2 〜 60 秒で設定可能。
-  * retries: unhealthy と判定するまでにリトライする回数。デフォルトは 3 秒。1 〜 10 回で設定可能。
-  * startPeriod  コンテナ起動時にヘルスチェックを猶予する時間。
-* cpu: タスクが使用できる CPU。インスタンス上に複数タスクがある場合はこの設定値に基づいた比率となる。
-* gpu: GPU の個数。
-* essential: true に設定されている場合、このコンテナがダウンすると他のコンテナも停止させる。
-* entryPoint: Docker コンテナ起動時の Entrypoint にマップされる。
-* command: Docker コンテナ起動時の Cmd にマップされる。
-* workingDirectory: Docker コンテナ起動時の WorkingDir にマップされる。
-* environmentFiles: docker run オプションの --env-file にマップされる。S3 上のオブジェクトを指定する。Fargate 起動タイプでは使用不可。
-* environment: Docker コンテナ起動時の Env にマップされる。
-* secrets: シークレットマネージャ or SSM パラメータストアの ARN を指定。
-* disableNetworking: Docker コンテナ起動時の NetworkDisabled にマップされる。
-* links: network mode が bridge の場合のみ使用可。ポートマッピング無しでコンテナが相互に通信できるようになる。
-* hostname: hostname を設定できる。
-* dnsServers: DNS サーバを設定できる。
-* dnsSearchDomains: DNS の検索対象ドメインを設定できる。
-* extraHosts: /etc/hosts に追記される。
-* readonlyRootFilesystem: root ファイルシステムを read only に設定できる。
-* mountPoints: データボリュームをマウントできる。
-  * sourceVolume: マウントするボリューム名。
-  * containerPath: コンテナのマウントパス。
-  * readOnly: readonly でマウントするかどうか。
-* volumesFrom: 異なるコンテナからデータボリュームをマウントできる。
-* logConfiguration: ログに関する設定
-  * logDriver: "awslogs","fluentd","gelf","json-file","journald","logentries","splunk","syslog","awsfirelens" から設定可能。
-* privileged: コンテナに特権を与える。
-* user: コンテナ内で使用するユーザ名。
-* dockerSecurityOptions: SELinux, Apparmor 用のカスタムラベルを設定。
-* ulimits: ulimit でを設定。
-* dockerLabels: Docker コンテナ起動時の Labels にマップされる。
-
-**Other Container Definition Parameters**
-
-* linuxParameters: Linux パラメータの設定。
-* dependsOn: コンテナの依存関係を設定。
-* startTimeout: 依存関係の解決を行うまでに待機する時間。依存先のコンテナがタイムアウト秒数内に期待する状態にならない場合、ギブアップしコンテナを起動しない。
-* stopTimeout: コンテナ終了までに待機する時間。
-* systemControls: カーネルパラメータを設定。
-* interactive: true の場合、stdin or tty が割り当てられる。
-* pseudoTerminal: true の場合、TTY が割り当てられる。
-
-**Volumes**
-
-Docker volumes — Docker-managed volume でコンテナインスタンスの /var/lib/docker/volumes に作られるもの。EC2 起動タイプでのみサポートされる。
-
-**Bind mounts** — ホストマシンのファイル、ディレクトリをコンテナにマウントするもの。EC2 or Fargate 起動タイプでサポートされる。
-
-* name: ボリューム名。
-* host: ボリュームマウントを使用する際に設定。
-* dockerVolumeConfiguration: Docker Volumes を使用する際に設定。
-* efsVolumeConfiguration: EFS を使用する際に設定。
-
-**Task placement constraints**
-
-Fargate の場合はサポートされない。**Fargate の場合はデフォルトで spread across Availability Zones となる。**
-
-* expression: 制約に関する記述。Cluster query language で記述。
-* type: 制約のタイプ。
-
-**Launch types**
-
-* requiresCompatibilities: EC2 or FARGATE
-
-**Task size**
-
-* cpu: 1024 = 1 vcpu
-* memory: 1024 = 1 GB
-
-**Proxy configuration**
-
-* proxyConfiguration: App Mesh proxy の設定。
-
-**Other task definition parameters**
-
-* ipcMode: IPC resource namespace を使用。
-* pidMode: process namespace を使用。
+* ファミリー
+  * family: 複数バージョンのタスク定義の名前のようなもの
+* 起動タイプ
+  * requiresCompatibilities: EC2 | FARGATE | EXTERNAL
+* タスクロール
+  * taskRoleArn: Windows ではコンテナインスタンス起動時に `-EnableTaskIAMRole` が必要
+* タスク実行ロール
+  * executionRoleArn: タスクの実行に使用するロール（ECR, CloudWatch Logs など）
+* ネットワークモード
+  * networkMode:
+    * Linux のデフォルトは bridge。none, bridge, awsvpc, host から選択可能
+    * Windows のデフォルトは default。Windows では default, awsvpc のみから選択可能
+    * none: 外部接続性を持たない。コンテナ定義でポートマッピングを設定できない
+    * bridge: Docker ビルトインの仮想ネットワークを使用
+    * host: Docker ビルトインの仮想ネットワークをバイパスし、コンテナポートとホストポートを直接マッピングする
+      * ダイナミックポートマッピングは使用不可
+      * hostPort の指定が必要
+      * ルートユーザーを使用してコンテナを実行してはならない
+    * awsvpc: ENI がタスクに割り当てられる
+      * Fargate の場合はこのモードになる
+      * NetworkConfiguration の指定が必要
+    * default: Docker ビルトインの仮想ネットワークを使用。nat Docker ネットワークドライバーが使用される
+* ランタイムプラットフォーム
+  * operatingSystemFamily
+    * Fargate では必須。LINUX, WINDOWS_SERVER_2019_FULL, WINDOWS_SERVER_2019_CORE, WINDOWS_SERVER_2022_FULL, WINDOWS_SERVER_2022_CORE
+    * EC2 の場合は LINUX, WINDOWS_SERVER_2022_CORE, WINDOWS_SERVER_2022_FULL, WINDOWS_SERVER_2019_FULL, WINDOWS_SERVER_2019_CORE, WINDOWS_SERVER_2016_FULL, WINDOWS_SERVER_2004_CORE, WINDOWS_SERVER_20H2_CORE
+    * サービスの platformFamily 値と一致する必要がある
+  * cpuArchitecture: X86_64 or ARM64
+    * Fargate Spot, Windows は対応。[考慮事項](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/userguide/ecs-arm64.html#ecs-arm64-considerations)
+* タスクサイズ
+  * EC2 では省略可能。Fargate では必須
+  * Windows の場合は無視されるため、コンテナレベルでの指定を推奨
+  * cpu
+    * EC2, 外部インスタンスで許可されている値は 0.25 〜 10 vCPU の間
+    * Fargate の場合は、表に指定されている CPU, Memory の組のみ指定可能
+  * memory
+    * ハードリミット
+* コンテナ定義
+  * name: コンテナ名
+  * image
+    * repository-url/image:tag または repository-url/image@digest
+  * memory
+    * ハードリミット
+    * Fargate の場合はオプション
+    * EC2 の場合:
+      * タスクレベルもしくはコンテナレベルのどちらかの指定が必要
+      * `memoryReservation` 未指定時は `memory` での指定量をスケジューリング時に使用する
+    * Docker デーモン 20.10.0 以降によって、コンテナ用として 6 MiB 以上のメモリが予約されるため、6 MiB 以下は指定しないようにする
+  * memoryReservation
+    * Windows ではサポートされない
+  * portMappings
+    * awsvpc では `hostPort` は空もしくは `containerPort` と同じ値にする
+    * appProtocol: Service Connect で使用。"HTTP" | "HTTP2" | "GRPC"
+    * containerPort
+      * Windows では 3150 は指定不可
+      * EC2 の場合 `hostPort` 未指定時は動的ポートマッピングになる
+    * containerPortRange
+      * 動的ポートマッピングのホストポート範囲にバインドされるコンテナのポート番号の範囲
+      * bridge, awsvpc のみ。EC2, Fargate の両方に対応
+      * 最大 100 個のポートレンジまで指定可能
+      * ポートの数が多い場合は、Docker デーモン設定ファイルの docker-proxy をオフにすることを推奨
+    * hostPortRange
+      * Docker によって割り当てられる
+    * hostPort
+      * Fargate　の場合は空もしくは `containerPort` と同じ値にする
+      * EC2 の場合、未指定時は動的ポートマッピングになる
+      * 一時ポート範囲は `/proc/sys/net/ipv4/ip_local_port_range` にリストされている
+      * エフェメラルポート範囲では、ホストポートを指定しないこと。自動割り当て用に予約済みのため
+      * デフォルトの予約済みポートは、SSH 用の 22、Docker ポートの 2375 および 2376、Amazon ECS コンテナエージェントポートの 51678-51680
+      * コンテナインスタンスには、デフォルトの予約済みポートを含めて、一度に最大 100 個の予約済みポートを割り当てられる
+      * name: Service Connect で使用
+      * protocol: tcp or udp。デフォルトは tcp
+  * repositoryCredentials
+    * credentialsParameter: プライベートリポジトリの認証情報が含まれているシークレットの Amazon リソースネーム (ARN)
+  * healthCheck
+    * コンテナイメージに組み込まれた HEALTHCHECK については ECS コンテナエージェントはモニタリングしない
+    * コンテナの `healthStatus` は `HEALTHY`, `UNHEALTHY`, `UNKNOWN` のいずれかとなる
+    * タスクの `healthStatus`
+      * UNHEALTHY — 1 つ以上の必須コンテナのヘルスチェックが失敗
+      * UNKNOWN — タスク内で実行されている必須コンテナはすべて UNKNOWN 状態。他の必須コンテナは UNHEALTHY 状態ではない
+      * HEALTHY — タスク内のすべての必須コンテナがヘルスチェックを正常に完了
+    * スタンドアローンのタスクは `healthStatus` にかかわらず稼働を続行する
+    * コンテナエージェントが ECS サービスに接続できない場合は、サービスはコンテナを `UNHEALTHY` として報告する
+    * command: stderr が出力されない終了コード 0 は成功。0 以外の終了コードは失敗
+    * interval: 間隔
+    * timeout: タイムアウト
+    * retries: デフォルトは 3 回。1 〜 10 回を指定できる
+    * startPeriod: コンテナ起動時にブートストラップのための時間を提供。デフォルトは無効。0 〜 300 秒を指定可能
+  * cpu
+    * `CpuShares` にマップされる。Agent バージョンが 1.2.0 以上の場合は 0, 1, null は 2 CPU share として渡される
+    * Fargate では省略可能
+    * Windows では絶対クォータとして強制される。0, null を指定した場合は Docker に 0 として渡されるが 1 CPU の 1 % と解釈される
+  * gpu
+    * GPU 数を指定
+    * Fargate, Windows では未サポート
+  * Elastic Inference accelerator
+    * value は deviceName と一致
+    * Fargate, Windows では未サポート
+  * essential
+    * true になっているコンテナが停止するとタスクも停止する
+  * entryPoint
+    * `Entrypoint` にマップされる
+  * command
+    * `Cmd` にマップされる
+  * workingDirectory
+    * `WorkingDir` にマップされる
+  * environmentFiles
+    * 最大 10 ファイルを指定可能
+    * ファイルの拡張子は .env である必要がある
+    * Windows では未サポート
+    * コンテナ定義にて環境変数が設定されている場合はそちらが優先される
+    * value
+      * S3 オブジェクトの ARN
+    * type
+      * s3 のみ
+  * environment
+    * name
+    * value
+  * secrets
+    * name
+    * valueFrom
+      * Secrets Manager の ARN もしくは SSM Parameter Store の ARN
+  * disableNetworking
+    * `NetworkDisabled` にマップされる
+  * links
+    * bridge の場合のみサポート
+    * awsvpc, Windows は未サポート
+    * `"links": ["name:internalName", ...]` のように指定
+  * hostname
+    * `Hostname` にマップされる
+    * awsvpc は未サポート
+  * dnsServers
+    * `Dns` にマップされる
+    * awsvpc, Windows は未サポート
+  * dnsSearchDomains
+    * `DnsSearch` にマップされる
+    * DNS 検索ドメインのリスト
+    * awsvpc, Windows は未サポート
+  * extraHosts
+    * `ExtraHosts` にマップされる
+    * `/etc/hosts` にホスト、IP アドレスの組みが追加される
+    * awsvpc, Windows は未サポート
+    * hostname
+      * ホスト名
+    * ipAddress
+      * IP アドレス
+  * readonlyRootFilesystem
+    * `ReadonlyRootfs` にマップされる
+    * ルートファイルシステムが読み取り専用でマウントされる
+    * Windows は未サポート
+  * mountPoints
+    * `Volumes` にマップされる
+    * Windows コンテナは $env:ProgramData と同じドライブに全部のディレクトリがマウントされる
+    * sourceVolume
+      * ボリューム名
+    * containerPath
+      * マウントするパス
+    * readOnly
+      * デフォルトは `false`
+  * volumesFrom
+    * 別のコンテナからマウントするデータボリューム
+    * sourceContainer
+      * ソースコンテナ名
+    * readOnly
+      * デフォルトは `false`
+  * logConfiguration
+    * `LogConfig` にマップされる
+    * EC2 起動タイプの場合 `ECS_AVAILABLE_LOGGING_DRIVERS` にて使用可能なログドライバーを登録する必要がある
+    * logDriver
+      * awslogs など
+      * Fargate の場合は awslogs、splunk、awsfirelens のみ
+    * options
+      * FireLens の場合は log-driver-buffer-limit を指定可能
+    * secretOptions
+      * ログ設定に渡すシークレット
+      * name
+        * 環境変数として渡す値
+      * valueFrom
+  * firelensConfiguration
+    * options
+      * `"enable-ecs-log-metadata": "true"` のような設定
+    * type
+      * fluentd | fluentbit
+  * credentialSpecs
+    * CredSpec ファイルの参照先
+    * MyARN の箇所を ARN に置き換えて指定
+    * S3 または SSM の ARN を指定
+    * credentialspecdomainless:MyARN
+      * 各タスクは異なるドメインに参加可能
+    * credentialspec:MyARN
+      * コンテナインスタンスをドメインに参加させる必要がある
+  * privileged
+    * ホストコンテナインスタンスに対する昇格されたアクセス権限が付与される
+    * セキュリティ上、使用は推奨されない
+    * `Privileged` にマップされる
+  * user
+    * `User` にマップされる
+    * `host` ネットワークモードの場合は root (UID 0)での実行は推奨されない
+    * Windows では未サポート
+  * dockerSecurityOptions
+    * "no-new-privileges" | "apparmor:PROFILE" | "label:value" | "credentialspec:CredentialSpecFilePath"
+    * Fargate では未サポート
+    * Linux では SELinux, AppArmor のカスタムラベルを参照できる
+    * Active Directory 認証用のコンテナを設定する認証情報仕様ファイルを参照できる
+    * コンテナエージェント側で `ECS_SELINUX_CAPABLE=true` もしくは `ECS_APPARMOR_CAPABLE=true` の設定が必要
+  * ulimitx
+    * `Ulimits` にマップされる
+    * Fargate では nofile のみ指定可能
+    * name
+      * "core" | "cpu" | "data" | "fsize" | "locks" | "memlock" | "msgqueue" | "nice" | "nofile" | "nproc" | "rss" | "rtprio" | "rttime" | "sigpending" | "stack"
+    * hardLimit
+    * softLimit
+  * dockerLabels
+    * `Labels` にマップされる
+    * コンテナに追加するラベルのキー/値のマップ
+  * linuxParameters
+    * Windows では未サポート
+    * Fargate では `SYS_PTRACE` の追加のみ
+    * capabilities
+      * add
+      * drop
+  * devices
+    * コンテナに公開するホストデバイス
+    * Fargate, Windows は未サポート
+    * hostPath
+    * containerPath
+    * permissions
+      * read | write | mknod
+  * initProcessEnabled
+    * PID 1 として使われるべき init プロセスを指定できる
+    * [Docker Reference](https://docs.docker.jp/engine/reference/run.html#init)
+  * maxSwap
+    * 0 を指定した場合はスワップは使用されない
+    * 省略時はコンテナインスタンスのスワップ設定を使用
+    * Fargate では未サポート
+  * sharedMemorySize
+    * /dev/shm ボリュームのサイズ値 (MiB) 
+    * Fargate では未サポート
+  * swappiness
+    * スワップの動作を調整するパラメータ
+    * Amazon Linux 2023 ではサポートされない
+    * 0 の場合は必要な場合を除きスワップされない
+    * 100 の場合は頻繁にスワップが行われる
+    * 未指定時のデフォルトは 60
+  * tmpfs
+    * Fargate では未サポート
+    * containerPath
+    * mountOptions
+    * size
+  * dependsOn
+    * containerName
+    * condition
+      * START
+        * 依存元コンテナが開始していること
+      * COMPLETE
+        * 依存元コンテナが終了していること。初期化スクリプトコンテナなどのユースケース
+      * SUCCESS
+        * COMPLETE に加えて exit code 0 で終了していること
+      * HEALTHY
+        * 依存元コンテナがヘルスチェックに成功していること
+  * startTimeout
+    * 依存元のコンテナが startTimeout の間に目標のステータスにならない場合、コンテナを開始しない
+  * stopTimeout
+    * コンテナが終了しなかった場合に SIGKILL 発行までの時間
+    * 未指定時、コンテナエージェント側で `ECS_CONTAINER_STOP_TIMEOUT` が設定されている場合はそちらを使用。コンテナエージェント側でも設定されていない場合は 30 秒
+  * systemControls
+    * Windows では未サポート
+    * awsvpc, host の場合、かつ複数コンテナを含むタスクの場合は非推奨
+      * awsvpc: 最後に起動したコンテナの設定が全コンテナで使用される
+      * host: ネットワーク名前空間の systemControls はサポートされない
+    * IPC リソース名前空間を設定している場合
+      * host IPC モード: IPC 名前空間の systemControls はサポートされない
+      * task IPC モード: IPC 名前空間の systemControls 値がタスク内のすべてのコンテナに適用される
+    * namespace
+      * "kernel.msgmax" | "kernel.msgmnb" | "kernel.msgmni" | "kernel.sem" | "kernel.shmall" | "kernel.shmmax" | "kernel.shmmni" | "kernel.shm_rmid_forced", and Sysctls that start with "fs.mqueue.*"
+    * value
+  * interactive
+    * `OpenStdin` にマップされる
+    * `true` の場合、stdin または tty を割り当てる必要があるコンテナ化されたアプリケーションをデプロイ可能
+  * pseudoTerminal
+    * `true` の場合、TTY が割り当てられる
+* Elastic Inference accelerator name
+  * deviceName
+  * deviceType
+* タスク配置制約
+  * Fargate では未サポート
+  * expression
+    * クラスタークエリ言語
+  * type
+    * memberOf を使用
+* proxyConfiguration
+  * App Mesh 用設定
+  * Windows では未サポート
+  * type
+    * APPMESH のみ
+  * containerName
+    * App Mesh プロキシとして使用するコンテナ名
+  * properties
+    * IgnoredUID
+    * IgnoredGID
+    * AppPorts
+    * ProxyIngressPort
+    * ProxyEgressPort
+    * EgressIgnoredPorts
+    * EgressIgnoredIPs
+  * name
+  * value
+* volumes
+  * 使用できるボリュームの種類はバインドマウント、Docker ボリューム(`/var/lib/docker/volumes` に作成される)
+  * name
+  * host
+    * Windows コンテナは $env:ProgramData と同じドライブに全部のディレクトリをマウントできる
+    * sourcePath
+  * dockerVolumeConfiguration
+    * scope
+      * task | shared
+    * autoprovision
+    * driver
+    * driverOpts
+    * labels
+  * efsVolumeConfiguration
+    * fileSystemId
+    * rootDirectory
+    * transitEncryption
+      * ENABLED | DISABLED
+    * transitEncryptionPort
+    * authorizationConfig
+      * accessPointId
+      * iam
+        * タスクロールの使用可否を設定
+        * 使用する場合は transitEncryption の有効化が必要
+        * ENABLED | DISABLED
+  * FSxWindowsFileServerVolumeConfiguration
+    * fileSystemId
+    * rootDirectory
+    * authorizationConfig
+      * credentialsParameter
+      * domain
+* Tags
+  * key
+  * value
+* ephemeralStorage
+  * Fargate におけるエフェメラルストレージサイズの指定
+* ipcMode
+  * Fargate, Windows は未サポート
+  * host | task | none
+  * host: ホストと同じ IPC リソースを共有
+  * task: タスク内のコンテナ間で IPC リソースを共有
+  * none: 各コンテナの IPC リソースはプライベートになる
+* pidMode
+  * Windows では未サポート
+  * host | task
+  * Fargate では task のみ
+  * サイドカーのモニタリングのようなユースケース
 
 
 

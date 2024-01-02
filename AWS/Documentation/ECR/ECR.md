@@ -79,6 +79,7 @@ curl -i -H "Authorization: Basic $TOKEN" https://aws_account_id.dkr.ecr.region.a
 
 [プライベートレジストリの許可](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/registry-permissions.html)
 
+* デフォルトでは自アカウントのクロスリージョンレプリケーションの権限はある。クロスアカウント時には設定が必要
 * ecr:ReplicateImage: クロスアカウントレプリケーションの許可設定
 * ecr:BatchImportUpstreamImage: Pull through cache のアクセス許可を付与
 * ecr:CreateRepository: リポジトリ作成を許可
@@ -100,6 +101,7 @@ curl -i -H "Authorization: Basic $TOKEN" https://aws_account_id.dkr.ecr.region.a
 
 * IAM ポリシーもしくはリポジトリポリシーのどちらかで許可が設定されている場合は、許可される。どちらか片方で拒否が設定されている場合は、拒否される
 * プル、プッシュを行う前に `ecr:GetAuthorizationToken` が必要
+* `ecr:GetAuthorizationToken` は IAM ポリシー側での許可が必要
 
 
 [リポジトリ ポリシーの例](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/repository-policy-examples.html)
@@ -199,15 +201,46 @@ notation verify 111122223333.dkr.ecr.region.amazonaws.com/curl@SHA256_digest
 
 * リモートパブリックレジストリ内のリポジトリのキャッシュをサポート
 * キャッシュイメージの URI からプルすると、リモートリポジトリを 24 時間に 1 回までチェックしキャッシュされたイメージが最新バージョンか確認
+* アップストリームからイメージをプルできない状況では、キャッシュが利用される
 * マルチアーキテクチャイメージをプルすると、マニフェストリストとマニフェストリストで参照されている各イメージがプルされる。特定のアーキテクチャのみをプルする場合、アーキテクチャに関連付けられたイメージダイジェストまたはタグを使用してイメージをプルすること
 * サービスにリンクされた IAM ロールを使用。キャッシュされたイメージのリポジトリを作成し、キャッシュされたイメージをプッシュするために必要なアクセス許可を提供
 * レジストリポリシーにより権限を細かく制御可能
 * タグのイミュータビリティを手動でオンにした場合、キャッシュされたイメージを更新できない場合がある
 * 初回のプルではインターネットへのアウトバウンドの疎通性が必要
 * 必要な IAM 許可
-  * ecr:CreatePullThroughCacheRule: プルスルーキャッシュルールを作成するアクセス許可
-  * ecr:BatchImportUpstreamImage: 外部イメージを取得し、プライベートレジストリにインポートするアクセス許可
-  * ecr:CreateRepository: リポジトリを作成するアクセス許可
+  * `ecr:CreatePullThroughCacheRule`: プルスルーキャッシュルールを作成するアクセス許可
+  * `ecr:BatchImportUpstreamImage`: 外部イメージを取得し、プライベートレジストリにインポートするアクセス許可
+  * `ecr:CreateRepository`: リポジトリを作成するアクセス許可
+
+
+[プルスルーキャッシュルールの作成](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/pull-through-cache-creating-rule.html)
+
+* 認証情報が必要な場合は、Secrets Manager にシークレットを格納し、ARN を指定する
+
+
+[アップストリームリポジトリの認証情報を AWS Secrets Manager シークレットに保存する](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/pull-through-cache-creating-secret.html)
+
+* シークレット名は `ecr-pullthroughcache/` をプレフィックスとする必要がある
+* コンテナレジストリごとに手順が用意されている
+
+
+#### Delete image
+
+[イメージの削除](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/delete_image.html)
+
+* batch-delete-image により削除する
+* 次のコマンドによりタグを削除する。最後のタグ削除時にイメージが削除される
+```
+aws ecr batch-delete-image \
+     --repository-name my-repo \
+     --image-ids imageTag=tag1 imageTag=tag2
+```
+* イメージダイジェストを指定した場合、イメージとタグは削除される
+```
+aws ecr batch-delete-image \
+     --repository-name my-repo \
+     --image-ids imageDigest=sha256:4f70ef7a4d29e8c0c302b13e25962d8f7a0bd304EXAMPLE
+```
 
 
 #### Retag
@@ -236,6 +269,7 @@ aws ecr put-image --repository-name amazonlinux --image-tag 2017.03 --image-mani
 * リポジトリ設定は複製されない
 * イミュータブル性が有効になっている場合、イメージのタグづけが解除される可能性がある
 * フィルター設定により複製対象を絞り込むことが可能
+* AWS パーティション間ではレプリケーション不可。us-west-2 のリポジトリは cn-north-1 にレプリケートできない
 
 
 [レプリケーションステータスの表示](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/replication-status.html)
@@ -254,7 +288,10 @@ aws ecr describe-image-replication-status \
 [ライフサイクルポリシー](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/LifecyclePolicies.html)
 
 * イメージのクリーンアップの自動化方法を定義できる
-* リアルタイムに削除されるわけではなく、24 時間以内にイメージが expire される
+* リアルタイムに削除されるわけではなく、24 時間以内にイメージが expire となる
+* tagPrefixList で複数タグが指定された場合は、and 条件。or ではない
+* imageCountMoreThan では pushed_at_time 順にイメージを並べ、指定したカウントよりも大きいイメージは古い順に expire となる
+* より優先度の高いルールにて識別対象となったイメージは削除対象から除外される
 * 日数、世代数などの条件で設定可能。パラメータは以下の通り
   * rulePriority: 数値が低いものから評価していく
   * description
@@ -266,6 +303,38 @@ aws ecr describe-image-replication-status \
     * countNumber: imageCountMoreThan の場合は世代数。sinceImagePushed の場合はイメージの最大期限
   * action
     * type: expire
+
+
+[ライフサイクルポリシーの例](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/lifecycle_policy_examples.html)
+
+以下設定の場合、タグづけされていないイメージを 1 個だけ保持し 残りは削除する。もっとも新しいもののみが残る
+```json
+            "selection": {
+                "tagStatus": "untagged",
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
+            },
+```
+
+以下設定の場合、`tagPrefixList` は and 条件。よって、片方のタグのみ指定されたイメージは削除対象とならない
+```json
+            "selection": {
+                "tagStatus": "tagged",
+                "tagPrefixList": ["alpha", "beta"],
+                "countType": "sinceImagePushed",
+                "countNumber": 5,
+                "countUnit": "days"
+            },
+```
+
+以下設定の場合でも、より高いルールで評価済みのイメージについては削除対象とならない。残りのイメージから削除対象を決める
+```json
+            "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
+            },
+```
 
 
 #### Image tag mutability
@@ -283,11 +352,14 @@ aws ecr describe-image-replication-status \
   * 新しい脆弱性が発生するとスキャンされる
   * OS のほかアプリケーションパッケージもスキャン対象
   * 最初に有効化した際は過去 30 日分のイメージがスキャン対象になる
-  * フィルターと一致しないリポジトリはスキャンされない
+  * フィルター
+    * 継続スキャン、プッシュ時にスキャン、それぞれについて別のフィルターを設定できる
+    * 一致しないリポジトリは、スキャンが無効に設定される
   * 継続スキャン、プッシュ時にスキャンの設定が可能
     * 継続スキャンではスキャン期間を設定可能。デフォルトは Lifetime だが、180 day, 30 day に設定することも可能
   * 手動スキャンはできない
   * スキャン結果はイベントとして発行される
+  * Amazon Inspector サービスにリンクされた IAM ロールが使用される。拡張スキャン有効時に Inspector によって自動的に作成される
 * ベーシックスキャン
   * オープンソースの Clair プロジェクトの CVE データベースを使用
   * プッシュ時にスキャンするほか、手動スキャンも設定可能。手動スキャンは 1 日 1 回のみ
@@ -309,8 +381,8 @@ aws ecr describe-image-replication-status \
 [Amazon ECS での Amazon ECR イメージの使用](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/ECR_on_ECS.html)
 
 * 必要なポリシー
-  * EC2, 外部インスタンスの場合: インスタンスロールに AmazonEC2ContainerServiceforEC2Role
-  * Fargate の場合: タスク実行ロールに AmazonECSTaskExecutionRolePolicy
+  * EC2, 外部インスタンスの場合: インスタンスロールに [AmazonEC2ContainerServiceforEC2Role](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonEC2ContainerServiceforEC2Role)
+  * Fargate の場合: タスク実行ロールに [AmazonECSTaskExecutionRolePolicy](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonECSTaskExecutionRolePolicy)
 
 
 [Amazon EKS での Amazon ECR イメージの使用](https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/ECR_on_EKS.html)
