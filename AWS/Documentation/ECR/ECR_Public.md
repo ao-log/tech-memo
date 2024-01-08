@@ -8,6 +8,20 @@
 ```
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 
+// repositorycatalogdata.json
+{
+    "description": "This is a test repo for an Amazon ECR tutorial.",
+    "architectures": [
+        "x86"
+    ],
+    "operatingSystems": [
+        "Linux"
+    ],
+    "logoImageBlob": "$(cat myrepoimage.png |base64 -w 0)",
+    "aboutText": "This repository is used as a tutorial only.",
+    "usageText": "This repository is not for public use."
+}
+
 aws ecr-public create-repository \
      --repository-name ecr-tutorial \
      --catalog-data file://repositorycatalogdata.json \

@@ -169,7 +169,7 @@ export class HelloEcsStack extends cdk.Stack {
   * Application logging
     * `awslogs` ログドライバーなどによりログ送信できる
 * Amazon ECS task execution IAM role
-  * ECR からのイメージプル、CloudWatch Logs のロググループ作成などの使用される
+  * ECR からのイメージプル、CloudWatch Logs のロググループ作成などに使用される
 * Task storage
   * EFS がサポートされている
   * エフェメラルストレージをバインドマウント可能
@@ -288,7 +288,7 @@ EC2 起動タイプに向いているワークロード
 
 『ベストプラクティスガイド』の [ネットワークモードの選択](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/bestpracticesguide/networking-networkmode.html) も各ネットワークモードの参考になる。
 
-[awsvpc](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking-awsvpc.html)
+[awsvpc](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-networking-awsvpc.html)
 
 * タスクごとに 1 つの ENI が割り当てられる。VPC フローログに記録される
 * 同一タスク内のコンテナは localhost 経由で通信できる
@@ -298,11 +298,12 @@ EC2 起動タイプに向いているワークロード
 * サービスにリンクされたロールが必要
 * インスタンスタイプごとに ENI 数のクォータがある。プライマリネットワークインタフェースでも 1 個消費される点にも注意。`awsvpcTrunking` を enabled に設定している場合はより大きな数の ENI をアタッチできる
 * タスク ENI にパブリック IP アドレスが付与されない。よって、NAT Gateway もしくは VPC エンドポイントを使用する必要がある
-* タスク定義内のコンテナが開始される前に、各タスクに Amazon ECS コンテナエージェントによって追加の pause コンテナが作成される。次に、amazon-ecs-cni-plugins CNI プラグインを実行して pause コンテナのネットワーク名前空間が設定される。その後、エージェントによってタスク内の残りのコンテナが開始されるため、pause コンテナのネットワークスタックが共有される。つまり、タスク内のすべてのコンテナは ENI の IP アドレスによってアドレス可能であり、localhost インターフェイス経由で相互に通信できるようになる。
+* インスタンスの属性に `ecs.capability.task-eni` が設定されている必要がある
+* タスク定義内のコンテナが開始される前に、各タスクに Amazon ECS コンテナエージェントによって追加の pause コンテナが作成される。次に、`amazon-ecs-cni-plugins` CNI プラグインを実行して pause コンテナのネットワーク名前空間が設定される。その後、エージェントによってタスク内の残りのコンテナが開始されるため、pause コンテナのネットワークスタックが共有される。つまり、タスク内のすべてのコンテナは ENI の IP アドレスによってアドレス可能であり、localhost インターフェイス経由で相互に通信できるようになる。
 * ELB サポートは ALB, NLB のみ。CLB はサポートされない。ターゲットのタイプは `ip` にする必要がある
 * デュアルスタックモード
- * アカウント設定の `dualStackIPv6` を enabled にしておく必要がある
- * VPC, サブネットが IPv6 で構成されている必要がある
+  * アカウント設定の `dualStackIPv6` を enabled にしておく必要がある
+  * VPC, サブネットが IPv6 で構成されている必要がある
 
 
 [host](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/networking-networkmode-host.html)
@@ -577,12 +578,20 @@ EC2 起動タイプに向いているワークロード
 [コンテナへの環境変数の受け渡し](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/taskdef-envfiles.html)
 
 * `containerDefinitions.environmentFiles` にて S3 上のファイルを指定可能。ファイルの拡張子は .env である必要がある
+* タスク実行ロールにて S3 の読み取り権限が必要
 
 
 [Secrets Manager の使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/secrets-app-secrets-manager.html)
 
 
 [AWS Systems Manager パラメータストアの使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/secrets-app-ssm-paramstore.html)
+
+
+[環境変数経由でシークレットを取得する - Secrets Manager の使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html)
+
+* Windows の場合は `ECS_ENABLE_AWSLOGS_EXECUTIONROLE_OVERRIDE` 環境変数の設定が必要
+* タスク実行ロール側に Secrets Manager の権限が必要
+
 
 
 ### Example
@@ -653,10 +662,11 @@ EC2 起動タイプに向いているワークロード
 * FARGATE_SPOT は Windows では未サポート。Linux でも ARM64 の場合は未サポート
 
 
-[Auto Scaling group capacity providers](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/asg-capacity-providers.html)
+[Auto Scaling group capacity providers](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/asg-capacity-providers.html)
 
 * 空の Auto Scaling グループの作成を推奨。既存の Auto Scaling グループの場合、起動済みのインスタンスが正常にキャパシティープロバイダーに登録されないことがある
 * インスタンスの重みづけは未サポート
+* スケールアウトしない場合は `PROVISIONING` 状態から遷移しない
 * managed termination protection
   * 使用する際 managed scaling が有効になっている必要がある。そうしないと managed termination protection は動作しない
   * 有効にすることでタスクが存在する EC2 インスタンスについてスケールインから保護することができる。Auto Scaling Group 側でもスケールインからのインスタンス保護の設定が有効になっている必要がある
@@ -673,6 +683,8 @@ EC2 起動タイプに向いているワークロード
   * 計算式: CapacityProviderReservation = (number of instances needed) / (number of running instances) x 100
   * `CapacityProviderReservation` > `targetCapacity` の場合にスケールアウトする
   * `CapacityProviderReservation` < `targetCapacity` の場合にスケールインする。終了するインスタンスは Auto Scaling Group の終了ポリシーにより決定される
+  * スケールアウト中は `PENDING` 状態となる
+  * ASG のインスタンスタイプのサイズよりもタスクのサイズが大きい場合には `PENDING` 状態となる
 * 考慮事項
   * スケーリングポリシーを変更、追加してはならない
   * スケーリングにはサービスにリンクされたロール `AWSServiceRoleForECS` を使用する
@@ -1452,6 +1464,7 @@ aws ecs create-service \
      ...
      --deployment-configuration "alarms={alarmNames=[alarm1Name,alarm2Name],enable=true,rollback=true}" \
 ```
+* 新しいデプロイが開始されるとロールアウトの状態は IN_PROGRESS 状態から始まる。サービスが定常状態になりベイク時間が完了すると、ロールアウトの状態は COMPLETED に移行する
 * ALARM 状態になった場合は、デプロイは FAILED になり、新規タスクは起動しなくなる
 * アラームを使用するデプロイが失敗した場合にもイベントが送信される。reason フィールドにはロールバックのためのデプロイが開始されたことが示される
 * サーキットブレーカー、CloudWatch アラームのどちらかで基準が満たされるとデプロイの失敗となる。その場合は基準を満たした側のロールバック設定を参照し、ロールバックするかどうかを決定する
@@ -1465,9 +1478,15 @@ aws ecs create-service \
 * CodeDeply の Blue/Green Deployment の考慮事項
   * デプロイ時に Green のタスクセットを作成する。テストトラフィックを Green のタスクセットに ModifyListener したあと、本番用トラフィックを Blue のタスクセットから Green のタスクセットに ModifyListener する
   * トラフィックの移行は一括、線形、Canaly から選択可能。ただし、NLB では `CodeDeployDefault.ECSAllAtOnce` のみ設定可能
+  * デプロイ中にスケーリングした場合
+    * スケーリング中にデプロイした場合は、定常状態になるまで最大 1 時間待機
+    * デプロイ中にスケーリングした場合、トラフィックは 5 分間移行し続ける。5 分以内に定常状態にならなかった場合はデプロイを失敗しとしてマークする
+    * デプロイ中にスケーリングした場合、タスク数が予期しない値に設定される場合がある。実行中のタスク数が現在の容量とみなされるため
   * CLB はサポートされていない
+  * DAEMON はサポートされていない
   * サービスの Auto Scaling と併用でき、デプロイ中もスケーリングできる。しかし、デプロイが失敗する場合がある
   * ECS サービスのサービスロールには CodeDeploy 関連のアクション許可が必要
+  * CodeDeploy 側には ecsCodeDeployRole ロールが必要
 
 
 [外部デプロイ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/deployment-type-external.html)
@@ -1502,7 +1521,7 @@ aws ecs create-service \
 * **タスクがヘルスチェックの条件を満たさない場合は、タスクは停止され、再度起動される。**
 * NLB と awsvpc の組み合わせの場合、送信元 IP アドレスは NLB のプライベートアドレスとなる。よって、タスク側で NLB のプライベートアドレスを許可するしかないが、その場合は世界中からのアクセス可能な状態になる（NLB 側でセキュリティグループを設定できずフィルタリングできないため）
 * NLB の UDP は Linux プラットフォーム 1.4.0、もしくは Windows プラットフォーム 1.0.0 が対応
-* 登録解除の遅延よりもタスク定義の stopTimeout を長くすると良い
+* 登録解除の遅延よりもタスク定義の `stopTimeout` を長くすると良い
 * ホストポートは一時ポート範囲から動的に選択される
 
 
@@ -1681,6 +1700,7 @@ aws ecs create-service \
 
 * タスクをスケールインから保護するよう設定できる
 * `$ECS_AGENT_URI/task-protection/v1/state` にて `ProtectionEnabled` 属性を設定できる。保護期間は `expiresInMinutes` で設定できデフォルトは 2 時間。最短 1 分、最長で 48 時間
+* `UpdateTaskProtection` API で設定することも可能
 * 考慮事項
   * ローリングアップデート時に `protectionEnabled` がクリアされるか有効期限が失効するまで当該タスクは停止しない
   * Blue/Green デプロイでは `protectionEnabled` が設定されたタスクがある場合はクリアされるか有効期限が失効するまで Blue 側のタスクが残る
@@ -2001,8 +2021,16 @@ curl -s http://localhost:51678/v1/metadata | python -mjson.tool
 
 * コンテナエージェント用のロール
 * ECR からのイメージのプル、CloudWatch Logs へのログ送信などで使用
-* シークレットを使用する場合は、SSM, Secrets Manager などへの許可が必要。カスタマーマネージドキーで暗号化されている場合は KMS の権限も必要
-* インターフェイスエンドポイントへのアクセスを制限する場合は `aws:SourceVpc` を使用
+* シークレットを使用する場合は、SSM, Secrets Manager などへの許可が必要。カスタマーマネージドキーで暗号化されている場合は KMS の権限も必要。`ECS_ENABLE_AWSLOGS_EXECUTIONROLE_OVERRIDE=true` の設定が必要
+* インターフェイスエンドポイントへのアクセスを制限する場合は `aws:SourceVpc` を使用。タスク実行ロール側で Condition により制限
+```json
+            "Condition": {
+                "StringEquals": {
+                    "aws:sourceVpce": "vpce-xxxxxx",
+                    "aws:sourceVpc": "vpc-xxxxx"
+                }
+            }
+```
 
 
 [タスクロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-iam-roles.html)
@@ -2024,6 +2052,32 @@ curl -s http://localhost:51678/v1/metadata | python -mjson.tool
    sudo iptables -t nat -A PREROUTING -p tcp -d 169.254.170.2 --dport 80 -j DNAT --to-destination 127.0.0.1:51679
    sudo iptables -t nat -A OUTPUT -d 169.254.170.2 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 51679
    ```
+  * 混乱した代理問題を防ぐために `aws:SourceArn`、`aws:SourceAccount` を設定することを推奨
+  ```json
+  {
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Effect":"Allow",
+         "Principal":{
+            "Service":[
+               "ecs-tasks.amazonaws.com"
+            ]
+         },
+         "Action":"sts:AssumeRole",
+         "Condition":{
+            "ArnLike":{
+            "aws:SourceArn":"arn:aws:ecs:us-west-2:111122223333:*"
+            },
+            "StringEquals":{
+               "aws:SourceAccount":"111122223333"
+            }
+         }
+      }
+   ]
+  }
+  ```
+
 
 
 [タスク用の Windows IAM ロールの追加設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/windows_task_IAM_roles.html)
@@ -2145,6 +2199,7 @@ New-NetRoute -DestinationPrefix 169.254.169.254/32 -InterfaceIndex $ifIndex -Nex
     * com.amazonaws.region.ecs-agent
     * com.amazonaws.region.ecs-telemetry
     * com.amazonaws.region.ecs
+  * クロスリージョンリクエストはサポートされていない
 
 
 [Amazon ECR エンドポイントとクォータ](https://docs.aws.amazon.com/ja_jp/general/latest/gr/ecr.html)
@@ -2601,7 +2656,7 @@ aws ecs put-cluster-capacity-providers \
 
 [デバッグ用にAmazon ECS Exec を使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-exec.html)
 
-* readonlyRootFilesystem が有効化されていると使用できない
+* `readonlyRootFilesystem` が有効化されていると使用できない
 * ゾンビプロセスをクリーンアップするにはタスク定義に `initProcessEnabled` フラグ設定を推奨
 * タスクロールに SSM の権限が必要（タスク実行ロールではない）
 * ログ記録を有効化できる。ECS クラスターで設定する

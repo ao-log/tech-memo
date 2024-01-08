@@ -441,7 +441,7 @@ helm install ecr-chart-demo oci://aws_account_id.dkr.ecr.region.amazonaws.com/he
 * awslogs ドライバーを使用して CloudWatch Logs へログを送信する場合: CloudWatch Logs VPC エンドポイントが必要
 * ECR Public は未サポート
 * プルスルーキャッシュを使用する場合は、初回のプル時のみインターネットへのアウトバウンドの疎通性が必要
-* Windows イメージの場合、ライセンスによって配布が制限されているアーティファクトが含まれており、通常は当該箇所はプッシュされない。Docker デーモンの --allow-nondistributable-artifacts フラグを使用することでプッシュされるようになるが、ライセンスの条項に則る必要がある
+* Windows イメージの場合、ライセンスによって配布が制限されているアーティファクトが含まれており、通常は当該箇所はプッシュされない。Docker デーモンの `--allow-nondistributable-artifacts` フラグを使用することでプッシュされるようになるが、ライセンスの条項に則る必要がある
 
 各エンドポイントについて
 
