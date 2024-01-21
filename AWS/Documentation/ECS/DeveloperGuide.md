@@ -304,6 +304,10 @@ EC2 起動タイプに向いているワークロード
 * デュアルスタックモード
   * アカウント設定の `dualStackIPv6` を enabled にしておく必要がある
   * VPC, サブネットが IPv6 で構成されている必要がある
+* Windows では以下はサポートされない
+  * デュアルスタック設定
+  * IPv6
+  * ENI トランキング
 
 
 [host](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/networking-networkmode-host.html)
@@ -319,8 +323,11 @@ EC2 起動タイプに向いているワークロード
 * 動的ポートマッピングを使用可能。ホストポート未指定の場合は動的ポートマッピングになる。ELB もしくは Cloud Map によりクライアント側からのアクセス用のマッピングを行う
 
 
-[Task networking for tasks hosted on Fargate](https://docs.aws.amazon.com/AmazonECS/latest/userguide/fargate-task-networking.html)
+[Task networking for tasks hosted on Fargate](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/fargate-task-networking.html)
 
+* Linux PV 1.3.0 では以下通信はタスク ENI ではなく Fargate ENI を通る
+  * Amazon ECR ログイン認証情報の取得
+  * Secrets Manager またはSystems Manager からシークレットの取得
 * プライマリプライベート IP アドレスを備えた ENI が提供される
 * オプションでパブリック IP アドレスを付与できる
 * VPC がデュアルスタックモードに対応していて IPv6 CIDR ブロックを備えたサブネットを使用する場合、タスクの ENI にも IPv6 アドレスが割り当てられる
@@ -366,6 +373,37 @@ EC2 起動タイプに向いているワークロード
 * 外部インスタンスではサポートされない
 * コンテナエージェント設定の `ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION` はデフォルト値の 1 時間よりも短くすることを推奨。FS マウント認証情報の有効期限切れを防ぎ、使用されていないマウントをクリーンアップするのに役立つ
 * アクセスポイントを使用することでアクセスポイントを介したすべてのファイルシステム要求に対してユーザーアイデンティティ (ユーザーの POSIX グループなど) を適用できる。ファイルシステムに対して別のルートディレクトリを適用することも可能。
+```json
+{
+    "containerDefinitions": [
+        {
+            ...
+            "mountPoints": [
+                {
+                    "sourceVolume": "myEfsVolume",
+                    "containerPath": "/mount/efs",
+                    "readOnly": true
+                }
+            ]
+        }
+    ],
+    "volumes": [
+        {
+            "name": "myEfsVolume",
+            "efsVolumeConfiguration": {
+                "fileSystemId": "fs-1234",
+                "rootDirectory": "/path/to/my/data",
+                "transitEncryption": "ENABLED",
+                "transitEncryptionPort": integer,
+                "authorizationConfig": {
+                    "accessPointId": "fsap-1234",
+                    "iam": "ENABLED"
+                }
+            }
+        }
+    ]
+}
+```
 
 
 [FSx for Windows File Server ボリューム](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/wfsx-volumes.html)
@@ -373,6 +411,32 @@ EC2 起動タイプに向いているワークロード
 * 有効なドメインに参加している ECS Windows EC2 インスタンスである必要がある。Fargate は未対応
 * Active Directory へのドメイン参加と FSx for Windows File Server ファイルシステムをアタッチするために使用される、認証情報を含む AWS Secrets Manager シークレットまたは SystemsManager パラメータが必要
 * `authorizationConfig` にてドメイン、認証情報の ARN を指定する
+```json
+    "containerDefinitions": [
+        {
+            ...
+            "mountPoints": [
+                {
+                    "sourceVolume": "fsx-windows-dir",
+                    "containerPath": "C:\\fsx-windows-dir",
+                    "readOnly": false
+                }
+            ]
+      ...
+    "volumes": [
+        {
+            "name": "fsx-windows-dir",
+            "fsxWindowsFileServerVolumeConfiguration": {
+                "fileSystemId": "fs-0eeb5730b2EXAMPLE",
+                "authorizationConfig": {
+                    "domain": "example.com",
+                    "credentialsParameter": "arn:arn-1234"
+                },
+                "rootDirectory": "share"
+            }
+        }
+    ]
+```
 
 
 [Docker ボリューム](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/docker-volumes.html)
@@ -425,7 +489,27 @@ EC2 起動タイプに向いているワークロード
 * 以下のようなユースケースにも対応可能
   * 空のデータボリュームをマウント。`volumes` にて `name` だけを指定してボリュームを作成するとよい
   * EC2 インスタンス側のライフサイクルのボリュームを作成するには `volumes` にて `host.sourcePath` を指定
+  ```json
+  "volumes" : [
+    {
+        "host" : {
+            "sourcePath" : "string"
+        },
+        "name" : "string"
+    }
+  ]
+  ```
   * EC2 の場合は `volumesFrom.sourceContainer` を使用して別コンテナからマウントすることも可能。元コンテナが `mountPoints` でマウントしているディレクトリの他 `Dockerfile` の `VOLUME` の内容も含まれる
+  ```json
+      {
+      "name": "busybox",
+      "image": "busybox",
+      "volumesFrom": [
+        {
+          "sourceContainer": "web"
+        }
+      ],
+  ```
 
 
 ### swap
@@ -515,6 +599,14 @@ EC2 起動タイプに向いているワークロード
 [Amazon ECSの 64-bit ARM ワークロードの操作](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-arm64.html)
 
 * `runtimePlatform.cpuArchitecture` にて `ARM64` を指定
+```json
+{
+    "runtimePlatform": {
+        "operatingSystemFamily": "LINUX",
+        "cpuArchitecture": "ARM64"
+    },
+```
+
 
 
 ### Logging
@@ -528,7 +620,7 @@ EC2 起動タイプに向いているワークロード
   * awslogs-create-group
   * awslogs-region
   * awslogs-group
-  * awslogs-stream-prefix
+  * awslogs-stream-prefix: EC2 の場合はオプション。Fargate の場合は必須
   * awslogs-datetime-format
   * awslogs-multiline-pattern
   * mode
@@ -536,6 +628,9 @@ EC2 起動タイプに向いているワークロード
     * `non-blocking` に設定すると `max-buffer-size` で指定されたメモリ内の中間バッファに保管される。サービスの可用性を確保したいが多少のログ欠損があっても良い場合はこちらのモードを選択する
   * max-buffer-size
     * バッファがいっぱいになるとそれ以上ログは保存できず、保存できなくなったログは失われる
+* EC2 ではインスタンスロールに以下アクションの許可が必要
+  * `logs:CreateLogStream`
+  * `logs:PutLogEvents`
 
 
 [カスタムログルーティング](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/using_firelens.html)
@@ -562,7 +657,7 @@ EC2 起動タイプに向いているワークロード
 
 * ログルーターコンテナは `essential` を `true` に設定することを推奨
 * ログファイルが生成される。`/fluent-bit/etc/fluent-bit.conf`(Fluent Bit), `/fluentd/etc/fluent.conf`(Fluentd)
-* `config-file-type` は `s3` or `file`。ただし、Fargate は `file` のみサポート
+* `config-file-type` は `s3` or `file`。ただし、Fargate は `file` のみサポート。S3 の場合はタスク実行ロールに S3 へのアクセス許可が必要
 
 
 ### Private registory
@@ -579,6 +674,31 @@ EC2 起動タイプに向いているワークロード
 
 * `containerDefinitions.environmentFiles` にて S3 上のファイルを指定可能。ファイルの拡張子は .env である必要がある
 * タスク実行ロールにて S3 の読み取り権限が必要
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::examplebucket/folder_name/env_file_name"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::examplebucket"
+      ]
+    }
+  ]
+}
+```
 
 
 [Secrets Manager の使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/secrets-app-secrets-manager.html)
@@ -591,7 +711,17 @@ EC2 起動タイプに向いているワークロード
 
 * Windows の場合は `ECS_ENABLE_AWSLOGS_EXECUTIONROLE_OVERRIDE` 環境変数の設定が必要
 * タスク実行ロール側に Secrets Manager の権限が必要
-
+* 特定のキーを参照する場合には ARN の最後にキー名を入力する
+```json
+{
+  "containerDefinitions": [{
+    "secrets": [{
+      "name": "environment_variable_name",
+      "valueFrom": "arn:aws:secretsmanager:region:aws_account_id:secret:appauthexample-AbCdEf:username1::"
+    }]
+  }]
+}
+```
 
 
 ### Example
@@ -605,6 +735,31 @@ EC2 起動タイプに向いているワークロード
   * dependsOn
   * Windows コンテナ
 
+
+entryPoint, command
+```json
+{
+  "containerDefinitions": [
+    {
+      "memory": 32,
+      "essential": true,
+      "entryPoint": [
+        "ping"
+      ],
+      "name": "alpine_ping",
+      "readonlyRootFilesystem": true,
+      "image": "alpine:3.4",
+      "command": [
+        "-c",
+        "4",
+        "example.com"
+      ],
+      "cpu": 16
+    }
+  ],
+  "family": "example_task_2"
+}
+```
 
 
 ## ECS Cluster
@@ -816,12 +971,15 @@ Docker ボリュームの拡張方法
 
 [Amazon ECS コンテナエージェントをインストールする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-agent-install.html)
 
+* デッドロックを防ぐには次のコマンドを使用する。`systemctl enable --now --no-block ecs.service`
 * Amazon Linux 2
   * `amazon-linux-extras` コマンドでインストール可能
+  * docker は競合発生回避のため disable にすること
   * systemctl で ecs サービスを起動できる
   * `curl -s http://localhost:51678/v1/metadata | python -mjson.tool` コマンドにて稼働状況を確認可能
 * 非 Amazon Linux EC2 インスタンス
   * パッケージのファイルをダウンロードし、パッケージマネージャによりインストールする
+  * ecs サービスをスタート
 * コンテナエージェント
   * host ネットワークモードで稼働している
   * コンテナエージェントから稼働したコンテナは http://169.254.169.254 へのアクセスがブロックされる
@@ -977,6 +1135,13 @@ Fargate は AWS 側の管理。EC2 or External は以下項目の管理が必要
 [Amazon EC2 ユーザーデータを使用してコンテナインスタンスをブートストラップする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/bootstrap_container_instance.html)
 
 * コンテナエージェントの設定は `/etc/ecs/ecs.config` により行う
+* カスタムインスタンス属性の設定例
+```
+#!/bin/bash
+cat <<'EOF' >> ecs.config
+ECS_INSTANCE_ATTRIBUTES={"envtype":"prod"}
+EOF
+```
 * Docker デーモンの設定は `/etc/docker/daemon.json` により行う
 
 
@@ -1045,7 +1210,35 @@ Fargate は AWS 側の管理。EC2 or External は以下項目の管理が必要
 
 [Amazon ECS コンテナエージェントの手動更新（Amazon ECS 最適化以外の AMI の場合）](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/manually_update_agent.html)
 
+* データディレクトリの保存先を確認する。
+```
+docker inspect ecs-agent | grep ECS_DATADIR
+```
 * ecs-agent サービスを停止してからコンテナイメージをプルする。`docker pull public.ecr.aws/ecs/amazon-ecs-agent:latest`。`docker run` コマンドにより ecs-agent を起動する
+* ecs.config の例
+```
+ECS_DATADIR=/data
+ECS_ENABLE_TASK_IAM_ROLE=true
+ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
+ECS_LOGFILE=/log/ecs-agent.log
+ECS_AVAILABLE_LOGGING_DRIVERS=["json-file","awslogs"]
+ECS_LOGLEVEL=info
+ECS_CLUSTER=default
+```
+* 起動コマンド例
+```
+sudo docker run --name ecs-agent \
+--detach=true \
+--restart=on-failure:10 \
+--volume=/var/run:/var/run \
+--volume=/var/log/ecs/:/log \
+--volume=/var/lib/ecs/data:/data \
+--volume=/etc/ecs:/etc/ecs \
+--volume=/etc/ecs:/etc/ecs/pki \
+--net=host \
+--env-file=/etc/ecs/ecs.config \
+amazon/amazon-ecs-agent:latest
+```
 
 
 #### Manage Windows
@@ -1072,6 +1265,45 @@ Initialize-ECSAgent -Cluster your_cluster_name -EnableTaskIAMRole -EnableTaskENI
 [Amazon EC2 ユーザーデータを使用して Windows コンテナインスタンスをブートストラップする](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/bootstrap_windows_container_instance.html)
 
 * `[Environment]::SetEnvironmentVariable("ECS_ENABLE_AWSLOGS_EXECUTIONROLE_OVERRIDE", $TRUE, "Machine")` により awslogs が使用可能になる
+* ユーザーデータにてエージェントをインストールする例
+```powershell
+<powershell>
+# Set up directories the agent uses
+New-Item -Type directory -Path ${env:ProgramFiles}\Amazon\ECS -Force
+New-Item -Type directory -Path ${env:ProgramData}\Amazon\ECS -Force
+New-Item -Type directory -Path ${env:ProgramData}\Amazon\ECS\data -Force
+# Set up configuration
+$ecsExeDir = "${env:ProgramFiles}\Amazon\ECS"
+[Environment]::SetEnvironmentVariable("ECS_CLUSTER", "windows", "Machine")
+[Environment]::SetEnvironmentVariable("ECS_LOGFILE", "${env:ProgramData}\Amazon\ECS\log\ecs-agent.log", "Machine")
+[Environment]::SetEnvironmentVariable("ECS_DATADIR", "${env:ProgramData}\Amazon\ECS\data", "Machine")
+# Download the agent
+$agentVersion = "latest"
+$agentZipUri = "https://s3.amazonaws.com/amazon-ecs-agent/ecs-agent-windows-$agentVersion.zip"
+$zipFile = "${env:TEMP}\ecs-agent.zip"
+Invoke-RestMethod -OutFile $zipFile -Uri $agentZipUri
+# Put the executables in the executable directory.
+Expand-Archive -Path $zipFile -DestinationPath $ecsExeDir -Force
+Set-Location ${ecsExeDir}
+# Set $EnableTaskIAMRoles to $true to enable task IAM roles
+# Note that enabling IAM roles will make port 80 unavailable for tasks.
+[bool]$EnableTaskIAMRoles = $false
+if (${EnableTaskIAMRoles}) {
+  $HostSetupScript = Invoke-WebRequest https://raw.githubusercontent.com/aws/amazon-ecs-agent/master/misc/windows-deploy/hostsetup.ps1
+  Invoke-Expression $($HostSetupScript.Content)
+}
+# Install the agent service
+New-Service -Name "AmazonECS" `
+        -BinaryPathName "$ecsExeDir\amazon-ecs-agent.exe -windows-service" `
+        -DisplayName "Amazon ECS" `
+        -Description "Amazon ECS service runs the Amazon ECS agent" `
+        -DependsOn Docker `
+        -StartupType Manual
+sc.exe failure AmazonECS reset=300 actions=restart/5000/restart/30000/restart/60000
+sc.exe failureflag AmazonECS 1
+Start-Service AmazonECS
+</powershell>
+```
 
 
 [Windows インスタンスに接続する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/instance-windows-connect.html)
@@ -1082,10 +1314,17 @@ Initialize-ECSAgent -Cluster your_cluster_name -EnableTaskIAMRole -EnableTaskENI
 [Windows コンテナインスタンス用の HTTP プロキシ設定](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/http_proxy_config-windows.html)
 
 ユーザーデータにて以下のように設定
-```
+```powershell
+<powershell>
+Import-Module ECSTools
+
 $proxy = "http://proxy.mydomain:port"
 [Environment]::SetEnvironmentVariable("HTTP_PROXY", $proxy, "Machine")
 [Environment]::SetEnvironmentVariable("NO_PROXY", "169.254.169.254,169.254.170.2,\\.\pipe\docker_engine", "Machine")
+
+Restart-Service Docker
+Initialize-ECSAgent -Cluster MyCluster -EnableTaskIAMRole
+</powershell>
 ```
 
 
@@ -1363,11 +1602,18 @@ EventBridge スケジューラのスケジュールによってタスクを起�
 * レプリカ: タスク数を維持
 * デーモン: コンテナインスタンスごとに一つのタスク
 
+**レプリカ**
+* タスク配置戦略未指定時は、AZ 間をバランスするようにタスクを起動、停止する。また、タスク数が最も少ないコンテナインスタンスにタスクを配置、最も多いコンテナインスタンスからタスクを停止するように試みる
+
 **デーモン**
 * タスク配置制約を満たすコンテナインスタンス上にタスクを配置する
 * 複数のタスクが同一コンテナインスタンス上で稼働する場合、まず DAEMON のリソースから確保される
 * DRAINING ステータスのインスタンス上には配置されない。また、DRANING 状態に遷移した場合は DAEMON タスクも停止する
 * DRAINING 時は最後に停止するように動作する
+
+**その他**
+* ベイク時間は、新しいサービスバージョンがスケールアウトされ、古いサービスバージョンがスケールインされた後の期間.
+その間 Amazon ECS はデプロイに関連するアラームを監視し続ける。CloudWatch アラームを使用してデプロイ失敗を検出する場合に使用される
 
 
 [コンソールを使用したサービスの作成](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/create-service-console-v2.html)
@@ -1706,8 +1952,9 @@ aws ecs create-service \
   * Blue/Green デプロイでは `protectionEnabled` が設定されたタスクがある場合はクリアされるか有効期限が失効するまで Blue 側のタスクが残る
 * IAM
   * タスクロールにて設定が必要
-    * ecs:GetTaskProtection: 設定内容の取得
-    * ecs:UpdateTaskProtection: 設定内容の更新
+    * `ecs:GetTaskProtection`: 設定内容の取得
+    * `ecs:UpdateTaskProtection`: 設定内容の更新
+
 
 [タスクスケールインプロテクションのエンドポイント](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-scale-in-protection-endpoint.html)
 
@@ -1751,6 +1998,8 @@ curl --request PUT --header 'Content-Type: application/json' ${ECS_AGENT_URI}/ta
 [Amazon ECS のサービスクォータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/service-quotas.html)
 
 * リソース作成数の上限のほか、1 分あたりに起動できるタスク数も定められている
+  * サービスあたりのタスク数は 5,000 個
+  * 1 分ごとにサービスから起動できるタスク数は 500 個
 * リファレンス
   * [AWS Fargate スロットリングのクォータ](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/userguide/throttling.html)
   * [Request throttling for the Amazon ECS API](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/APIReference/request-throttling.html)
@@ -1791,17 +2040,37 @@ curl --request PUT --header 'Content-Type: application/json' ${ECS_AGENT_URI}/ta
 * EC2 の場合、インスタンスロールに `ecs:StartTelemetrySession` が必要`
 * コンテナエージェント設定で `ECS_DISABLE_METRICS` を `true` にしている場合はメトリクスは収集されない
 * 名前空間: AWS/ECS
-  * CPUReservation:
-    * ディメンション: `ClusterName` のみ。(CPU 予約量 ÷ コンテナインスタンスのリソース量)。EC2 起動タイプのみ
-  * CPUUtilization:
-    * ディメンション: `ClusterName`。(CPU 使用量 ÷ コンテナインスタンスのリソース量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される。EC2 起動タイプのみ
-    * ディメンション: `ClusterName`、`ServiceName`。(サービスに属している CPU ユニット数の使用量 ÷ サービスの CPU 予約量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される。EC2、Fargate 両方に対応
-  * MemoryReservation: CPUReservation の Memory 版
-  * MemoryUtilization: CPUUtilization の Memory 版
-* クラスター予約
-  * コンテナ定義の CPU, Memory, GPU の各コンテナの合計量が予約され、クラスターに登録されているリソース量の割合として計算される
-  * タスク定義で `memoryReservation` が指定されている場合はそちらを計算に使用する。ない場合は `memory` を使用
-  * メモリの合計サイズには tmpfs, sharedMemorySize のボリュームサイズも含まれている
+  * ディメンション `ClusterName`
+    * `ClusterName` のディメンションは EC2 起動タイプのみ
+    * CPUReservation
+      * (CPU 予約量 ÷ コンテナインスタンスのリソース量)
+      * CPU 予約量
+        * タスクサイズで指定した場合はタスクサイズの `cpu` を使用
+        * タスクサイズ未指定時は各コンテナ定義の CPU の合計量
+    * MemoryReservation
+      * (Memory 予約量 ÷ コンテナインスタンスのリソース量)
+      * Memory 予約量
+        * タスクサイズの `Memory` 指定時はコンテナ定義の値によらずタスクサイズの `Memory` を使用
+        * タスクサイズの `Memory` 未指定時。`MemoryReservation` 指定時はこちらを使用。未指定時はコンテナ定義の `Memory` を使用
+      * メモリの予約合計サイズには `tmpfs`, `sharedMemorySize` のボリュームサイズも含まれている
+    * CPUUtilization
+      * (CPU 使用量 ÷ コンテナインスタンスのリソース量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される
+    * MemoryUtilization
+      * (Memory 使用量 ÷ コンテナインスタンスのリソース量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される
+  * ディメンション `ClusterName`, `MemoryName`
+    * CPUUtilization
+      * (サービスに属している CPU ユニット数の使用量 ÷ サービスの CPU 予約量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される
+      * CPU 予約量
+        * タスクサイズで指定した場合はタスクサイズの `cpu` を使用
+        * タスクサイズ未指定時は各コンテナ定義の CPU の合計量
+    * MemoryUtilization
+      * (サービスに属している Memory ユニット数の使用量 ÷ サービスの Memory 予約量)。ACTIVE, DRAINIG のコンテナインスタンス分が集計される
+      * Memory 予約量
+        * タスクサイズの `Memory` 指定時はコンテナ定義の値によらずタスクサイズの `Memory` を使用
+        * タスクサイズの `Memory` 未指定時。`MemoryReservation` 指定時はこちらを使用。未指定時はコンテナ定義の `Memory` を使用
+
+考え方
+
 * クラスター使用率
   * コンテナインスタンスのリソース量に対する、リソース使用量の割合として計算される
 * サービス使用率
@@ -2023,13 +2292,37 @@ curl -s http://localhost:51678/v1/metadata | python -mjson.tool
 * ECR からのイメージのプル、CloudWatch Logs へのログ送信などで使用
 * シークレットを使用する場合は、SSM, Secrets Manager などへの許可が必要。カスタマーマネージドキーで暗号化されている場合は KMS の権限も必要。`ECS_ENABLE_AWSLOGS_EXECUTIONROLE_OVERRIDE=true` の設定が必要
 * インターフェイスエンドポイントへのアクセスを制限する場合は `aws:SourceVpc` を使用。タスク実行ロール側で Condition により制限
+* `ecr:GetAuthorizationToken` には `aws:SourceVpc`, `aws:SourceVpce` を適用できない。Fargate ENI 側を経由するため
 ```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetAuthorizationToken",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage"
+            ],
+            "Resource": "*",
             "Condition": {
                 "StringEquals": {
                     "aws:sourceVpce": "vpce-xxxxxx",
                     "aws:sourceVpc": "vpc-xxxxx"
                 }
             }
+        }
+    ]
+}
 ```
 
 
@@ -2085,7 +2378,7 @@ curl -s http://localhost:51678/v1/metadata | python -mjson.tool
 * コンテナエージェント起動時に `-EnableTaskIAMRole` オプションが必要
 * タスク認証情報プロバイダーの IAM ロールは、コンテナインスタンスのポート 80 を使用。よって、コンテナはポート 80 を使用できなくなる
 * Powershell の場合は以下の例のようなスクリプトでセットアップが必要
-```
+```powershell
 $gateway = (Get-NetRoute | Where { $_.DestinationPrefix -eq '0.0.0.0/0' } | Sort-Object RouteMetric | Select NextHop).NextHop
 $ifIndex = (Get-NetAdapter -InterfaceDescription "Hyper-V Virtual Ethernet*" | Sort-Object | Select ifIndex).ifIndex
 New-NetRoute -DestinationPrefix 169.254.170.2/32 -InterfaceIndex $ifIndex -NextHop $gateway -PolicyStore ActiveStore # credentials API
@@ -2877,9 +3170,11 @@ $ docker inspect コンテナID
   * cpuArchitecture: X86_64 or ARM64
     * Fargate Spot, Windows は対応。[考慮事項](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/userguide/ecs-arm64.html#ecs-arm64-considerations)
 * タスクサイズ
-  * EC2 では省略可能。Fargate では必須
+  * EC2 では省略可能
+  * Fargate では必須
   * Windows の場合は無視されるため、コンテナレベルでの指定を推奨
   * cpu
+    * CPU ユニットのハードリミット
     * EC2, 外部インスタンスで許可されている値は 0.25 〜 10 vCPU の間
     * Fargate の場合は、表に指定されている CPU, Memory の組のみ指定可能
   * memory
@@ -2938,7 +3233,7 @@ $ docker inspect コンテナID
   * cpu
     * `CpuShares` にマップされる。Agent バージョンが 1.2.0 以上の場合は 0, 1, null は 2 CPU share として渡される
     * Fargate では省略可能
-    * Windows では絶対クォータとして強制される。0, null を指定した場合は Docker に 0 として渡されるが 1 CPU の 1 % と解釈される
+    * Windows では絶対クォータとして適用される。0, null を指定した場合は Docker に 0 として渡されるが 1 CPU の 1 % と解釈される
   * gpu
     * GPU 数を指定
     * Fargate, Windows では未サポート
@@ -2971,6 +3266,7 @@ $ docker inspect コンテナID
       * Secrets Manager の ARN もしくは SSM Parameter Store の ARN
   * disableNetworking
     * `NetworkDisabled` にマップされる
+    * awsvpc, Windows は未サポート
   * links
     * bridge の場合のみサポート
     * awsvpc, Windows は未サポート
@@ -3159,7 +3455,7 @@ $ docker inspect コンテナID
   * name
   * host
     * Windows コンテナは $env:ProgramData と同じドライブに全部のディレクトリをマウントできる
-    * sourcePath
+    * sourcePath: 未指定時は Docker デーモンによって割り当てられる
   * dockerVolumeConfiguration
     * scope
       * task | shared
@@ -3210,10 +3506,13 @@ $ docker inspect コンテナID
 
 * launchType
 * capacityProviderStrategy
+  * キャパシティープロバイダー戦略、起動タイプ無指定時はデフォルトのキャパシティープロバイダーが使用される
   * capacityProvider
   * weight
   * base: base を設定できるのは 1 つのキャパシティプロバイダー
-* taskDefinition: ローリングアップデート時は指定が必要
+* taskDefinition
+  * ローリングアップデート時は指定が必要
+  * リビジョン未指定時は最新の ACTIVE なリビジョンを使用
 * platformFamily
 * platformVersion: 未指定時は LATEST
 * cluster: 未指定時は default
@@ -3255,6 +3554,7 @@ $ docker inspect コンテナID
     * securityGroups
     * assignPublicIP
 * healthCheckGracePeriodSeconds
+  * Elastic Load Balancing ターゲットのヘルスチェック、コンテナのヘルスチェック、Route 53 のヘルスチェックを無視する期間 (秒単位)
 * loadBalancers: `deploymentController` が `ECS` の場合のみ変更可能
   * targetGroupArn
   * loadBalancerName
@@ -3277,7 +3577,11 @@ $ docker inspect コンテナID
 * serviceRegistries
   * registryArn
   * port
+    * サービス検出サービスが SRV レコードを指定した場合に使用されるポート値
+    * awsvpc ネットワークモードと SRV レコードの両方が使用されている場合に必要
   * containerName
+    * bridge, host: containerName, containerPort の組み合わせ指定が必要
+    * awsvpc: SRV レコード使用時、containerName, containerPort の組み合わせ指定, もしくは port 値の指定が必要（どちらか片方で対応が必要。両方は不可）
   * containerPort
 * clientToken: 冪等性確保のために使用される
 

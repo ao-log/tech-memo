@@ -66,13 +66,17 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
     * 1) シェルスクリプトを介して実行される実際のアプリケーションに exec というプレフィックスをつける。
     * 2) tini (Amazon ECS-Optimized AMI の Docker ランタイムに同梱されている) や dumb-init などの専用のプロセスマネージャーを使用する。
   * あるコマンドを exec をつけて実行すると、子プロセスを生成するのではなく現在実行中のプロセス (この場合は shell ) の内容を新しい実行可能プロセスに置き換える。
-  * tini や dumb-init などのプロセスマネージャーを使用すると、これらのプログラムは SIGTERM を受け取ると、アプリケーションを含むすべての子プロセスグループに SIGTERM を送信する。
+  * tini や dumb-init などのプロセスマネージャーを使用すると、これらのプログラムは SIGTERM を受け取ると、アプリケーションを含むすべての子プロセスグループに SIGTERM を送信する。以下のように指定すると良い
+  ```
+  ENTRYPOINT ["tini", "--", "/path/to/application"]
+  ```
+  * `InitProcessEnabled` を有効にした ECS タスクを実行すると、ECS はコンテナの init プロセスとして tini を自動的に実行する
 * SIGTERM シグナルの処理
   * デフォルトの停止シグナルは SIGTERM だが、Dockerfile に STOPSIGNAL ディレクティブを追加することで上書きできる。
   * ALB から draining され unused となったあとに SIGTERM が実行される（単一の ALB に登録されている場合）。
   * EC2 インスタンスが drain 状態になっても RunTask によって実行されたタスクは draining されない。
 * スポットインスタンスの中断
-  * ECS_ENABLE_SPOT_INSTANCE_DRAINING を true に設定することでスポットインスタンスの中断通知を受信すると、ECS エージェントはインスタンスを DRAINING 状態にする
+  * `ECS_ENABLE_SPOT_INSTANCE_DRAINING` を true に設定することでスポットインスタンスの中断通知を受信すると、ECS エージェントはインスタンスを DRAINING 状態にする
   * スポットインスタンスの中断通知を受信すると ALB から登録解除される。
   * 登録解除後に SIGTERM なので、登録解除の遅延は 120 秒未満にする必要がある。
 

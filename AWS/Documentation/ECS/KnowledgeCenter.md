@@ -16,12 +16,30 @@
 [Amazon ECS の CPU 割り当てについて知っておくべきことは何ですか?](https://repost.aws/ja/knowledge-center/ecs-cpu-allocation)
 
 * タスクレベルの CPU
-  * Limit として機能する
-  * EC2 では省略可能
+  * ハードリミットとして機能する
+  * EC2 では省略可能。指定時は CPU 予約としても機能
   * Fargate では指定必須
 * コンテナレベルの CPU
-  * CpuShares にマッピングされる。よって 1 vCPU のインスタンス上では 512 の 1 タスクのみの場合はフルに CPU を使用できる。2 タスクの場合は、共にフルに使用している場合は 512 が Limit となる。ただし、余裕がある場合は 512 を超えて使用できる
+  * タスクレベルで指定されていない場合、ハードリミットは設定されない。ただし、Windows ではタスクレベルの指定ができず、コンテナレベルの CPU が上限となる
+  * `CpuShares` にマッピングされる。よって 1 vCPU のインスタンス上では 512 の 1 タスクのみの場合はフルに CPU を使用できる。2 タスクの場合は、共にフルに使用している場合は 512 が Limit となる。ただし、余裕がある場合は 512 を超えて使用できる
   * Fargate では省略可能。合計値がタスクレベルの指定量を超えてはならない
+  * Java 10 などの一部のアプリケーションは、コンテナに対応しており、CPU 競合の有無にかかわらず、コンテナレベルの cpu 定義で定義されている制限のみを使用される
+
+
+[Amazon ECS のタスクにメモリを割り当てるにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/allocate-ecs-memory-tasks)
+
+* タスクレベル
+  * ハードリミット
+  * EC2 では省略可能
+* コンテナレベル
+  * `memory`: ハードリミット。`memoryReservation` 未指定時はメモリ予約として機能
+  * `memoryReservation`: ソフトリミット。メモリ予約として機能
+* [Docker Document](https://docs.docker.com/config/containers/resource_constraints/#limit-a-containers-access-to-memory)
+  * [補足] メモリに関するオプション
+    * `-m` or `--memory`=: The maximum amount of memory the container can use.
+    * `--memory-reservation`: Allows you to specify a soft limit smaller than --memory which is activated when Docker detects contention or low memory on the host machine.
+    * `--memory-swap*`: The amount of memory this container is allowed to swap to disk. `--memory-swap` represents the total amount of memory and swap that can be used, and --memory controls the amount used by non-swap memory. So if --memory="300m" and --memory-swap="1g", the container can use 300m of memory and 700m (1g - 300m) swap.
+      * つまり memory, swap あわせて使用可能なメモリ使用量を指定するオプション。--memory="300m", --memory-swap="1g" の場合は 700m までスワップとして使用可能
 
 
 ## コンテナインスタンス
@@ -75,7 +93,7 @@ $ sudo rm /var/lib/ecs/data/agent.db
 * awsvpc ネットワーキングモード:
   * `/etc/ecs/ecs.config` に `ECS_AWSVPC_BLOCK_IMDS=true` を設定
 * ブリッジネットワーキングモード
-  * iptables により DROP する
+  * iptables により Docker によるインスタンスメタデータの IP アドレスに対する通信を DROP する
   ```
   yum install iptables-services -y
 
@@ -154,7 +172,7 @@ $ sudo rm /var/lib/ecs/data/agent.db
   * インスタンスロールの権限を確認
   * メモリなどのリソースが十分にあることを確認
   * ecs.config のクラスター名設定が正しいことを確認
-  * エンドポイントとの疎通性を確認
+  * ecs.region.amazonaws.com のエンドポイントとの疎通性を確認
 
 
 [Amazon Linux 1 AMI の Amazon ECS コンテナインスタンスが切断されるのはなぜですか?](https://repost.aws/ja/knowledge-center/ecs-agent-disconnected)
@@ -175,6 +193,8 @@ $ sudo rm /var/lib/ecs/data/agent.db
 
 [Amazon ECS の「キャパシティープロバイダーのマネージド終了保護設定が無効です」というエラーを解決する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-termination-protection-error)
 
+* エラーメッセージ
+  * `The managed termination protection setting for the capacity provider is invalid. To enable managed termination protection for a capacity provider, the Auto Scaling group must have instance protection from scale in enabled."`
 * キャパシティープロバイダーのマネージド終了保護を有効にする場合、Auto Scaling グループでスケールイン保護を有効にしておく必要がある
 
 
@@ -321,7 +341,7 @@ curl -I http://${IPADDR}:${PORT}/${PATH}
 ```
 time curl -Iv http://<example-task-pvt-ip>:<example-port>/<example_healthcheck_path>
 ```
-* healthCheckGracePeriodSeconds を十分な長さに設定
+* `healthCheckGracePeriodSeconds` を十分な長さに設定
 * アクセスログにてヘルスチェックのアクセスを確認。CloudWatch Logs Insights にて以下のようなクエリで確認可能。
 ```
 fields @timestamp, @message
@@ -341,7 +361,7 @@ netstat -tulpn | grep LISTEN
 ```
 $ nc -z -v -w10 example-task-private-ip example-port
 ```
-* healthCheckGracePeriodSeconds を十分な長さに設定
+* `healthCheckGracePeriodSeconds` を十分な長さに設定
 * アプリケーションログの確認
 
 
@@ -359,7 +379,7 @@ $ nc -z -v -w10 example-task-private-ip example-port
 [Fargate での Amazon ECS タスクのヘルスチェックの失敗をトラブルシューティングするにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-fargate-health-check-failures)
 
 * ネットワークの疎通性確認
-* healthCheckGracePeriodSeconds を十分な長さに設定
+* `healthCheckGracePeriodSeconds` を十分な長さに設定
 * CPU, Memory 使用量を確認
 * アプリケーションログを確認
 * ヘルスチェックパスの確認
@@ -411,12 +431,16 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [Amazon ECS のサービスで「the closest matching container-instance container-instance-id encountered error 'AGENT'」というエラーを解決する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-container-instance-agent-error)
 
+* エラーメッセージ
+  * `[AWS service] was unable to place a task because no container instance met all of its requirements.The closest matching container-instance container-instance-id encountered error 'AGENT'`
 * コンテナエージェントのログを確認する
 * コンテナエージェントを再起動する
 
 
 [Amazon ECS で「[AWS service] was unable to place a task because no container instance met all of its requirements」(要件をすべて満たすコンテナインスタンスがないため、[AWS のサービス] はタスクを配置できませんでした) というエラーを解決するにはどうすればよいですか。](https://repost.aws/ja/knowledge-center/ecs-container-instance-requirement-error)
 
+* エラーメッセージ
+  * `[AWS service] was unable to place a task because no container instance met all of its requirements`
 * 以下のような場合に発生する
   * クラスターにコンテナインスタンスがない
   * タスクに必要なポートがすでに使用されている
@@ -426,6 +450,8 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [Amazon ECS で「the closest matching container-instance container-instance-id has insufficient CPU units available」というエラーを解決する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-container-instance-cpu-error)
 
+* エラーメッセージ
+  * `[AWS service] was unable to place a task because no container instance met all of its requirements.The closest matching container-instance container-instance-id has insufficient CPU units available.`
 * インスタンスタイプ、もしくはタスク定義の CPU 指定量を見直す
 * コンテナインスタンスを追加する
 
@@ -438,7 +464,7 @@ $ nc -z -v -w10 example-task-private-ip example-port
 [Amazon ECS でスケジュールされたタスクに関連する問題をトラブルシューティングするにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-scheduled-task-issues)
 
 * CloudWatch メトリクスで FailedInvocations が記録されていないかを確認する
-* CloudTrail で RunTask を実行する
+* CloudTrail で RunTask を確認する
 * タスクが成功している場合もあり、コンテナのログを確認する
 
 
@@ -450,16 +476,23 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [Amazon ECS クラスターでタスクの起動に失敗する場合の「Image is exist」エラーを解決する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-cluster-image-not-exist-error)
 
+* エラーメッセージ
+  * `CannotPullContainerError: Error response from daemon: manifest for 1234567890.dkr.ecr.us-east-1.amazonaws.com/test:curlnginx1234 not found.`
 * イメージの指定が正しいか、リポジトリに格納されているかを確認する
 
 
 [Amazon ECS for Fargate で「dockertimeouterror unable transition start timeout after wait 3m0s」というエラーを解決するにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-fargate-docker-timeout-error)
 
+* エラーメッセージ
+  * `dockertimeouterror unable transition start timeout after wait 3m0s`
+* 3 分以内に PENDING から RUNNING に遷移しない場合はタスクは停止する
 * 各エンドポイントへの疎通性があるかを確認する
 
 
 [Amazon ECS の「ResourceInitializationError: failed to validate logger args (ResourceInitializationError: ロガー引数の検証に失敗しました)」エラーを解決するにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-resource-initialization-error)
 
+* エラーメッセージ
+  * `ResourceInitializationError: failed to validate logger args: create stream has been retried 1 times: failed to create CloudWatch log stream: ResourceNotFoundException: The specified log group does not exist. : exit status 1`
 * AWSSupport-TroubleshootECSTaskFailedToStart ランブックを使用して切り分ける
 * CloudWatch Logs のロググループがあることを確認する。もしくはタスク定義で自動作成する設定にする
 
@@ -542,10 +575,28 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [AWS Fargate タスクで Amazon EFS ボリュームをマウントできないのはなぜですか?](https://repost.aws/ja/knowledge-center/fargate-unable-to-mount-efs)
 
-* EFS 間のネットワーク疎通性の確保が必要
+エラーメッセージ
+* `"ResourceInitializationError: failed to invoke EFS utils commands to set up EFS volumes: stderr: b'mount.nfs4: Connection timed out' : unsuccessful EFS utils command execution; code: 32"`
+対策
+* EFS のマウントターゲットのセキュリティグループにて 2049/tcp のインバウンド通信の許可が必要
+
+エラーメッセージ
+* `"ResourceInitializationError: failed to invoke EFS utils commands to set up EFS volumes: stderr: mount.nfs4: Connection reset by peer : unsuccessful EFS utils command execution; code: 32"`
+対策
+* EFS のマウントターゲットのセキュリティグループにて 2049/tcp のインバウンド通信の許可が必要
+* DNS レコードの伝搬まで 90 秒ほど要する場合があるため、待機条件を入れる
+* App Mesh 使用時は EgressIgnoredPorts に 2049 を含める
+
+エラーメッセージ
+* `"ResourceInitializationError: failed to invoke EFS utils commands to set up EFS volumes: stderr: Failed to resolve "fs-xxxxxxxxxxx.efs.us-east-1.amazonaws.com" - check that your file system ID is correct"`
+対策
 * EFS のマウントターゲットが Fargate と同じ AZ にある必要がある
 * VPC のデフォルトの DNS サーバを使用する必要がある。カスタム DNS サーバの場合、DNS フォワーダーの設定が必要
-* 権限に関する問題
+
+エラーメッセージ
+* `"ResourceInitializationError: failed to invoke EFS utils commands to set up EFS volumes: stderr: b'mount.nfs4: access denied by server while mounting 127.0.0.1:/' : unsuccessful EFS utils command execution; code: 32"`
+対策
+* 権限を見直す
   * ファイルシステムポリシー
   * タスクロール
   * POSIX ファイルシステムレベルの権限
@@ -558,7 +609,7 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 * 例えば S3 にアクセスする際はタスクロールを設定
 * タスクメタデータより認証情報を取得。`curl 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI`
-* 環境変数 AWS_CONTAINER_CREDENTIALS_RELATIVE_URI は PID 1 でのみ使用可能
+* 環境変数 `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` は PID 1 でのみ使用可能
 
 
 [Amazon ECS で「Access Denied」(アクセス拒否) エラーを発生させないように IAM タスクロールを設定するにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-iam-task-roles-config-errors)
@@ -573,6 +624,8 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [Amazon ECS タスクの実行中の「ECS がロールを引き受けることができません」というエラーをトラブルシューティングするには、どうすればよいですか?](https://repost.aws/ja/knowledge-center/ecs-unable-to-assume-role)
 
+* エラーメッセージ
+  * `ECS was unable to assume the role 'arn:aws:iam::xxxxxxxxxxxx:role/yyyyyyyy' that was provided for this task. Please verify that the role being passed has the proper trust relationship and permissions and that your IAM user has permissions to pass this role.`
 * ロールが存在すること、信頼ポリシーにて Principal `ecs-tasks.amazonaws.com` に `sts:AssumeRole` の許可が設定されていることを確認する
 
 
@@ -598,6 +651,37 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 ## ECR、コンテナイメージ
 
+[Amazon ECR イメージリポジトリ内のイメージをセカンダリアカウントにプッシュまたはプルできるようにするにはどうすればよいですか?](https://repost.aws/ja/knowledge-center/secondary-account-access-ecr)
+
+* プライマリアカウントはリポジトリ所有。セカンダリアカウントにてイメージのプル、プッシュを行う
+* リポジトリポリシー例
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowPushPull",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::account-id:root"
+      },
+      "Action": [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:PutImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload"
+      ]
+    }
+  ]
+}
+```
+* 認証トークンの取得。プライマリアカウントの AWS アカウント、リージョンの指定が必要。
+  * `aws ecr get-login-password --region regionID | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.regionID.amazonaws.com`
+
+
 [Amazon ECS タスクに Amazon ECR イメージリポジトリからイメージを取得することを許可する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-tasks-pull-images-ecr-repository)
 
 * EC2 の場合: タスク実行ロールもしくはインスタンスロールにて指定。タスク実行ロールへの指定がベストプラクティス
@@ -613,7 +697,11 @@ $ nc -z -v -w10 example-task-private-ip example-port
   * もしくは VPC エンドポイント
 * IAM ロールに、イメージをプルまたはプッシュするための権限が許可されていない
 * DockerHub のレート制限
-* イメージ名、タグ名の指定ミス。もしくは存在していない
+  * `CannotPullContainerError: inspect image has been retried 5 time(s): httpReaderSeeker: failed open: unexpected status code https://registry-1.docker.io/v2/manifests/sha256:2bb501e6429 Too Many Requests - Server message: toomanyrequests:`
+* ECR でホストされているイメージのタグが存在しない
+  * `Cannotpullcontainererror: pull image manifest has been retried 1 time(s): failed to resolve ref 123456789.dkr.ecr.ap-southeast-2.amazonaws.com/image-name:tag: 123456789**.dkr.ecr.ap-southeast-2.amazonaws.com/image-name:tag: not found**`
+* ECR 以外のレジストリ。イメージが存在しない場合、タグが存在しない場合、レジストリ認証情報が入力されていない場合
+  * `Cannotpullcontainererror: pull image manifest has been retried 1 time(s): failed to resolve ref docker.io/library/invalid-name:non-existenttag: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed`
 
 
 [Fargate での Amazon ECS タスクの「cannotpullcontainererror」エラーはどのように解決すればよいですか?](https://repost.aws/ja/knowledge-center/ecs-fargate-pull-container-error)
@@ -642,13 +730,17 @@ $ nc -z -v -w10 example-task-private-ip example-port
 
 [Amazon ECR から Docker イメージを取り出す際に、Amazon ECS の「error pulling image configuration: error parsing HTTP 403 response body」を解決する方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-ecr-docker-image-error)
 
+* エラーメッセージ
+  * `error pulling image configuration: error parsing HTTP 403 response body.`
 * ゲートウェイエンドポイントポリシーで許可されていない
 
 
 [Amazon ECS で「unable to pull secrets or registry auth」(シークレットまたはレジストリ認証をプルできません) というエラーのトラブルシューティング方法を教えてください。](https://repost.aws/ja/knowledge-center/ecs-unable-to-pull-secrets)
 
-* タスク実行ロール
-* VPC エンドポイント
+* エラーメッセージ
+  * `ResourceInitializationError: unable to pull secrets or registry auth: pull command failed: : signal: killed" or "ResourceInitializationError: unable to pull secrets or registry auth: execution resource retrieval failed: unable to retrieve secret from asm: service call has been retried."`
+* タスク実行ロールに各権限が付与されていること(ECR, Logs, Secrets Manager)
+* エンドポイントへの疎通性があること
 * タスク定義での指定
 
 
