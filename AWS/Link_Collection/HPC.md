@@ -10,3 +10,8 @@
 c5n.18xlarge と c5n.metalのインスタンスの性能比較をしている記事。
 
 
+[日本最速のスーパーコンピューター「富岳」はなぜAWS上で仮想化されたか](https://aws.amazon.com/jp/blogs/news/why-fugaku-japans-fastest-supercomputer-went-virtual-on-aws-jp/)
+
+
+
+

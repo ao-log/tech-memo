@@ -215,6 +215,9 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [CloudWatch と Prometheus のカスタムメトリクスに基づく Amazon ECS サービスのオートスケーリング](https://aws.amazon.com/jp/blogs/news/autoscaling-amazon-ecs-services-based-on-custom-cloudwatch-and-prometheus-metrics/)カスタム
 
 
+[Scale your Amazon ECS using different AWS native services!](https://aws.amazon.com/jp/blogs/containers/scale-your-amazon-ecs-using-different-aws-native-services/)
+
+
 #### Faster Container Startup
 
 [AWS Fargate Enables Faster Container Startup using Seekable OCI](https://aws.amazon.com/jp/blogs/aws/aws-fargate-enables-faster-container-startup-using-seekable-oci/)
@@ -273,6 +276,43 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 * 「CPU 負荷をかける」「ストレージ I/O 負荷をかける」「プロセスの停止」「ネットワークトラフィックの停止」「ネットワークレイテンシーの増加」「パケットロス」などのフォールとインジェクションアクションが追加された
 * SSM Agent がサイドカーとして動作し、Run Command により障害試験を行う。そのため、SSM Agent のサイドカーが必要
 * CloudWatch アラームと連携し、アラームが発火した時に試験を止めることができる
+
+
+#### EFS
+
+[Amazon EFS を Amazon ECS と AWS Fargate で使用するための開発者ガイド – パート 1](https://aws.amazon.com/jp/blogs/news/developers-guide-to-using-amazon-efs-with-amazon-ecs-and-aws-fargate-part-1/)
+
+* EFS のマウントは PV 1.4.0 から
+* エンドソリューションのパフォーマンス、冗長性、可用性、柔軟性のレベルに応じてボリュームストレージを選定する
+* EC2 の場合はこれまでも使えていたが、Fargate でもできるようになった。また EC2 の場合はセットアップが必要だったが、それも省力化されることになる
+* S3 にデータを置いている場合は ECS タスクのタスクストレージにダウンロードする必要があるが、このようなユースケースにおいて EFS は便利
+
+
+[Amazon EFS を Amazon ECS と AWS Fargate で使用するための開発者ガイド – パート 2](https://aws.amazon.com/jp/blogs/news/developers-guide-to-using-amazon-efs-with-amazon-ecs-and-aws-fargate-part-2/)
+
+* EFS のセキュリティの観点は 2 つ
+  * ネットワークセキュリティ: EFS マウントターゲットへの疎通性
+  * クライアントセキュリティ: 読み書きの検眼があるかどうか
+* クライアントセキュリティ
+  * EFS 側のリソースベースとクライアント側のアイデンティティベースの 2 つがある
+  * 以下のアクションを設定可能
+    * elasticfilesystem:ClientMount (読み取り専用アクセス)
+    * elasticfilesystem:ClientWrite (読み取り/書き込みアクセス)
+    * elasticfilesystem:ClientRootAccess (root アクセス)
+  * ClientWrite が許可されていない場合は書き込みできない
+  * リソースレベルのポリシーがない場合は、全て許可
+  * クライアント側の権限では ECS タスクロールを使用。これがない場合は匿名として識別される
+* アクセスポイント
+  * アクセスポイントを介した場合、コンテナ内の UID, GID にかかわらず、アクセスポイントに設定された UID, GID でアクセスが行われる
+* 対応可能なユースケース
+  * ECS サービスごとにアクセスポイントを分けることで、互いに独立したディレクトリに対して読み書き可能。ただし、EFS スループットは共有される
+  * 同一のファイルシステムを複数 ECS サービスで利用。ECS サービスによって Read のみ, Read/Write 可能を設定可能
+  * 特定のクライアントのみアクセス可能な制限付きのディレクトリを設定できる
+
+
+[Amazon EFS を Amazon ECS と AWS Fargate で使用するための開発者ガイド – パート 3](https://aws.amazon.com/jp/blogs/news/developers-guide-to-using-amazon-efs-with-amazon-ecs-and-aws-fargate-part-3/)
+
+
 
 
 

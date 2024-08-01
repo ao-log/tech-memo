@@ -344,6 +344,8 @@ EC2 起動タイプに向いているワークロード
 
 利用可能なボリューム
 
+* EBS
+* Fargate エフェメラルタスクストレージ
 * EFS
 * FSx for Windows File Server
 * Docker ボリューム(/var/lib/docker/volumes に作成される Docker マネージドボリューム)
@@ -364,9 +366,63 @@ EC2 起動タイプに向いているワークロード
   * 10 GB の Docker Layer ストレージ、ボリュームマウント用の追加の 4 GB のストレージを受け取る
 
 
+[Amazon EBS ボリューム](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ebs-volumes.html)
+
+* タスクごとに 1 つの EBS ボリュームをアタッチできる
+* [Amazon ECS インフラストラクチャ IAM ロール](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/infrastructure_IAM_role.html) の設定が必要。サービス定義もしくは `RunTask`, `StartTask` の `volumeConfigurations.managedEBSVolume.roleArn` にて指定
+* 既存ボリュームのアタッチはできない。ただし、スナップショットの設定は可能
+* ローリングアップデート、レプリカ戦略の場合のみ設定可能
+* `AmazonECSCreated`, `AmazonECSManaged` のタグが自動的に付与される。これらのタグを削除すると ECS がボリュームを管理できなくなる
+* ECS サービスの場合はタスク終了時にボリュームは削除される。スタンドアローンのタスクの場合は保持するように設定できる
+* EBS ボリュームに書き込むには root ユーザーとして実行する必要がある 
+* タスク定義の `volumes.configuredAtLaunch` を `true` に設定する
+```json
+    "volumes": [
+        {
+            "name": "myEBSVolume",
+            "configuredAtLaunch": true
+        }
+    ]
+```
+* サービス定義もしくは `RunTask`, `StartTask` にてサイズなどを指定
+```json
+    "volumeConfigurations": [
+        {
+            "name": "", 
+            "managedEBSVolume": {
+                "encrypted": true, 
+                "kmsKeyId": "", 
+                "volumeType": "", 
+                "sizeInGiB": 0, 
+                "snapshotId": "", 
+                "iops": 0, 
+                "throughput": 0, 
+                "tagSpecifications": [
+                    {
+                        "resourceType": "volume", 
+                        "tags": [
+                            {
+                                "key": "", 
+                                "value": ""
+                            }
+                        ], 
+                        "propagateTags": "NONE"
+                    }
+                ], 
+                "roleArn": "", 
+                "filesystemType": ""
+            }
+        }
+    ]
+```
+
+
 [Amazon EFS ボリューム](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/efs-volumes.html)
 
-* 独自の AMI を使用する場合 `amazon-efs-utils` パッケージをインストールし、`amazon-ecs-volume-plugin` サービスを起動する必要がある
+* `amazon-efs-utils`
+  * 独自の AMI を使用する場合 `amazon-efs-utils` パッケージをインストールし、`amazon-ecs-volume-plugin` サービスを起動する必要がある
+  * ドキュメント: [amazon-efs-utils ツールの使用](https://docs.aws.amazon.com/ja_jp/efs/latest/ug/using-amazon-efs-utils.html)
+  * [GitHub: efs-utils](https://github.com/aws/efs-utils)
 * Fargate
   * PV 1.4.0 から対応
   * スーパーバイザーコンテナにより EFS ボリュームが管理される。このコンテナによりタスクメモリが少しだけ使用される。Container Insights では aws-fargate-supervisor コンテナとして表示される
@@ -406,11 +462,30 @@ EC2 起動タイプに向いているワークロード
 ```
 
 
+[Amazon EFS 使用のベストプラクティス](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/efs-best-practices.html)
+
+* アクセス制御は 3 つの方法がある
+  * セキュリティグループ
+  * IAM
+  * アクセスポイント
+* パフォーマンス
+  * 汎用モード: レイテンシーの影響を受けやすいアプリケーションに向いている
+  * Max I/O: 
+* スループット
+  * バーストモードによりバースト可能
+* コスト最適化
+  * 複数のアプリケーションで共用利用する。アクセス権限はアクセスポイントで管理
+* データ保護
+  * 耐久性は 1 年間に 99.999999999% (9 が 11 桁)
+  * バックアップを取ることがベストプラクティス
+
+
 [FSx for Windows File Server ボリューム](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/wfsx-volumes.html)
 
 * 有効なドメインに参加している ECS Windows EC2 インスタンスである必要がある。Fargate は未対応
 * Active Directory へのドメイン参加と FSx for Windows File Server ファイルシステムをアタッチするために使用される、認証情報を含む AWS Secrets Manager シークレットまたは SystemsManager パラメータが必要
 * `authorizationConfig` にてドメイン、認証情報の ARN を指定する
+* チュートリアルが用意されている。[Amazon ECS での FSx for Windows File Server ファイルシステムの使用](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/tutorial-wfsx-volumes.html)
 ```json
     "containerDefinitions": [
         {
