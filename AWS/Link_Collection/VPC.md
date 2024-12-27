@@ -42,3 +42,14 @@ aws ec2 create-route                                  \
 * つまり、従来 Local 宛の通信経路を変えることはできなかったが、特定 CIDR 宛の通信を特定 ENI に向けることができるようになった
 * アプライアンス用のインスタンスでは `net.ipv4.ip_forward=1` でトラフィック転送できるようにし、Source/dest check を無効化する
 
+
+[Amazon VPC Block Public Access による VPC セキュリティの強化](https://aws.amazon.com/jp/blogs/news/vpc-block-public-access/)
+
+* VPC からインターネットに対するインバウンド、アウトバウンドトラフィックをブロックできる
+* Internet Gateway があったとしても、この設定の方が優先される
+* イングレス方向のみをブロックできる
+* 除外対象とする VPC, サブネットを設定できる
+
+
+
+

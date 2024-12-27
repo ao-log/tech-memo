@@ -36,3 +36,33 @@
 * バージョンを発行することができる。発行されたバージョンのコードは変更不可。LATEST, DEFAULT のエイリアスを設定可能。トラフィックの重みづけを設定可能
 * プロビジョニングされた同時実行数により、ウォームスタートされた状態で指定値分の実行環境を使用できる。コストには注意
 * Lambda SnapStart によりコールドスタートの時間短縮が期待できる
+
+
+[Lambda Web Adapter でウェブアプリを (ほぼ) そのままサーバーレス化する](https://aws.amazon.com/jp/builders-flash/202301/lambda-web-adapter/)
+
+* Lambda は原則としては handler 関数を実行し、イベント内容が第一引数に渡される
+```ts
+export const handler = async (event, context) => {
+  // ここに処理を記述
+}
+```
+* Dockerfile に一行追加するだけでよい
+```Dockerfile
+FROM node:16
+
+# この1行を追加するだけ！
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.5.0 /lambda-adapter /opt/extensions/lambda-adapter
+
+# あとは従来どおり
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 8080
+CMD [ "node", "server.js" ]
+```
+* Web Adapter は Lambda Extension の仕組みを使っている。Lambda ランタイムは /opt/extensions/ ディレクトリを確認し、ファイルがあれば Lambda Extension として実行する仕組みになっている
+
+
+[サポートエンジニアがよく見る AWS Lambda についてのお悩み事](https://aws.amazon.com/jp/builders-flash/202410/lambda-faq-by-aws-support/)
+

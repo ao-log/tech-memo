@@ -1,4 +1,13 @@
 
+[新しい Amazon EKS Auto Mode で Kubernetes クラスター管理を効率化](https://aws.amazon.com/jp/blogs/news/streamline-kubernetes-cluster-management-with-new-amazon-eks-auto-mode/)
+
+* データプレーン側がかなりマネージドになる
+* eksctl を使用する場合は、以下のようにオプションを付与
+```
+$ eksctl create cluster --name=<cluster-name> --enable-auto-mode
+```
+
+
 [Kubernetes アプリケーションの公開 Part1: Service と Ingress リソース](https://aws.amazon.com/jp/blogs/news/exposing-kubernetes-applications-part-1-service-and-ingress-resources/)
 
 * Service
@@ -9,7 +18,6 @@
   * 各 Service の ClusterIP には、<service-name>.<namespace-name>.svc.cluster.local 形式のクラスター内部でのみアクセス可能な DNS 名が提供される
   * Service コントローラーは、新しい Service リソースが作成されるのを監視し、spec.type が LoadBalancer の場合、コントローラーはクラウドプロバイダーの API を使用してロードバランサーをプロビジョニング
   * Service ごとにロードバランサーを作るのは非効率。Ingress で統合できる。例えば ALB の場合、URL パスごとに転送先の Service を指定できる
-
 
 
 [AWS Load Balancer Controller を使った Blue/Green デプロイメント、カナリアデプロイメント、A/B テスト](https://aws.amazon.com/jp/blogs/news/using-aws-load-balancer-controller-for-blue-green-deployment-canary-deployment-and-a-b-testing/)
@@ -46,6 +54,19 @@ alb.ingress.kubernetes.io/actions.blue-green: |
 * Amazon VPC CNI の最新バージョンでは、クラスター内の全てのノードに CNI バイナリと ipamd プラグインと共に、Node Agent もインストールされる。aws-node の DaemonSet のコンテナとして稼働
 
 
+[AWS App Mesh から Amazon VPC Lattice への移行](https://aws.amazon.com/jp/blogs/news/migrating-from-aws-app-mesh-to-amazon-vpc-lattice/)
+
+* App Mesh と VPC Lattice のリソースは次の対応関係となっている
+  * Service Mesh → Service Network
+  * Virtual Service → Lattice Service
+  * Virtual Node → Target Groups
+  * Routing Rule → Routes
+* VPC Lattice では AWS Resource Access Manager と連携することで、クロスアカウントアクセスも可能
+* 移行
+  * インプレース、カナリア、Blue/Green など、複数の戦略から選択可能
+  * AWS Gateway API Controller を使用して VPC Latticeリソースを作成可能
+  * インプレースで対応する場合は Kubernetes Namespace にアノテーションを付与して、App Mesh Controller が Pod を操作できないようにする
+
 
 [Amazon EKS での Kubernetes アップグレードの計画](https://aws.amazon.com/jp/blogs/news/planning-kubernetes-upgrades-with-amazon-eks/)
 
@@ -58,5 +79,10 @@ alb.ingress.kubernetes.io/actions.blue-green: |
 
 [Amazon EKS で GitOps パイプラインを構築する](https://aws.amazon.com/jp/blogs/news/building-a-gitops-pipeline-with-amazon-eks/)
 
+
+
+## tori さん
+
+[プラットフォームの上でものを作るということ](https://toris.io/2019/12/what-i-think-about-when-i-think-about-kubernetes-and-ecs/)
 
 

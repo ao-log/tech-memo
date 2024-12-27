@@ -2015,6 +2015,21 @@ aws ecs create-service \
 * ECS サービスを新規作成する場合にのみ設定可能
 
 
+[Amazon VPC Lattice を使用して Amazon ECS サービスを接続、監視、保護する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-vpc-lattice.html)
+
+* ECS タスク起動時に VPC Lattice のターゲットグループに自動追加される
+* VPC Lattice ヘルスチェックに失敗した際はタスクの置き換えが行われる
+* AWS Resource Access Manager を使用してクロスアカウント接続もできる
+* ローリングアップデートのみサポート。Blue/Green はサポートされていない
+
+
+[VPC Lattice を使用するサービスを作成する](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/ecs-vpc-lattice-create-service.html)
+
+* ECS サービス作成時に VPC Lattice のターゲットグループを設定する
+* ECS インフラストラクチャロールを使用する
+
+
+
 ### Task Scale-In Protection
 
 [タスクスケールイン保護](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-scale-in-protection.html)

@@ -128,6 +128,20 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
     * VPC 内に Route 53 リゾルバーのインバウンドエンドポイント
 
 
+[AWS App Mesh から Amazon ECS Service Connect への移行](https://aws.amazon.com/jp/blogs/news/migrating-from-aws-app-mesh-to-amazon-ecs-service-connect/)
+
+* App Mesh は 2026 年 9 月 30 日にサポート終了
+* ECS Service Connect では外れ値検出、リトライの機能がある。また、メトリクスも取得される
+* App Mesh は次の仕組み
+  * Envoy を使用
+  * Virtual Service → Virtual Router → Virtual Node の経路
+  * サービスディスカバリは Cloud Map
+* 移行
+  * ECS サービスの再作成が必要
+  * ダウンタイムを回避するために Blue/Green 戦略を使用するのがよい
+  * トラフィックの移行は Route 53 の加重ルーティング、CloudFront の継続的デプロイ、ALB の加重ターゲットグループなどがある
+
+
 #### Build
 
 [Building better container images](https://aws.amazon.com/jp/blogs/containers/building-better-container-images/)
@@ -266,6 +280,14 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [Amazon ECS向けAmazon CloudWatch Container Insightsについて](https://aws.amazon.com/jp/blogs/news/introducing-container-insights-for-amazon-ecs/)
 
 
+[オブザーバビリティが強化された Container Insights が Amazon ECS で利用可能に](https://aws.amazon.com/jp/blogs/news/container-insights-with-enhanced-observability-now-available-in-amazon-ecs/)
+
+* アカウント設定の箇所で有効化できる。ECS クラスター単位で設定することも可能
+* Container Insigths の画面にて、クラスター、インスタンス、サービス、タスクファミリー、タスク、コンテナごとに画面を確認可能
+* フィルターオプションで対象を絞ることができる
+
+
+
 [AWS Distro for OpenTelemetry コレクターを使用したクロスアカウントの Amazon ECS メトリクス収集](https://aws.amazon.com/jp/blogs/news/using-aws-distro-for-opentelemetry-collector-for-cross-account-metrics-collection-on-amazon-ecs/)
 
 
@@ -362,6 +384,9 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [お誕生日おめでとう！AWS Fargate 5 周年](https://aws.amazon.com/jp/blogs/news/happy-5th-birthday-aws-fargate/)
 
 
+[Amazon ECS の 10 周年を祝う: 10 年間にわたるコンテナ化イノベーションの推進](https://aws.amazon.com/jp/blogs/news/celebrating-10-years-of-amazon-ecs-powering-a-decade-of-containerized-innovation/)
+
+
 [Bottlerocket のセキュリティ機能 〜オープンソースの Linux ベースオペレーティングシステム〜](https://aws.amazon.com/jp/blogs/news/security-features-of-bottlerocket-an-open-source-linux-based-operating-system/)
 
 
@@ -385,6 +410,9 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [Amazon ECS Fargate/EC2 起動タイプでの理論的なコスト最適化手法](https://aws.amazon.com/jp/blogs/news/theoretical-cost-optimization-by-amazon-ecs-launch-type-fargate-vs-ec2/)
 
 
+[Serverless containers at AWS re:Invent 2024](https://aws.amazon.com/jp/blogs/containers/serverless-containers-at-aws-reinvent-2024/)
+
+
 
 ## Black Belt
 
@@ -406,6 +434,45 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [202109 AWS Black Belt Online Seminar Amazon Elastic Container Service − EC2 スポットインスタンス / Fargate Spot ことはじめ](https://www.slideshare.net/AmazonWebServicesJapan/202109-aws-black-belt-online-seminar-amazon-elastic-container-service-ec-fargate-spot)
 
 
+## builders.flash
+
+[Web アプリケーションにおける Amazon ECS / AWS Fargate アーキテクチャデザインパターン](https://aws.amazon.com/jp/builders-flash/202409/web-app-architecture-design-pattern/)
+
+* 1. パブリック API サービスパターン
+  * ALB - ECS
+  * API Gateway - ALB - ECS
+* 2. SPA パターン
+  * CloudFront - S3
+  * CloudFront - API Gateway - NLB - ECS
+* 3. SSR パターン
+  * ALB - ECS(Rendering) - ECS(Backend API)
+* 4. ソーシャルログインパターン
+  * ALB と Cognito を連携。Cognito では外部 IdP と連携
+* 5. 内部サービス連携パターン
+  * 内部 ALB 接続パターン
+  * ECS サービス検出パターン
+  * App Mesh 接続パターン
+  * ECS Service Connect パターン
+* 6. ジョブ構成パターン
+  * ジョブ定期実行パターン
+  * ジョブワークフローパターン (Step Functions によるエラーハンドリングも可能)
+  * ジョブ API 実行パターン
+* 7. ログ運用パターン
+  * CloudWatch Logs 連携パターン
+  * ログ長期保管向け S3 連携パターン
+* 8. アラート通知パターン
+  * アプリケーションエラー通知パターン (CloudWatch Logs の文字列をもとに通知)
+    * CloudWatch Logs - SNS - Chatbot - Slack
+  * ECS アラート通知パターン
+    * タスク状態変更イベントなどを通知
+* 9. ECS タスク CI/CD パターン
+  * GitHub Actions による CI/CD パターン
+  * Code シリーズによる CI/CD パターン
+* 10. 開発デバッグパターン
+  * ECS exec 利用パターン
+  * CloudShell 利用パターン
+
+
 
 ## tori さん
 
@@ -421,7 +488,6 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 
 
 [アプリケーション開発者は Amazon ECS あるいは Kubernetes をどこまで知るべきか](https://speakerdeck.com/toricls/you-build-it-you-run-it)
-
 
 
 
