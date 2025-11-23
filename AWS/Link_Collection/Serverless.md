@@ -3,3 +3,5 @@
 
 [ヘキサゴナルアーキテクチャを使ってドメインモデルをAWS Lambdaファンクションで実装してみた](https://qiita.com/afukui/items/c705aca2cb46e182c5e4)
 
+[AWS サーバレスサービスで実現するラーメン山岡家のキッチンオペレーション効率化](https://aws.amazon.com/jp/blogs/news/aws-serverless-yamaokaya-kitchen/)
+

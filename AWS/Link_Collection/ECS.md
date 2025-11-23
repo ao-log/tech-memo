@@ -96,6 +96,11 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [Fargate のサービスクォータが vCPU ベースに変更になります](https://aws.amazon.com/jp/blogs/news/migrating-fargate-service-quotas-to-vcpu-based-quotas/)
 
 
+#### Security
+
+[Building secure guardrails for Amazon ECS with AWS IAM and AWS CloudFormation Guard](https://aws.amazon.com/jp/blogs/containers/building-secure-guardrails-for-amazon-ecs-with-aws-iam-and-aws-cloudformation-guard/)
+
+
 #### Networking
 
 [AWS Cloud Map:アプリケーションのカスタムマップの簡単な作成と維持](https://aws.amazon.com/jp/blogs/news/aws-cloud-map-easily-create-and-maintain-custom-maps-of-your-applications/)
@@ -142,6 +147,16 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
   * トラフィックの移行は Route 53 の加重ルーティング、CloudFront の継続的デプロイ、ALB の加重ターゲットグループなどがある
 
 
+[Amazon ECS announces IPv6-only support](https://aws.amazon.com/jp/blogs/containers/amazon-ecs-announces-ipv6-only-support/)
+
+* IPv6 only サブネットでは IPv6 アドレス、dualstack サブネットでは IPv6, IPv4 アドレスが割り当てられる
+* IPv6 only サブネットの場合は ECR からのイメージプルは dualstack VPC Endpoint である必要がある
+* Cloud Map は IPv6 をサポートしている
+* RDS, EFS なども IPv6 をサポートしている
+* Internet 向には [DNS64/NAT64](https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-nat64-dns64.html) が必要
+* IPv4 で構成されたサービスから移行するには新しい IPv6 サービスを作成し、トラフィックを移行するのがおすすめ。
+
+
 #### Build
 
 [Building better container images](https://aws.amazon.com/jp/blogs/containers/building-better-container-images/)
@@ -172,6 +187,26 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 
 
 #### Deploy
+
+[Migrating from AWS CodeDeploy to Amazon ECS for blue/green deployments](https://aws.amazon.com/jp/blogs/containers/migrating-from-aws-codedeploy-to-amazon-ecs-for-blue-green-deployments/)
+
+* CodeDeploy では未対応だった機能
+  * Service Connect のサポート
+  * ヘッドレスサービスのサポート。例えば、キュープロセッシングサービス
+  * EBS の構成のサポート
+  * 複数の ELB をアタッチした構成のサポート
+  * 同一のリスナーポートで本番、テストトラフィックに対応できる
+* 一方で ECS の blue/green で未対応のもの
+  * all-at-once でのデプロイのみ
+  * CodeDeploy ではトラフィックの Green 側への移行前の wait time を設定できたが、ECS blue/green ではライフサイクルフックでの対応が必要
+* 移行方法
+  * `UpdateService` にて、`deploymentStrategy` を `BLUE_GREEN` にする
+  * 既存 ALB に新しいリスナーを作成し `BLUE_GREEN` の ECS サービスに転送する。既存リスナーのポート番号を変更した後、`BLUE_GREEN` のリスナーポート番号を本番用のものに変更する
+  * ALB と ECS サービスを新規作成し、DNS の向き先を新規作成した ALB に変更する
+
+
+[Extending deployment pipelines with Amazon ECS blue green deployments and lifecycle hooks](https://aws.amazon.com/jp/blogs/containers/extending-deployment-pipelines-with-amazon-ecs-blue-green-deployments-and-lifecycle-hooks/)
+
 
 [AWS CodeDeploy による AWS Fargate と Amazon ECS でのBlue/Greenデプロイメントの実装](https://aws.amazon.com/jp/blogs/news/use-aws-codedeploy-to-implement-blue-green-deployments-for-aws-fargate-and-amazon-ecs/)
 
@@ -211,6 +246,22 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 * unhealthy なタスクを停止すると、残っている healthy な ECS タスクに負荷が集中し、unhelathy になることにつながる
 
 
+#### Managed Instance
+
+[コンテナ化されたアプリケーション用の Amazon ECS マネージドインスタンスの発表](https://aws.amazon.com/jp/blogs/news/announcing-amazon-ecs-managed-instances-for-containerized-applications/)
+
+* 14 日ごとに開始される定期的なセキュリティパッチの実装
+* Bottlerocket 上で動作
+* インスタンスタイプを非常に柔軟に選択できる
+
+
+[Deep Dive: Amazon ECS マネージドインスタンスのプロビジョニングと最適化](https://aws.amazon.com/jp/blogs/news/deep-dive-amazon-ecs-managed-instances-provisioning-and-optimization/)
+
+* 全ての AZ で分散させた後に binpack で配置するので、最小限のインスタンス台数で済む
+* 利用率の低いインスタンスは自動的にドレインされ、タスクは既存インスタンスもしくは新規の適切なサイズのインスタンスに配置される
+
+
+
 #### Auto Scaling
 
 [Amazon ECS クラスターの Auto Scaling を深く探る](https://aws.amazon.com/jp/blogs/news/deep-dive-on-amazon-ecs-cluster-auto-scaling/)
@@ -233,6 +284,12 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 
 
 #### Faster Container Startup
+
+[Improving Amazon ECS deployment consistency with SOCI Index Manifest v2](https://aws.amazon.com/jp/blogs/containers/improving-amazon-ecs-deployment-consistency-with-soci-index-manifest-v2/)
+[SOCI Index Manifest v2 を用いた一貫性のある Amazon ECS デプロイメントの実現](https://aws.amazon.com/jp/blogs/news/improving-amazon-ecs-deployment-consistency-with-soci-index-manifest-v2/)
+
+* SOCI v2 ではコンテナイメージと SOCI インデックスの双方向の関連付けにより、一貫性のあるコンテナの実行が可能となる
+
 
 [AWS Fargate Enables Faster Container Startup using Seekable OCI](https://aws.amazon.com/jp/blogs/aws/aws-fargate-enables-faster-container-startup-using-seekable-oci/)
 
@@ -277,6 +334,12 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 
 #### Observability
 
+[AWSLogs コンテナログドライバーのノンブロッキングモードによるログ損失の防止](https://aws.amazon.com/jp/blogs/news/preventing-log-loss-with-non-blocking-mode-in-the-awslogs-container-log-driver/)
+
+* デフォルトはブロッキングモード
+* ノンブロッキングモードにした場合のログ損失を試験した結果を載せている
+
+
 [Amazon ECS向けAmazon CloudWatch Container Insightsについて](https://aws.amazon.com/jp/blogs/news/introducing-container-insights-for-amazon-ecs/)
 
 
@@ -287,8 +350,12 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 * フィルターオプションで対象を絞ることができる
 
 
-
 [AWS Distro for OpenTelemetry コレクターを使用したクロスアカウントの Amazon ECS メトリクス収集](https://aws.amazon.com/jp/blogs/news/using-aws-distro-for-opentelemetry-collector-for-cross-account-metrics-collection-on-amazon-ecs/)
+
+
+[Centralized Amazon ECS task logging with Amazon OpenSearch](https://aws.amazon.com/jp/blogs/containers/centralized-amazon-ecs-task-logging-with-amazon-opensearch/)
+
+* Fluent Bit により OpenSearch にログ転送を行う
 
 
 #### FIS
@@ -335,7 +402,46 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 [Amazon EFS を Amazon ECS と AWS Fargate で使用するための開発者ガイド – パート 3](https://aws.amazon.com/jp/blogs/news/developers-guide-to-using-amazon-efs-with-amazon-ecs-and-aws-fargate-part-3/)
 
 
+#### Gen AI
 
+[Automating AI-assisted container deployments with the Amazon ECS MCP Server](https://aws.amazon.com/jp/blogs/containers/automating-ai-assisted-container-deployments-with-amazon-ecs-mcp-server/)
+
+* Amazon ECS MCP Server は development, deployment, operations, troubleshooting, and decommissioning まで対応できる
+* 以下のアクションがある
+  * containerize_app: Development	Provides guidance to create docker file
+  * create_ecs_infrastructure	Deployment: Provisions Amazon ECS infrastructure using CloudFormation
+  * get_deployment_status	Deployment: Monitors deployment status
+  * ecs_resource_management	Operations: Manages resource inventory
+  * ecs_troubleshooting_tool: Troubleshooting	Diagnoses Amazon ECS issues across services and tasks
+  * delete_ecs_infrastructure: Decommissioning	Helps with resource cleanup
+
+
+[Accelerate container troubleshooting with the fully managed Amazon ECS MCP server (preview)](https://aws.amazon.com/blogs/containers/accelerate-container-troubleshooting-with-the-fully-managed-amazon-ecs-mcp-server-preview/)
+
+* [ECS のドキュメント](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-mcp-introduction.html) にもまとめられている
+* Remote MCP Server が使用できる。MCP Client → aws-mcp-proxy → MCP Service の構成で使用
+  * `~/.kiro/settings/mcp.json` に設定を行う
+```json
+{
+  "ecs-mcp-pdx": {
+    "disabled": false,
+    "timeout": 60000,
+    "command": "uvx",
+    "args": [
+      "mcp-proxy-for-aws@latest",
+      "https://ecs-mcp.us-west-2.api.aws/mcp",
+      "--service",
+      "ecs-mcp",
+      "--profile",
+      "default",
+      "--region",
+      "us-west-2"
+    ],
+    "type": "stdio"
+  }
+}
+```
+* コンソールの Amazon Q からも使用できる。タスク停止時などのトラブルシューティングができる
 
 
 #### その他の機能
@@ -576,4 +682,8 @@ Amazon ECS deployment circuit breaker
 
 [ECS Service Connectによるサービスの新しいつなぎ方](https://speakerdeck.com/iselegant/a-new-way-to-connect-services-with-ecs-service-connect?slide=29)
 
+
+[ECS Service Connect はヘルスチェックの結果を元にトラフィックをルーティングしないので、起動に時間がかかるアプリケーションでは注意が必要です](https://dev.classmethod.jp/articles/ecs-service-connect-application-health-check-and-traffic-routing/)
+
+* アプリケーションの起動が安定するまでの間にトラフィックを流す [Issue](https://github.com/aws/containers-roadmap/issues/2334) がある。対策としては 1 個コンテナを増やし、対象コンテナが HEALTHY となるように依存関係を設定するとよい
 

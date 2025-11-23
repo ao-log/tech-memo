@@ -80,6 +80,28 @@ alb.ingress.kubernetes.io/actions.blue-green: |
 [Amazon EKS で GitOps パイプラインを構築する](https://aws.amazon.com/jp/blogs/news/building-a-gitops-pipeline-with-amazon-eks/)
 
 
+# builders.flash
+
+[Amazon EKS Auto Mode のノード自動更新を Deep Dive する](https://aws.amazon.com/jp/builders-flash/202504/dive-deep-eks-node-automated-update/)
+
+* AMI の自動更新などのノード管理を、AWS 側でやってくれる
+* 長期実行ワークロードの課題に向き合う必要がある
+  * データの永続性
+  * 処理の中断
+  * 接続の維持
+* ノードの自動終了設定。Graceful、Forceful がある
+* ノード終了に関して重要な設定
+  * terminationGracePeriod: この期間に Pod が排出できていない場合は強制終了
+  * expireAfter: ノードの自動停止をトリガーする期間
+* Pod の設定
+  * Pod の terminationGracePeriodSeconds を NodePool の terminationGracePeriod より短くする
+  * PDB の設定
+  * マウントしている EBS ボリュームにデータ保存
+  * WebSocket のようなワークロードでは SIGTERM を受け取った際、新規の接続を行わないようにすると同時に、接続状態をプロセス内で監視。24 時間経って、接続が全て完了したらプロセスを終了
+* その他観点
+  * 21 日より長く実行する必要があるワークロードはマネージドノードグループを使用する
+
+
 
 ## tori さん
 

@@ -141,6 +141,28 @@ Amazon Kinesis ストリーム、Amazon Kinesis Data Firehose ストリーム、
 Amazon S3 へエクスポート可能。
 
 
+
+## アプリケーションパフォーマンスモニタリング (APM)
+
+[アプリケーションパフォーマンスモニタリング (APM)](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Monitoring-Intro.html)
+
+* メトリクス、トレースなどの収集ができる
+
+
+[カスタムセットアップを使用して Amazon ECS で Application Signals を有効にする - サイドカー戦略を使用してデプロイする](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Signals-ECS-Sidecar.html)
+
+* 次の流れ
+  * サービスリンクロールを作成
+  * ECS タスクロールに `CloudWatchAgentServerPolicy` をアタッチ
+  * CloudWatch Agent の設定ファイルを SSM Parameter Store にアップロード
+  * タスク定義設定
+    * 各コンテナで `opentelemetry-auto-instrumentation-python` をマウント
+    * init コンテナでファイルを所定のパスに配置
+    * サイドカーで CloudWatch Agent を稼働
+    * 環境変数にて各種設定変更可能
+
+
+
 # BlackBelt
 
 * [20190326 AWS Black Belt Online Seminar Amazon CloudWatch](https://pages.awscloud.com/rs/112-TZM-766/images/20190326_AWS-BlackBelt_CloudWatch.pdf)
