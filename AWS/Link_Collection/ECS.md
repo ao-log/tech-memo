@@ -261,6 +261,15 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 * 利用率の低いインスタンスは自動的にドレインされ、タスクは既存インスタンスもしくは新規の適切なサイズのインスタンスに配置される
 
 
+#### Express Mode
+
+[Amazon ECS Express Mode を使用して、インフラストラクチャを複雑化することなく、本番環境に対応したアプリケーションを構築](https://aws.amazon.com/jp/blogs/news/build-production-ready-applications-without-infrastructure-complexity-using-amazon-ecs-express-mode/)
+
+* コンテナイメージ、タスク実行ロール、インフラストラクチャロールの指定だけで ECS 上に Web コンテナをデプロイできる
+  * ECS サービスは Express モード
+  * ALB も自動作成される
+
+
 
 #### Auto Scaling
 
@@ -442,6 +451,24 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 }
 ```
 * コンソールの Amazon Q からも使用できる。タスク停止時などのトラブルシューティングができる
+
+
+[Amazon ECS and Amazon EKS now offer enhanced AI-powered troubleshooting in the Console](https://aws.amazon.com/about-aws/whats-new/2025/11/amazon-ecs-eks-ai-powered-troubleshooting-console/)
+
+* 2025/11/21
+* マネジメントコンソール上から Amazon Q でタスク停止理由などのレポートを生成できる
+
+
+[Amazon ECS MCP Server を用いたコンテナデプロイメントの AI 支援と自動化](https://aws.amazon.com/jp/blogs/news/automating-ai-assisted-container-deployments-with-amazon-ecs-mcp-server/)
+
+* 以下のツールを使用可能
+  * containerize_app: Dockerfile 作成のガイダンスを提供
+  * create_ecs_infrastructure: AWS CloudFormation を使用して Amazon ECS インフラストラクチャをプロビジョニング
+  * get_deployment_status: デプロイメントステータスを監視
+  * ecs_resource_management: リソースインベントリを管理
+  * ecs_troubleshooting_tool: Amazon ECS サービスおよびタスクに関する問題を診断
+  * delete_ecs_infrastructure: リソースのクリーンアップを支援
+
 
 
 #### その他の機能

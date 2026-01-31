@@ -18,6 +18,9 @@
   * 成果物でエラーが出る場合は、エラー内容をプロンプトで伝える
 
 
+[より豊かなコンテキストのための Model Context Protocol (MCP) による Amazon Q Developer CLI の拡張](https://aws.amazon.com/jp/blogs/news/extend-the-amazon-q-developer-cli-with-mcp/)
+
+
 [[アップデート]Amazon Q Developer CLIでMCPがサポートされました！](https://dev.classmethod.jp/articles/amazon-q-developer-cli-mcp-support-hands-on/)
 
 * 設定ファイル `~/.aws/amazonq/mcp.json`
@@ -42,7 +45,6 @@
 * 司令塔用のエージェントに指示を行う。どの場合にどのエージェントを使用するかも指示に含める
 
 
-
 [Amazon Bedrock の新機能マルチエージェントで「わが家の AI 技術顧問」を作ろう !](https://aws.amazon.com/jp/builders-flash/202503/create-ai-advisor-with-bedrock/)
 
 * マルチエージェントシステムは、複数のエージェントを駆使して目的を達成するアプローチ
@@ -51,13 +53,112 @@
 * 監督用の Agent を作成し、上記 2 個の Agent に対して適切に使い分けるようにする指示を与えておく
 
 
+[Claude Code on AWS パターン解説 – Amazon Bedrock / AWS Marketplace](https://aws.amazon.com/jp/blogs/news/claude-code-on-aws-patterns/)
+
+* Claude Code on AWS パターン 1: Amazon Bedrock との連携
+  * Claude Code 起動時に環境変数を設定しておけば Bedrock が使用される
+  * OIDC provider で認証 → ID トークンを Amazon Cognito に渡す → Cognito から一時的な AWS クレデンシャルを生成、の流れで認証可能
+  * 利用状況などを確認できる Dashboard がある
+  * token 使用量に基づいた従量課金。スモールスタートに適している
+* パターン2: AWS Marketplace での購入
+  * GUI アプリケーションとしての使用も可能
+  * コーディングだけでなく、設計、レビュー、ドキュメント作成なども効率化したい場合、このパターンが適している
+  * 予測可能で予算が立てやすいコスト体系
+
+
+# Kiro
+
+[Kiro 導入ガイド：始める前に知っておくべきすべてのこと](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-1-implementation-guide/)
+
+* Amazon Q Developer と Kiro は独立したサブスクリプション体系を持つ別製品
+* 既に Amazon Q Developer Pro サブスクリプションを利用している場合は Kiro CLI と Kiro IDE が Kiro Pro プラン相当の範囲内で有効
+* Q Developer CLI は Kiro CLI にアップデートされる
+* AWS 請求に一本化したい場合は、AWS IAM Identity Center での認証が必須。GitHub などでも認証できるが、その場合の支払い方法はクレジットカード
+
+
+[Amazon Q Developer の IDE プラグインから Kiro に乗り換える準備](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-2-q-dev-ide-to-kiro/)
+
+* Rules 機能が進化した Steering 機能。開発標準を定義できるので、チーム開発時に有用
+* コードレビュー機能はない。Amazon Inspector コードセキュリティによるコードレビュー機能などの方法を検討する必要がある
+* Spec 昨日では、要件（Requirements）、設計（Design）、タスク（Tasks）の 3 フェーズを経て、構造化された開発プロセスを実現
+
+
+[Kiro を組織で利用するためのセキュリティとガバナンス](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-3-security-governance/)
+
+* IAM Identity Center を用いた認証が可能
+* セキュリティ、プライバシー
+  * 使用 Tier によりプロンプト、返答が保存されるリージョンが異なる
+  * データ転送時、保管時は暗号化される
+  * 使用 Tier により、利用情報が製品の改善に使用される場合がある。オプトアウト可能。Kiro for enterprise の場合は自動的にオプトアウト
+* PrivateLink を介した接続が可能
+
+
+[インフラエンジニアのあなたも！Shell スクリプト開発で Kiro を使ってみよう](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-5-kiro-for-shell-scripting/)
+
+* Spec mode で自然言語で要求を伝え仕様書を生成してもらう
+* 設計書の作成
+* Kiro によるコードの自動生成
+
+
+[イベントストーミングから要件・設計・タスクへ。Kiro を活用した仕様駆動開発](https://aws.amazon.com/jp/blogs/news/eventstorming-with-kiro/)
+
+
+[Kiro における負債にならない Spec ファイルの扱い方](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-8-spec-bps/)
+
+* Spec ファイルの構成
+  * requirements.md：EARS (Easy Approach to Requirements Syntax) 記法での要件
+  * design.md：構造やデータフローなど実装方針
+  * tasks.md：要件と設計を基に Kiro が生成する実装タスク群
+* Spec ファイルの分け方
+  * 巨大な一つの Spec ファイルを作成するのではなく、複数の Spec ファイルを機能ごとに作成することを推奨
+  * Kiro と壁打ちしながら Spec ファイルの分け方の案を出してもらいつつ分類していくのも手
+* 要件変更時の対応
+  * 要件の更新：requirements.md ファイルを直接修正するか、Spec モードを開始して Kiro に新しい要件や設計要素を追加するよう指示
+  * 設計の更新: design.md ファイルに移動し「Refine」を選択
+  * タスクの更新: tasks.mdファイルに移動し、「Update tasks」を選択
+* Vibe モードで構築したコンテキストから Spec ファイルを作成することも可能
+* Spec ファイルもバージョン管理推奨
+
+
+[AWS Japan の新卒が Kiro でマネコン上の操作を支援する Chrome 拡張機能をチーム開発してみた！](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-9-team-development/)
+
+* ソリューションの開発は [PRFAQ](https://aws.amazon.com/jp/blogs/news/propelling-innovation-the-people-culture-and-process-imperatives/) を書くところから
+* ステアリング機能によりコーディング規約を定義
+  * ステアリングファイルに AI からの質問やヒアリングを促す指示を含めると効果的
+  * LLM は古いバージョンのフレームワークやライブラリに基づくコードを生成することがある。そのため、バージョン情報の明示が重要
+  * ステアリングを育てていく継続的な改善が不可欠
+* MVP (Minimum Viable Product) 思考で Spec 自体を小さく保つことが重要重要
+
+
+[スピードと品質の両立 – Kiro が加速する開発、GitLab AI が支えるレビュー。新時代の開発パートナーシップ設計](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-10-gitlab-partnerships/)
+
+* Kiro 側で Spec の仕様書やコード実装を管理
+* GitLab + Amazon Bedrock でコードレビュー
+
+
+[エスツーアイ株式会社様の AWS 生成 AI 事例「Kiro を活用した経費精算システムの迅速な開発」のご紹介](https://aws.amazon.com/jp/blogs/news/genai-case-study-s2i/)
+
+
+# DevOps Agent
+
+[AWS DevOps Agent はインシデント対応の迅速化とシステム信頼性の向上に役立ちます (プレビュー)](https://aws.amazon.com/jp/blogs/news/aws-devops-agent-helps-you-accelerate-incident-response-and-improve-system-reliability-preview/)
+
+* 問題発生時に、メトリクスやログから GitHub や GitLab での最近のコードデプロイまで、運用ツールチェーン全体のデータを自動的に関連付け、考えられる根本原因を特定し、的を絞った緩和策を推奨
+* Slack チャンネルを使ってステークホルダーに最新情報を伝えたり、詳細な調査スケジュールを管理できる
+* Amazon CloudWatch、Datadog、Dynatrace、New Relic、Splunk などの一般的なサービスと連携してオブザーバビリティデータを取得し、GitHub Actions や GitLab CI/CD と統合してデプロイとそのクラウドリソースへの影響を追跡できる
+
+
 # Q Developer
 
 [Amazon Q Developer CLIにAWSアカウントを調査・操作させてみた](https://dev.classmethod.jp/articles/exploring-aws-with-q-cli/)
 
-* CloudFormation スタックから drawio 形式で AWS 構成図を書いてくれる
-* アクセスログの分析ができる
-* プロンプトにより CloudFormation テンプレートの生成
+* 新規スクリプトの作成
+  * CloudFormation スタックから drawio 形式で AWS 構成図を書いてくれる
+  * アクセスログの分析ができる
+  * プロンプトにより CloudFormation テンプレートの生成
+* 既存スクリプトの解析
+  * 仕様を解析してテキストに起こしてくれる
+  * スクリプトの問題点も洗い出してくれる
 
 
 # Others

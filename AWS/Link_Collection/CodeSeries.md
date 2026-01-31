@@ -1,4 +1,7 @@
 
+[AWS CodeCommit の今後について](https://aws.amazon.com/jp/blogs/news/aws-codecommit-returns-to-general-availability/)
+
+
 ## 記事
 
 [[ECS/Fargate] 別のAWSアカウントにあるCodeCommit Repository をソースとするCodePipelineをCloudFormationで構築してみた](https://dev.classmethod.jp/articles/cross-account-codecommit-codepipeline-in-fargate-with-cfn/)

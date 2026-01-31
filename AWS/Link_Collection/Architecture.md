@@ -46,6 +46,10 @@
 * プロジェクト管理スキルも重要
 
 
+[AWS の新卒社員が考えた寿司配送システムのアーキテクチャを、ベテラン社員にレビューしてもらってみた](https://aws.amazon.com/jp/builders-flash/202511/review-sushi-delivery-system-architecture/)
+
+
+
 #### 外部記事
 
 [DevelopersIOブログの記事配信がCloudFront経由になりました](https://dev.classmethod.jp/articles/developersio-cdn-cloudfront/)

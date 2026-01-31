@@ -1751,6 +1751,7 @@ kubectl get --raw /metrics
 * [ナレッジセンター](https://aws.amazon.com/jp/premiumsupport/knowledge-center/#Amazon_Elastic_Container_Service_for_Kubernetes_.28Amazon_EKS.29)
 * Black Belt
   * [20190410 AWS Black Belt Online Seminar Amazon Elastic Container Service for Kubernetes (Amazon EKS)](https://www.slideshare.net/AmazonWebServicesJapan/20190410-aws-black-belt-online-seminar-amazon-elastic-container-service-for-kubernetes-amazon-eks)
+  * [Amazon EKS × AWS アカウントアーキテクチャパターン](https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_AmazonEKS-AWSMultiAccount-architecture-pattern_1205_v1.pdf)
 * [API Reference](https://docs.aws.amazon.com/ja_jp/eks/latest/APIReference/Welcome.html)
 * 外部ドキュメント、ブログ
   * [EKS on FargateでALBからアプリにアクセスする](https://839.hateblo.jp/entry/2019/12/08/172020)
