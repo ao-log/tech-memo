@@ -261,6 +261,15 @@ Fargate データプレーンは Fargate Agent, Containerd。こちらは Fargat
 * 利用率の低いインスタンスは自動的にドレインされ、タスクは既存インスタンスもしくは新規の適切なサイズのインスタンスに配置される
 
 
+[Amazon ECS マネージドインスタンスのマネージドデーモンサポートの発表](https://aws.amazon.com/jp/blogs/news/announcing-managed-daemon-support-for-amazon-ecs-managed-instances/)
+
+* ログ収集コンテナの稼働などが主なユースケース
+* Daemon タスク定義からクラスター内に Daemon を作成する
+* Daemon コンテナがインスタンス内で最初に起動する
+* `daemon_bridge` ネットワークモード
+* 特権コンテナとしての起動、ホストファイルシステムのマウントなどもできる。モニタリングで有用
+
+
 #### Express Mode
 
 [Amazon ECS Express Mode を使用して、インフラストラクチャを複雑化することなく、本番環境に対応したアプリケーションを構築](https://aws.amazon.com/jp/blogs/news/build-production-ready-applications-without-infrastructure-complexity-using-amazon-ecs-express-mode/)

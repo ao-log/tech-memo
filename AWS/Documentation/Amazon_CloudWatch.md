@@ -48,7 +48,6 @@ Bytes、Seconds、Count、Percent など。
 
 ## Metrics
 
-
 [カスタムメトリクスを発行する](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/publishingMetrics.html)
 
 独自のメトリクスを送信可能。
@@ -160,6 +159,20 @@ Amazon S3 へエクスポート可能。
     * init コンテナでファイルを所定のパスに配置
     * サイドカーで CloudWatch Agent を稼働
     * 環境変数にて各種設定変更可能
+
+
+
+## CloudWatch 調査
+
+[CloudWatch 調査](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/Investigations.html)
+
+[調査を作成する方法](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/creation-methods.html)
+
+* コンソール上からプロンプトで調査を開始できる
+
+[環境内の運用上の問題を調査する](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/Investigations-Investigate.html)
+
+* Amazon Q チャット、CloudWatch Alarm、CloudWatch Application Signals SLO メトリクスなどから調査を開始できる
 
 
 

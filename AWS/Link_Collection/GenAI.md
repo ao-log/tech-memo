@@ -66,6 +66,29 @@
   * 予測可能で予算が立てやすいコスト体系
 
 
+[開発以外にも使える !? Bedrock Engineer の AI エージェントをカスタマイズしてみよう !](https://aws.amazon.com/jp/builders-flash/202602/customize-bedrock-engineer-ai-agents/)
+
+* Bedrock Engineer でカスタムの AI Agent 作成ができる
+
+
+[エンタープライズにおける AI エージェント: Amazon Bedrock AgentCore を活用したベストプラクティス](https://aws.amazon.com/jp/blogs/news/ai-agents-in-enterprises-best-practices-with-amazon-bedrock-agentcore/)
+
+* この機能で何ができるかではなく、課題を出発点とする
+* 初期の計画段階で明確にしておくべきこと
+  * 「やるべきこと」「やるべきでないこと」の明確な定義と文書化
+  * エージェントの回答のトーン
+  * ツール、パラメータ、ナレッジベースの明確な定義
+  * Ground truth データセット
+* まず PoC で実際に運用した時の問題を見つけ出す
+* オブザーバビリティは初日から組み込んでおく
+* AgentCore Gateway は、ツールの所在に関係なく統一されたエントリポイントを提供
+* 評価の自動化。Ground truth データセットに対する正答率やレイテンシー
+* 一つのエージェントに詰め込まず、マルチエージェント。エージェント間のコンテキスト共有は AgentCore Memory で
+* AgentCore Runtime により各セッションを専用のコンピューティングとメモリを備えた独立したマイクロ仮想マシン (microVM) 上で実行できる
+* AgentCore Evaluations による評価の実行メカニズムの簡素化
+
+
+
 # Kiro
 
 [Kiro 導入ガイド：始める前に知っておくべきすべてのこと](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-1-implementation-guide/)
@@ -79,8 +102,8 @@
 [Amazon Q Developer の IDE プラグインから Kiro に乗り換える準備](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-2-q-dev-ide-to-kiro/)
 
 * Rules 機能が進化した Steering 機能。開発標準を定義できるので、チーム開発時に有用
-* コードレビュー機能はない。Amazon Inspector コードセキュリティによるコードレビュー機能などの方法を検討する必要がある
-* Spec 昨日では、要件（Requirements）、設計（Design）、タスク（Tasks）の 3 フェーズを経て、構造化された開発プロセスを実現
+* コードレビュー機能はない。Amazon Inspector コードセキュリティによるコードレビュー機能、Amazon Q Developer の IDE プラグインなどの方法を検討する必要がある
+* Spec 機能では、要件（Requirements）、設計（Design）、タスク（Tasks）の 3 フェーズを経て、構造化された開発プロセスを実現
 
 
 [Kiro を組織で利用するためのセキュリティとガバナンス](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-3-security-governance/)
@@ -93,14 +116,49 @@
 * PrivateLink を介した接続が可能
 
 
+[Kiroを使ったペアプログラミングのすすめ](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-4-pair-programming/)
+
+* 議論した内容のホワイトボードを撮影し、画像を Kiro に読み込ませる。画像認識機能により文字起こし
+* 生成された仕様書を二人で同じ画面を見ながらレビュー。一人は設計の妥当性、もう一人は仕様との適合性確認と役割分担。より深いレビューが可能になり、承認も適当にならなかった。疑問点、改善点も議論し、すぐに Kiro に修正依頼することで、仕様の精度が飛躍的に向上
+* 英語で発表する必要があったので、Hook で英語ドキュメント作成を自動化
+* Git 統合されているので、前回のレビューからの変更点なども、即座に確認できる
+
+
 [インフラエンジニアのあなたも！Shell スクリプト開発で Kiro を使ってみよう](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-5-kiro-for-shell-scripting/)
 
-* Spec mode で自然言語で要求を伝え仕様書を生成してもらう
-* 設計書の作成
-* Kiro によるコードの自動生成
+* Spec mode
+  * 仕様書作成
+    * 自然言語で要求を伝え仕様書を生成してもらう
+    * 仕様書は EARS 記法 (Easy Approach to Requirements Syntax) 
+    * 仕様書の内容を変更したい場合は Kiro に依頼して直してもらう
+  * 設計フェーズ
+  * タスク実行時に生成されたコードの修正を行いたい場合は、まず設計を直す。その後タスクを再実行する
+* 既存コードの内容を読み込ませて、説明させることもできる
+* Kiro がインフラエンジニアに向いている理由
+  * ドキュメント化の自動化ができる
+  * ベストプラクティスを適用できる
+  * 学習コストが低い
+
+
+[Amazon Q Developer CLI から Kiro CLI へ : 知っておくべき変更点](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-6-amazon-q-developer-cli-to-kiro-cli/)
+
+* 変更履歴は `kiro-cli version --changelog=all` で確認できる
+* おすすめ機能
+  * カスタムエージェントにより用途ごとにツールの許可などを設定できる
 
 
 [イベントストーミングから要件・設計・タスクへ。Kiro を活用した仕様駆動開発](https://aws.amazon.com/jp/blogs/news/eventstorming-with-kiro/)
+
+* イベントストーミングでは、色分けされた付箋と付箋間の遷移のルールに従って、業務フローを可視化
+* イベントストーミングの画像を Kiro に添付し、要件作成を指示することで requirements.md を作成してくれる
+  * 「不明な点があれば質問してください。」と質問することで、曖昧さを解消するための質問を返してくれる
+  * requerements.md は用語集、8 つの要件(EARS 記法)、受け入れ基準が記述されている
+* 設計フェーズでは design.md を作成。
+  * アーキテクチャ、データモデルなどが設計書として記述される 
+  * 正確性プロパティが自動生成される。それぞれのプロパティには、以下の情報が含まレル
+    * プロパティの説明（任意の〜に対して、〜すべきである）
+    * 検証対象となる要件番号
+* 実装タスクでは task.md を作成。プロパティテストはオプション扱いのためグレーになっている
 
 
 [Kiro における負債にならない Spec ファイルの扱い方](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-8-spec-bps/)
@@ -127,7 +185,7 @@
   * ステアリングファイルに AI からの質問やヒアリングを促す指示を含めると効果的
   * LLM は古いバージョンのフレームワークやライブラリに基づくコードを生成することがある。そのため、バージョン情報の明示が重要
   * ステアリングを育てていく継続的な改善が不可欠
-* MVP (Minimum Viable Product) 思考で Spec 自体を小さく保つことが重要重要
+* MVP (Minimum Viable Product) 思考で Spec 自体を小さく保つことが重要。アプリケーション層とインフラ層の Spec を分離した
 
 
 [スピードと品質の両立 – Kiro が加速する開発、GitLab AI が支えるレビュー。新時代の開発パートナーシップ設計](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-10-gitlab-partnerships/)
@@ -136,7 +194,65 @@
 * GitLab + Amazon Bedrock でコードレビュー
 
 
+[進化し続ける Kiro の仕様駆動開発を一度立ち止まって整理する](https://aws.amazon.com/jp/builders-flash/202606/organize-kiro-sdd-evolution/)
+
+* 仕様駆動開発についての、Spec の分割の仕方や、Feature Spec, Bugfix Spec、などの項目ごとの選択肢やどれを選択するかの考え方などが整理されている記事
+
+
+[バグ修正と既存アプリの上に構築するための新しい Spec タイプ](https://aws.amazon.com/jp/blogs/news/specs-bugfix-and-design-first/)
+
+* デザインファーストワークフロー、バグ修正 の 2 つの新しい Spec がリリースされた
+
+
+[Kiro Powers であなたにパワーを授けよう](https://aws.amazon.com/jp/builders-flash/202602/enpower-you-with-kiro-powers/)
+
+* MCP サーバの課題としてコンテキスト消費がある
+* Powers はツールをオンデマンドで読み込む
+* 必須要素は `POWER.md`。keywords に記述したキーワードを含むプロンプトで該当する POWER をアクティブ化する
+* Kiro IDE で使用可能
+
+
+[Kiro の ACP 対応により特化型 IDE にも AI を](https://aws.amazon.com/jp/blogs/news/kiro-adopts-acp/)
+
+* Agent Client Protocol（ACP）は、コードエディタと AI コーディングエージェント間の通信を標準化するプロトコル
+* コードエディタから Kiro CLI を呼び出せるようになる
+
+
+[Kiro CLI 2.0: デザイン刷新、ヘッドレス CI/CD パイプライン、Windows サポート](https://aws.amazon.com/jp/blogs/news/cli-2-0/)
+
+* Kiro CLI 2.0 がリリースされた
+* ヘッドレスモードに対応した
+* Windows サポート
+* UX の改善
+
+
+[Kiro にハーネスを付ける ~ 制御された全力疾走のすすめ](https://aws.amazon.com/jp/builders-flash/202605/add-harness-kiro/)
+
+* コンテキストエンジニアリング: モデルが推論時に何を見ているか (RAG、ツール定義、Few-shot 例、会話履歴、状態管理) を体系的に設計する技術
+* ハーネスエンジニアリング: 複数セッションにまたがる環境全体を最適化
+  * 実装と評価を別々のエージェントが行う。GAN (敵対的生成ネットワーク) に着想を得ている
+
+
+["伝わらない"を解消 ! 生成 AI で磨くAWS サポートケース起票スキル ~ 生成 AI 活用による問題解決の効率化 ~](https://aws.amazon.com/jp/builders-flash/202602/genai-support-case-issue-skills/)
+
+* 「技術的なお問い合わせに関するガイドライン」に記載された内容に沿った形でサポートケースを起票するために、生成 AI を活用してサポートの起票文をセルフレビューする方法を紹介している記事
+* 「技術的なお問い合わせに関するガイドライン」をベースにしつつ、効果的にセルフレビューできるように Amazon Quick Suite の Amazon Quick Research でプロンプトを改善
+* 方法
+  * 4 通りある
+    * チャット内で都度プロンプトを記述する
+    * カスタムエージェントの prompt にて、プロンプト内容を記載したファイルを指定する
+    * MCP で support-case-reviewer を設定する
+    * Amazon Quick Suite のカスタムチャットエージェントを利用
+
+
 [エスツーアイ株式会社様の AWS 生成 AI 事例「Kiro を活用した経費精算システムの迅速な開発」のご紹介](https://aws.amazon.com/jp/blogs/news/genai-case-study-s2i/)
+
+
+[aws-observability](https://github.com/kirodotdev/powers/tree/main/aws-observability)
+
+
+[ログもアラームもトレースもセキュリティ監査も、「とりあえず Kiro に聞いてみ」でよかった話](https://zenn.dev/aws_japan/articles/kiro-aws-observability-power)
+
 
 
 # DevOps Agent
@@ -146,6 +262,34 @@
 * 問題発生時に、メトリクスやログから GitHub や GitLab での最近のコードデプロイまで、運用ツールチェーン全体のデータを自動的に関連付け、考えられる根本原因を特定し、的を絞った緩和策を推奨
 * Slack チャンネルを使ってステークホルダーに最新情報を伝えたり、詳細な調査スケジュールを管理できる
 * Amazon CloudWatch、Datadog、Dynatrace、New Relic、Splunk などの一般的なサービスと連携してオブザーバビリティデータを取得し、GitHub Actions や GitLab CI/CD と統合してデプロイとそのクラウドリソースへの影響を追跡できる
+
+
+[AWS DevOps Agent を本番環境にデプロイするためのベストプラクティス](https://aws.amazon.com/jp/blogs/news/best-practices-for-deploying-aws-devops-agent-in-production/)
+
+
+[AWS DevOps Agent によるエージェンティック AI を活用した自律的インシデント対応](https://aws.amazon.com/jp/blogs/news/leverage-agentic-ai-for-autonomous-incident-response-with-aws-devops-agent/)
+
+* CloudWatch Alarm が発報すると、インシデントを自動診断し、最近のコードデプロイに起因する DynamoDB の書き込みスロットリングを特定。オンデマンドキャパシティへの切り替えまたはロールバックの提案を自律的に Slack に投稿
+* コンテキスト
+  * DevOps Agent はリソーストポロジーだけでなく、テレメトリ、デプロイタイムライン、インフラストラクチャおよびアプリケーションコードも把握
+* コントロール
+  * アクセス可能な範囲は IAM 権限で制御
+  * すべての推論ステップとアクションは、エージェントが記録後に変更できない不変の監査ジャーナルに記録
+* 利便性
+  * Agent Space に設定が入っているので、使用するエンジニアの PC 内の構成依存がない
+* コラボレーション
+  * 自律的なチームメンバー的に動作する。インシデントがトリガーされると自動的に調査が開始する
+* 継続的学習
+  * クラウドインフラストラクチャ、テレメトリデータ、コードリポジトリをスキャンして、アプリケーショントポロジーを継続的に学習・更新
+  * 過去の調査を分析してパターンを特定し、将来のトラブルシューティングワークフローを最適化
+* コスト効率
+  * エージェントがタスクに積極的に取り組んでいる時間に対してのみ課金
+
+
+[AI エージェントをプロトタイプから製品へ: AWS DevOps Agent 開発で得た教訓](https://aws.amazon.com/jp/blogs/news/from-ai-agent-prototype-to-product-lessons-from-building-aws-devops-agent/)
+
+
+[AWS DevOps Agent はどこまで障害の原因を特定できるのか？re:Invent 2025 の新機能を検証](https://zenn.dev/10q89s/articles/2bae74f7a6cbdc)
 
 
 # Q Developer
@@ -161,11 +305,26 @@
   * スクリプトの問題点も洗い出してくれる
 
 
+# AWS Security Agent
+
+[AWS Security Agent のオンデマンドペネトレーションテストの一般提供を開始](https://aws.amazon.com/jp/blogs/news/aws-security-agent-on-demand-penetration-testing-now-generally-available/)
+
+
 # Others
 
 [生成系 AI アプリケーションでベクトルデータストアが果たす役割とは](https://aws.amazon.com/jp/blogs/news/the-role-of-vector-datastores-in-generative-ai-applications/)
 
 * ベクトルデータストアは、ベクトルを大規模に保存し、問い合わせを行うためのシステムであり、効率的な最近傍クエリアルゴリズムと適切なインデックスにより、データ検索を改善
+
+
+[Spec-Driven Presentation Maker — 伝えたいことを先に設計し、スライド構築は AI に任せる](https://aws.amazon.com/jp/blogs/news/spec-driven-presentation-maker-ja/)
+
+* 何を伝えたいか、伝わるか、が本質的に重要
+* 設計から開始する
+  * 1. ブリーフィング — 聞き手は誰か、何を伝えたいか、聞き手にどうなってほしいかを定義します
+  * 2. アウトライン — 1 スライド 1 メッセージの原則で、各スライドが答えるべき疑問と、その答えを定義します
+  * 3. アートディレクション — 色使い、フォント、ビジュアルの方向性を定義します
+* 既存 Power Point テーマをそのまま使える
 
 
 [エンタープライズにおける Amazon Bedrock による生成 AI のオペレーティングモデル](https://aws.amazon.com/jp/blogs/news/generative-ai-operating-models-in-enterprise-organizations-with-amazon-bedrock/)
@@ -183,4 +342,9 @@
 
 [[プレビュー] AWS Knowledge MCP Serverを使ってみた](https://dev.classmethod.jp/articles/aws-knowledge-mcp-server-available-preview/)
 
+
+[【実機検証】AWS Observability Kiro Power を ECS Fargate 環境で試したら、AIが脆弱性スキャンと設定ミスを自動で見つけてくれた話](https://qiita.com/YShiba92/items/30dee66127dd5f4677bd)
+
+* 障害対応系の MCP のほか、インシデント対応などのステアリングが同梱されている
+* Kiro IDE 上からプロンプトで障害調査できる
 

@@ -12,6 +12,8 @@
 
 [AWS Certified DevOps Engineer - Professional 公式練習問題集](https://explore.skillbuilder.aws/learn/course/external/view/elearning/12514/aws-certified-devops-engineer-professional-practice-question-set-dop-c01-japanese?devops=sec&sec=prep)
 
+[Official Practice Question Set: AWS Certified DevOps Engineer - Professional (DOP-C02 - 日本語)](https://skillbuilder.aws/learn/KE7KPXG5TV/official-practice-question-set-aws-certified-devops-engineer--professional-dopc02--/VJG1AX9C86)
+
 [試験準備: AWS Certified DevOps Engineer - Professional](https://explore.skillbuilder.aws/learn/course/external/view/elearning/74/exam-readiness-aws-certified-devops-engineer-professional?devops=sec&sec=prep)
 
 
@@ -204,8 +206,11 @@
 * 運用
   * RDS の自動スナップショットは 1 日 1 回。バックアップウインドウ中に実施される。[バックアップの使用](https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html)
   * DynamoDB はテーブルに TTL を設定できる
+  * グローバルテーブル、クロスリージョンレプリケーション
 * その他ポイント
   * 機能面で問題のない選択肢でも、非機能要件を満たせない場合は不正解の場合がある。例えばリアルタイムではないなど。
   * コスト最適化の観点も重要。機能面で満たせても、高価な場合はより安価な選択肢を優先する
-
+* CloudWatch
+  * メトリクスストリーム(Metrics データを Firehose に流し込める)
+  * メトリクスフィルター(メトリクスとして発行)、サブスクリプションフィルター(別のターゲットに送信)
 

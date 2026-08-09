@@ -230,7 +230,9 @@
 Kiro CLI になった。
 
 
+## MCP
 
+[Amazon Q Developer での MCP の使用](https://docs.aws.amazon.com/ja_jp/amazonq/latest/qdeveloper-ug/qdev-mcp.html)
 
 
 
